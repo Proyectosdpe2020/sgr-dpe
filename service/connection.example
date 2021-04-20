@@ -1,0 +1,28 @@
+<?php
+	$connections = array(
+        'sicap' => array(
+            'conn' => sqlsrv_connect(
+                '',
+                array(
+                    'CharacterSet' => 'UTF-8', 
+                    'Database' => '', 
+                    'UID' => '', 
+                    'PWD' => ''
+                )
+            ),
+            'db' => ''
+        ),
+        'cmasc' => array(
+            'conn' => sqlsrv_connect(
+                '',
+                array(
+                    'CharacterSet' => 'UTF-8', 
+                    'Database' => '', 
+                    'UID' => '', 
+                    'PWD' => ''
+                )
+            ),
+            'db' => ''
+        )
+    );
+?>

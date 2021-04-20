@@ -1,0 +1,188 @@
+body{
+    background-color: #DCE3DF !important;
+    zoom: 80%;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    background: rgba(255,255,255,0.9);
+    border-radius: 5px;
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.50);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.50);
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.50);
+    margin-top: 200px;
+    background-color: white;
+}
+
+.login-form .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.login-form .form-control:focus {
+    z-index: 2;
+}
+
+.login-form input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.login-form input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.login-form h1{
+    font-family: LabradorA;
+    font-size: 30pt;
+}
+
+.notifyjs-corner{
+    margin-top:  6% !important;
+}
+
+td{
+    cursor: pointer;
+}
+
+tr{
+    cursor: auto;
+}
+
+@font-face {
+    font-family: LabradorA;
+    font-weight: bold;
+    src: url("../fonts/LabradorA-ExtraBold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Galano;
+    font-weight: bold;
+    src: url("../fonts/Galano_Grotesque_Medium.otf") format("opentype");
+}
+
+.title{
+    background-color: #152F4A;
+    color: white;
+    padding: 15px;
+    font-family: LabradorA;
+    font-weight: lighter !important;
+    text-align: center;
+}
+
+#user-logo{
+    opacity: 0.5;
+}
+
+#frame{
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    margin-top: 70px;
+}
+
+.form-buttons{
+    text-align: right;
+}
+
+/*Top bar*/
+/* Add a black background color to the top navigation */
+.framebar {
+    font-family: LabradorA;
+    background-color: #333;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+/* Style the links inside the navigation bar */
+.framebar div {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.framebar div:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.framebar div.active {
+    /*background-color: #4CAF50;*/
+    background-color: #4CAF8E;
+    color: white;
+}
+/*___________*/
+
+  /*Top bar*/
+.topnav {
+    z-index: 100000;
+    position: fixed !important;
+    top: 0px !important;
+    width: 100%;
+
+    font-family: LabradorA;
+    background-color: #333;
+    overflow: hidden;
+    cursor: pointer;
+}
+  
+.topnav div {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.topnav div.home {
+    background-color: #152F4A;
+    color: white;
+    border-right: solid;
+}
+
+.topnav div.session {
+    color: white;
+    float: right;
+}
+
+.topnav div.session:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+#content{
+    padding: 15px;
+    border: lightgrey solid 1px;
+}
+
+.loader{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url('../assets/img/loader.svg') 50% 50% no-repeat rgb(62,62,62);
+    opacity: .8;
+}
+
+.static-loader{
+    color: red;
+    font-size: 20pt;
+}
