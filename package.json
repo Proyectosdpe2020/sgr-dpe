@@ -1,0 +1,19 @@
+{
+  "name": "sgr-dpe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Proyectosdpe2020/sgr-dpe.git"
+  },
+  "author": "ISC. José Daniel García Sánchez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Proyectosdpe2020/sgr-dpe/issues"
+  },
+  "homepage": "https://github.com/Proyectosdpe2020/sgr-dpe#readme"
+}
