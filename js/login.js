@@ -38,11 +38,9 @@ function login(){
                         redirectTo('src/main/main.php');
                         break;
                 }
-
-                //Swal.fire('Bienvenido', '', 'success');
             }
             else{
-                Swal.fire('Usuario incorrecto', 'Intentelo de nuevo!', 'warning')
+                Swal.fire('Usuario incorrecto', 'Intentelo de nuevo!', 'warning');
             }
         }
         else{

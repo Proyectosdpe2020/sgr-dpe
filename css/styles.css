@@ -186,3 +186,11 @@ tr{
     color: red;
     font-size: 20pt;
 }
+
+.search-form{
+    background-color: white;
+    padding: 50px;
+    width: 40%;
+    float: left;
+    margin-left: 30%;
+}
