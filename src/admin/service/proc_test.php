@@ -2,7 +2,7 @@
 session_start();
 include("../../../service/connection.php");
 
-$conn = $connections['sicapepe']['conn'];
+$conn = $connections['cmasc']['conn'];
 
 $options = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
 
@@ -10,7 +10,7 @@ sqlsrv_configure('WarningsReturnAsErrors',0);
 
 $myparams['mes'] = 2;
 $myparams['anio'] = 2021;
-$myparams['opcion'] = 2;
+$myparams['opcion'] = 1;
 
 $procedure_params = array(
     array(&$myparams['mes'], SQLSRV_PARAM_IN),
@@ -20,7 +20,7 @@ $procedure_params = array(
 
 
 //EXEC the procedure, {call stp_Create_Item (@Item_ID = ?, @Item_Name = ?)} seems to fail with various errors in my experiments
-$sql = "EXEC PRUEBA.dbo.SENAP19 @mes = ?, @anio = ?, @opcion = ?";
+$sql = "EXEC dbo.SENAP19 @mes = ?, @anio = ?, @opcion = ?";
 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params, $options);
 
 
