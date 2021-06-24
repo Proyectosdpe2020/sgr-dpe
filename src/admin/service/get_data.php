@@ -7,7 +7,8 @@ $db_table = '[dbo].[Usuario]';
 
 $data = array();
 
-$query = "";
+$query = "SELECT 	top 4000
+* From Carpeta	";
 
 
 $params = array();

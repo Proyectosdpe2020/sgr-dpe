@@ -2,7 +2,7 @@
 session_start();
 include("../../../service/connection.php");
 
-$conn = $connections['cmasc']['conn'];
+$conn = $connections['sicapepe']['conn'];
 
 $options = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
 
@@ -20,7 +20,7 @@ $procedure_params = array(
 
 
 //EXEC the procedure, {call stp_Create_Item (@Item_ID = ?, @Item_Name = ?)} seems to fail with various errors in my experiments
-$sql = "EXEC dbo.SENAP19 @mes = ?, @anio = ?, @opcion = ?";
+$sql = "EXEC dbo.SENAP19TEST @mes = ?, @anio = ?, @opcion = ?";
 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params, $options);
 
 

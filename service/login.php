@@ -1,5 +1,5 @@
 <?php
-session_start();
+/*session_start();
 include('connection.php');
 $conn = $connections['sgr_dpe']['conn'];
 $db = $connections['sgr_dpe']['db'];
@@ -75,6 +75,25 @@ else{
     );
 
     echo json_encode($return, JSON_FORCE_OBJECT);
-}
+}*/
+
+$return = array(
+    'state' => 'success',
+    'data' => array(
+        'user' => array(
+            'id' => 1,
+            'username' =>   'dan',
+            'name' => 'Daniel',
+            'paternal_surname' => 'Gar',
+            'maternal_surname' => 'Sa',
+            'type' => 1,
+            'permissions' => array(
+                'senap' => 1
+            )
+        )
+    )
+);
+
+echo json_encode($return, JSON_FORCE_OBJECT);
 
 ?>

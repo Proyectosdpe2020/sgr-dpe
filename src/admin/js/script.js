@@ -103,7 +103,7 @@ function searchSenap(attr){
 
     if(attr == null){
         attr = {
-            url_service_file: 'service/proc_test.php',
+            url_service_file: 'service/get_senap_procedure_data.php',
             parameters: {
                 month: 1,
                 year: 2021
@@ -147,7 +147,6 @@ function searchSenap(attr){
 }
 
 function drawTable(attr){
-    console.log('draw attr: ', attr);
 
     if(attr.data != null){
         $.ajax({
