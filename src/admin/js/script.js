@@ -99,23 +99,49 @@ function checkCompletedFields(attr){
     }
 }
 
+function testm(){
+
+    date = document.getElementById('main-search-search-month').value;
+    date_format = new Date(date+'-01');
+    date_format.setHours(date_format.getHours()+6); 
+    console.log(date_format.getMonth()+1);
+
+    console.log(date_format.getFullYear());
+}
+
 function searchSenap(attr){
+
+    date = document.getElementById('main-search-search-month').value;
+    date_format = new Date(date+'-01');
+    date_format.setHours(date_format.getHours()+6); 
+
+    procedure_op = document.getElementById('main-search-option').value;
 
     if(attr == null){
         attr = {
             url_service_file: 'service/get_senap_procedure_data.php',
             parameters: {
-                month: 1,
-                year: 2021
+                month: date_format.getMonth()+1,
+                year: date_format.getFullYear(),
+                procedure_op: procedure_op
             },
             on_success: {
                 functions: [
-                    {
+                    /*{
                         function: drawTable,
                         attr: {
                             data: null,
                             url_service_file: 'templates/tables/default_table.php',
                             element_id: 'records-section'
+                        },
+                        response: true
+                    },*/
+                    {
+                        function: createExcelReport,
+                        attr: {
+                            data: null,
+                            url_service_file: 'templates/excel/report_test.php',
+                            file_name: 'senap2.csv'
                         },
                         response: true
                     }
@@ -133,7 +159,7 @@ function searchSenap(attr){
             cache: false
         }).done(function(response){
             console.log(response);
-            test = response;
+            //test = response;
 
             for(os_function in attr.on_success.functions){
                 if(attr.on_success.functions[os_function].response){
@@ -173,6 +199,43 @@ function drawTable(attr){
             } 
         });*/
     }
+}
+
+function downloadExcelReport() {
+
+	var month = document.getElementById('mesPuestaSelected').value;
+	var year = document.getElementById('anioCmasc').value;
+	
+	var data = [];
+
+	generalDataFiscalias(month, year, data);
+
+}
+
+function createExcelReport(attr) {
+
+    if(attr.data != null){
+
+        console.log('createeee', attr);
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: attr.url_service_file,
+            data: {
+                data: JSON.stringify(attr.data)
+                //data: attr.data
+            },
+        }).done(function(data){
+            console.log('good response');
+            var $a = $("<a>");
+            $a.attr("href",data.file);
+            $("body").append($a);
+            $a.attr("download", attr.file_name);
+            $a[0].click();
+            $a.remove();
+        });
+    }
+
 }
 
 function tableToExcel(){
