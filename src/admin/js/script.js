@@ -111,13 +111,45 @@ function testm(){
 
 function searchSenap(attr){
 
-    date = document.getElementById('main-search-search-month').value;
-    date_format = new Date(date+'-01');
-    date_format.setHours(date_format.getHours()+6); 
+    csv_names = {
+        1: 'SENAP_Carga_NoticiaCriminal',
+        2: 'SENAP_Carga_CarpetaInvestigacion',
+        3: 'SENAP_Carga_EtapaInvestigacion',
+        4: 'SENAP_Carga_ActosInvestigacion',
+        5: 'SENAP_Carga_Delitos',
+        6: 'SENAP_Carga_Aseguramientos',
+        7: 'SENAP_Carga_VictimasDelito',
+        8: 'SENAP_Carga_ImputadoDelito',
+        9: 'SENAP_Carga_VictimaImputado',
+        10: 'SENAP_Carga_Determinacion',
+        11: 'SENAP_Carga_Proceso',
+        12: 'SENAP_Carga_MandamientosJudiciales',
+        13: 'SENAP_Carga_InvestigacionComplementaria',
+        14: 'SENAP_Carga_MedidasCautelares',
+        15: 'SENAP_Carga_EtapaIntermedia',
+        16: 'SENAP_Carga_MASC',
+        17: 'SENAP_Carga_Sobreseimiento',
+        18: 'SENAP_Carga_SuspensionCondicional',
+        19: 'SENAP_Carga_Sentencia'
+    }
 
+    date = document.getElementById('main-search-search-month').value;
     procedure_op = document.getElementById('main-search-option').value;
 
-    if(attr == null){
+    date_format = null;
+    completed_form = false;
+
+
+    if(date == "" || procedure_op == ""){
+        completed_form = false;
+    }
+    else{
+        date_format = new Date(date+'-01');
+        date_format.setHours(date_format.getHours()+6); 
+        completed_form = true;
+    }
+
+    if(attr == null && completed_form){
         attr = {
             url_service_file: 'service/get_senap_procedure_data.php',
             parameters: {
@@ -140,36 +172,44 @@ function searchSenap(attr){
                         function: createExcelReport,
                         attr: {
                             data: null,
-                            url_service_file: 'templates/excel/report_test.php',
-                            file_name: 'senap2.csv'
+                            url_service_file: 'templates/excel/report_test_csv.php',
+                            file_name: csv_names[procedure_op]+'.csv'
                         },
                         response: true
                     }
                 ]
             }
         }
+
+        if(attr.url_service_file){
+            console.log('showl');
+            showLoading(true);
+    
+            $.ajax({
+                url: attr.url_service_file,
+                type: 'POST',
+                dataType: 'JSON',
+                data: attr.parameters,
+                cache: false
+            }).done(function(response){
+                console.log(response);
+                //test = response;
+    
+                for(os_function in attr.on_success.functions){
+                    if(attr.on_success.functions[os_function].response){
+                        attr.on_success.functions[os_function].attr.data = response;
+                    }
+                    attr.on_success.functions[os_function].function(attr.on_success.functions[os_function].attr);
+                }
+    
+            });
+        }
+    }
+    else{
+        Swal.fire('Campos faltantes', 'Tiene que completar alguno de los campos para completar la busqueda', 'warning');
     }
     
-    if(attr.url_service_file){
-        $.ajax({
-            url: attr.url_service_file,
-            type: 'POST',
-            dataType: 'JSON',
-            data: attr.parameters,
-            cache: false
-        }).done(function(response){
-            console.log(response);
-            //test = response;
-
-            for(os_function in attr.on_success.functions){
-                if(attr.on_success.functions[os_function].response){
-                    attr.on_success.functions[os_function].attr.data = response;
-                }
-                attr.on_success.functions[os_function].function(attr.on_success.functions[os_function].attr);
-            }
-
-        });
-    }
+    
 }
 
 function drawTable(attr){
@@ -233,6 +273,34 @@ function createExcelReport(attr) {
             $a.attr("download", attr.file_name);
             $a[0].click();
             $a.remove();
+            showLoading(false);
+        });
+    }
+
+}
+
+function createExcelReportCopy(attr) {
+
+    if(attr.data != null){
+
+        console.log('createeee', attr);
+        $.ajax({
+            type: "POST",
+            dataType: 'json',
+            url: attr.url_service_file,
+            data: {
+                data: JSON.stringify(attr.data)
+                //data: attr.data
+            },
+        }).done(function(data){
+            console.log('good response');
+            var $a = $("<a>");
+            $a.attr("href",data.file);
+            $("body").append($a);
+            $a.attr("download", attr.file_name);
+            $a[0].click();
+            $a.remove();
+            showLoading(false);
         });
     }
 
@@ -251,3 +319,11 @@ function tableToExcel(){
     window.location.href = uri + base64(format(template, ctx));
     
 }
+
+
+/*function showLoading(ind){
+    if(ind)
+        $(".loader-div").addClass("loader");
+    else
+        $(".loader-div").removeClass("loader");
+}*/

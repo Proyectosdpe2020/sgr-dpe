@@ -25,21 +25,31 @@
 	
 		<form class="login-form" id="login-form">
 
-			<div id="user-logo">
-				<img class="mb-4" src="assets/img/user.png" alt="" width="200" height="200">
+			<div class="login-form-header">
+				
+				<img class="user-logo" src="assets/img/fge.png" alt="" width="200" height="200">
+	
+				<h1 class="font-weight-normal login-form-text">INICIO DE SESIÓN</h1>
+				
 			</div>
 
-			<h1 class="h3 mb-3 font-weight-normal">INICIO DE SESIÓN</h1>
+			<!--<div class="separator"></div>-->
+
+			<div class="login-form-body">
+
+				<input id="user" name="user" type="text" class="form-control" placeholder="Usuario" required autofocus>
 			
-			<input id="user" name="user" type="text" class="form-control" placeholder="Usuario" required autofocus>
+				<br>
+
+				<input id="pass" name="pass" type="password" class="form-control" placeholder="Contraseña" required>
+
+				<br>
+
+				<button class="btn btn-lg btn-outline-primary btn-block" type="submit" class="botonlg" id="login" >Acceder</button>
+
+			</div>
 			
-			<br>
-
-			<input id="pass" name="pass" type="password" class="form-control" placeholder="Contraseña" required>
-
-			<br>
-
-			<button class="btn btn-lg btn-outline-primary btn-block" type="submit" class="botonlg" id="login" >Acceder</button>
+			
 
 		</form>
 		

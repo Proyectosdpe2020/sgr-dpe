@@ -8,9 +8,19 @@ $options = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
 
 sqlsrv_configure('WarningsReturnAsErrors',0);
 
-$myparams['month'] = $_POST['month'];;
-$myparams['year'] = $_POST['year'];;
-$myparams['option'] = $_POST['procedure_op'];;
+/*$myparams['mes'] = $_POST['month'];
+$myparams['anio'] = $_POST['year'];
+$myparams['opcion'] = $_POST['procedure_op'];*/
+
+$myparams['month'] = $_POST['month'];
+$myparams['year'] = $_POST['year'];
+$myparams['option'] = $_POST['procedure_op'];
+
+/*$procedure_params = array(
+    array(&$myparams['mes'], SQLSRV_PARAM_IN),
+    array(&$myparams['anio'], SQLSRV_PARAM_IN),
+    array(&$myparams['opcion'], SQLSRV_PARAM_IN)
+);*/
 
 $procedure_params = array(
     array(&$myparams['month'], SQLSRV_PARAM_IN),
@@ -18,7 +28,8 @@ $procedure_params = array(
     array(&$myparams['option'], SQLSRV_PARAM_IN)
 );
 
-$sql = "EXEC dbo.SENAPTEST2 @month = ?, @year = ?, @option = ?";
+//$sql = "EXEC dbo.SENAPRETROACTIVO @mes = ?, @anio = ?, @opcion = ?";
+$sql = "EXEC dbo.SENAPPROCINTERMEDIO @month = ?, @year = ?, @option = ?";
 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params, $options);
 
 if( sqlsrv_execute( $stmt ) === false ) {

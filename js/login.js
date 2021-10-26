@@ -26,7 +26,7 @@ function login(){
 
                 switch(response.data.user.type){
                     case 1:
-                        redirectTo('src/admin/admin.php');
+                        redirectTo('src/admin/admin.html');
                         break;
                     case 2:
                         redirectTo('src/main/main.php');

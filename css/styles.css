@@ -1,20 +1,33 @@
 body{
+    /*background-color: #DCE3DF !important;
+    zoom: 80%;*/
     background-color: #DCE3DF !important;
-    zoom: 80%;
 }
 
 .login-form {
     width: 100%;
-    max-width: 330px;
-    padding: 15px;
+    max-width: 380px;
+    /*padding: 15px;*/
     margin: auto;
     background: rgba(255,255,255,0.9);
-    border-radius: 5px;
+    /*border-radius: 5px;*/
     -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.50);
     -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.50);
     box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.50);
     margin-top: 200px;
     background-color: white;
+    /*background-image: url('../assets/img/fge.png');*/
+    /*background-color: #152F4A;*/
+}
+
+.login-form button{
+    background-color: white;
+    border-radius: 100px;
+}
+
+.login-form input{
+    background-color: white;
+    border-radius: 100px;
 }
 
 .login-form .form-control {
@@ -31,19 +44,21 @@ body{
 
 .login-form input[type="text"] {
     margin-bottom: -1px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    /*border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;*/
 }
 
 .login-form input[type="password"] {
     margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    /*border-top-left-radius: 0;
+    border-top-right-radius: 0;*/
 }
 
 .login-form h1{
     font-family: LabradorA;
     font-size: 30pt;
+    color: white;
+    margin-top: 10px;
 }
 
 .notifyjs-corner{
@@ -61,13 +76,13 @@ tr{
 @font-face {
     font-family: LabradorA;
     font-weight: bold;
-    src: url("../fonts/LabradorA-ExtraBold.otf") format("opentype");
+    src: url("../assets/fonts/LabradorA-ExtraBold.otf") format("opentype");
 }
 
 @font-face {
     font-family: Galano;
     font-weight: bold;
-    src: url("../fonts/Galano_Grotesque_Medium.otf") format("opentype");
+    src: url("../assets/fonts/Galano_Grotesque_Medium.otf") format("opentype");
 }
 
 .title{
@@ -79,8 +94,10 @@ tr{
     text-align: center;
 }
 
-#user-logo{
-    opacity: 0.5;
+.user-logo{
+    padding: 10px;
+    border-radius: 50%;
+    background-color: white;
 }
 
 #frame{
@@ -188,9 +205,33 @@ tr{
 }
 
 .search-form{
-    background-color: white;
+    /*background-color: white;
     padding: 50px;
     width: 40%;
     float: left;
-    margin-left: 30%;
+    margin-left: 30%;*/
+}
+
+.separator{
+    background-color: #152F4A;
+    width: 100%;
+    height: 3px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.login-form-body{
+    padding: 15px;
+    background-color: white;
+}
+
+.login-form-header{
+    padding: 15px;
+    /*background-color: #152F4A;*/
+    background-color: #22313f;
+}
+
+.login-form-text{
+    margin-top: 10px;
+    color: white;
 }

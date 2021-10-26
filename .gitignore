@@ -6,3 +6,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/src/admin/assets/sass
+/src/admin/assets/webfonts
+/src/admin/images

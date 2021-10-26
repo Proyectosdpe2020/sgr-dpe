@@ -1,0 +1,11 @@
+#header h1{
+    background-color: #152F4A;
+    padding: 10px;
+    color: white;
+}
+
+#main .inner section{
+    background-color: white;
+    padding: 10px;
+    margin-top: 10px;
+}

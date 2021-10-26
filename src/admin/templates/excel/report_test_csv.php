@@ -50,21 +50,49 @@ header('Cache-Control: max-age=0');*/
 
 //header('content-type:application/csv;charset=UTF-8');
 
-header('Content-Encoding: UTF-8');
-header('Content-type: text/csv; charset=UTF-8');
-header('Content-Disposition: attachment; filename=Customers_Export.csv');
+//$writer->save('php://output');
+
+
 
 //$writer = new Xlsx($spreadsheet);
 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
 ob_start();
+
+
+
+$writer->setUseBOM(true);
+$writer->setDelimiter(',');
+$writer->setEnclosure('');
+$writer->setLineEnding("\r\n");
+$writer->setSheetIndex(0);
+
 $writer->save('php://output');
+
+header('Content-Encoding: UTF-8');
+
+header('Content-type: application/x-www-form-urlencoded');
+
+header('Content-Transfer-Encoding: Binary');
+
+//header('Content-Disposition: attachment; filename=Customers_Export.csv');
+
+header("Content-Disposition: attachment; filename=\Customers_Export.csv");
+
 $xlsData = ob_get_contents();
 ob_end_clean();
+
+/* $response =  array(
+    'op' => 'ok',
+    'file' => "data:application/vnd.ms-excel;base64,".base64_encode($xlsData)
+);*/
+
 
 $response =  array(
     'op' => 'ok',
     'file' => "data:application/vnd.ms-excel;base64,".base64_encode($xlsData)
 );
+
+
 
 die(json_encode($response));
 
