@@ -14,7 +14,9 @@ $myparams['opcion'] = $_POST['procedure_op'];*/
 
 $myparams['month'] = $_POST['month'];
 $myparams['year'] = $_POST['year'];
-$myparams['option'] = $_POST['procedure_op'];
+$myparams['integer_option'] = $_POST['procedure_op'];
+$myparams['string_option'] = '';
+$myparams['procedure_option'] = $_POST['procedure'];
 
 /*$procedure_params = array(
     array(&$myparams['mes'], SQLSRV_PARAM_IN),
@@ -25,11 +27,13 @@ $myparams['option'] = $_POST['procedure_op'];
 $procedure_params = array(
     array(&$myparams['month'], SQLSRV_PARAM_IN),
     array(&$myparams['year'], SQLSRV_PARAM_IN),
-    array(&$myparams['option'], SQLSRV_PARAM_IN)
+    array(&$myparams['integer_option'], SQLSRV_PARAM_IN),
+    array(&$myparams['string_option'], SQLSRV_PARAM_IN),
+    array(&$myparams['procedure_option'], SQLSRV_PARAM_IN)
 );
 
 //$sql = "EXEC dbo.SENAPRETROACTIVO @mes = ?, @anio = ?, @opcion = ?";
-$sql = "EXEC dbo.SENAPPROCINTERMEDIO @month = ?, @year = ?, @option = ?";
+$sql = "EXEC dbo.SENAPPROCINTERMEDIO @month = ?, @year = ?, @integer_option = ?, @string_option = ?, @procedure_option = ?";
 $stmt = sqlsrv_prepare($conn, $sql, $procedure_params, $options);
 
 if( sqlsrv_execute( $stmt ) === false ) {

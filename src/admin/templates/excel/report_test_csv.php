@@ -89,7 +89,7 @@ ob_end_clean();
 
 $response =  array(
     'op' => 'ok',
-    'file' => "data:application/vnd.ms-excel;base64,".base64_encode($xlsData)
+    'file' => "data:text/csv;base64,".base64_encode($xlsData)
 );
 
 

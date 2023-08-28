@@ -21,12 +21,12 @@ function login(){
         if(response.state != "fail"){
 
             if(response.data != null){
-                //setSessionVariables('user', response.data.user);
+                setSessionVariables('user', response.data.user);
                 //showLoading(true);
 
                 switch(response.data.user.type){
                     case 1:
-                        redirectTo('src/admin/admin.html');
+                        redirectTo('src/admin/admin.php');
                         break;
                     case 2:
                         redirectTo('src/main/main.php');

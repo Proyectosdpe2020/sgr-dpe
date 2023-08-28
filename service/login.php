@@ -1,8 +1,8 @@
 <?php
-/*session_start();
+session_start();
 include('connection.php');
-$conn = $connections['sgr_dpe']['conn'];
-$db = $connections['sgr_dpe']['db'];
+$conn = $connections['incidencia_sicap']['conn'];
+$db = $connections['incidencia_sicap']['db'];
 
 $data = json_decode($_POST['auth'], true );
 
@@ -11,17 +11,17 @@ $pass = $data['password'];
 
 
 if($conn){
-    $sql = "SELECT TOP (1)
-            u.[UsuarioID]
-            ,[Usuario]
-            ,[Nombre]
-            ,[ApellidoPaterno]
-            ,[ApellidoMaterno]
-            ,[Tipo]
-            ,[SENAP]
-        FROM [sgr_dpe].[dbo].[Usuario] u INNER JOIN sgr_dpe.dbo.Permisos p ON u.UsuarioID = p.UsuarioID 
-        WHERE [Usuario] = '$user'
-        AND [Contrasena] = '$pass'";
+    $sql = "SELECT TOP (1) [UsuarioBasesNacionalesID]
+                ,[Nombre]
+                ,[Paterno]
+                ,[Materno]
+                ,[Usuario]
+                ,[Contrasena]
+                ,[Estatus]
+            FROM [EJERCICIOS2].[dbo].[UsuariosBasesNacionales]
+            WHERE [Usuario] = '$user'
+            AND [Contrasena] = '$pass'
+            AND Estatus = 1";
 
     $params = array();
     $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
@@ -43,14 +43,14 @@ if($conn){
             'state' => 'success',
             'data' => array(
                 'user' => array(
-                    'id' => $json['UsuarioID'],
+                    'id' => $json['UsuarioBasesNacionalesID'],
                     'username' => $json['Usuario'],
                     'name' => $json['Nombre'],
-                    'paternal_surname' => $json['ApellidoPaterno'],
-                    'maternal_surname' => $json['ApellidoMaterno'],
-                    'type' => $json['Tipo'],
+                    'paternal_surname' => $json['Paterno'],
+                    'maternal_surname' => $json['Materno'],
+                    'type' => 1,
                     'permissions' => array(
-                        'senap' => $json['SENAP']
+                        'senap' => 1
                     )
                 )
             )
@@ -75,25 +75,7 @@ else{
     );
 
     echo json_encode($return, JSON_FORCE_OBJECT);
-}*/
 
-$return = array(
-    'state' => 'success',
-    'data' => array(
-        'user' => array(
-            'id' => 1,
-            'username' =>   'dan',
-            'name' => 'Daniel',
-            'paternal_surname' => 'Gar',
-            'maternal_surname' => 'Sa',
-            'type' => 1,
-            'permissions' => array(
-                'senap' => 1
-            )
-        )
-    )
-);
-
-echo json_encode($return, JSON_FORCE_OBJECT);
-
+    sqlsrv_close($conn);
+}
 ?>
