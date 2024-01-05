@@ -1,0 +1,34 @@
+#header h1{
+    background-color: #152F4A;
+    padding: 10px;
+    color: white;
+}
+
+#main .inner section{
+    background-color: white;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.sp-frame-record{
+    background-color: white;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.sp-frame-record h1{
+    width: 100%;
+    display: inline-block;
+    font-family: LabradorA;
+    font-size: 25pt;
+    /* color: #152F4A; */
+    color: white;
+    background-color: #2F2F2F;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+
+.sp-frame-record .dataTables_wrapper{
+    width: 100%; 
+    /*overflow-x: auto;*/
+}
