@@ -3,7 +3,7 @@ session_start();
 include("../../../../service/connection.php");
 include("../common.php");
 
-$conn = $connections['sicapepe']['conn'];
+$conn = $connections['sicap']['conn'];
 
 $month = $_POST['month'];
 $year = $_POST['year'];

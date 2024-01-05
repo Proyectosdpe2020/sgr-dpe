@@ -2,7 +2,7 @@
 session_start();
 include("../../../service/connection.php");
 
-$conn = $connections['sicapepe']['conn'];
+$conn = $connections['sicap']['conn'];
 
 $options = array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
 
