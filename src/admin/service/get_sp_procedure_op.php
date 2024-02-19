@@ -30,6 +30,7 @@ $procedure_op = array(
 			4 => array(
 				'3-11-VictimasPorTipo',
 				'3-12-VictimasPorSexoYEdad',
+				'3-12a-VictimasPorEscolaridad',
 				'3-13-VictimasPorNacionadidadYSexo',
 				'3-14-VictimasPorProfesionYSexo',
 				'3-15-VictimasPorFamiliaLinguisticaYSexo',
@@ -146,6 +147,7 @@ $procedure_op = array(
 			4 => array(
 				'2-11-VictimasPorTipo',
 				'2-12-VictimasPorSexoYEdad',
+				'3-12a-VictimasPorEscolaridad',
 				'2-13-VictimasPorNacionadidadYSexo',
 				'2-14-VictimasPorProfesionYSexo',
 				'2-15-VictimasPorFamiliaLinguisticaYSexo',
