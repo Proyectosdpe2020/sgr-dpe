@@ -135,8 +135,9 @@
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="admin.php">SENAP</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">MICRODATO</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="avp.php">Exportar Base de datos histórica</a></li>
-										<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="norma_tecnica.php">Norma Técnica</a></li>
+										<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Norma Técnica</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="censo_procu.php">Censo procuración de justicia</a></li>
+										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="incidencia_sesesp.php">Incidencia delictiva SESESP</a></li>
 									</ul>
 								</nav>
 

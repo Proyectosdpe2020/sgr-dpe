@@ -33,7 +33,7 @@
 		<script src="../../js/script.js"></script>
 
 		<script src="js/script.js"></script>
-		<script src="js/microdata.js"></script>
+		<script src="js/sesesp.js"></script>
 	</head>
 	<body class="is-preload">
 
@@ -74,7 +74,7 @@
 
 						<div class="background-header">
 
-							<h1>MICRODATO</h1>
+							<h1>INCIDENCIA SESESP</h1>
 
 						</div>
 
@@ -108,18 +108,6 @@
 							
 											<div class="col-md-6 form-group">
 							
-												<label style="font-weight:bold">Opcion: *</label>
-							
-												<select id="main-search-option" class="form-control" required="true">									
-													<option value ="Homicidio" selected>Homicidio</option>
-													<option value ="Feminicidio">Feminicidio</option>
-													<option value ="Secuestro">Secuestro</option>
-												</select>	
-							
-											</div>
-							
-											<div class="col-md-6 form-group">
-							
 												<label style="font-weight:bold">Mes y año: *</label>
 							
 												<input id="main-search-search-month" type="month" class="form-control" required="true">	
@@ -132,7 +120,7 @@
 							
 										<div class="form-buttons">		
 							
-											<button type="button" class="btn btn-outline-success" style="height:38px; width: 150px;"  onclick="searchMicrodata()">Descargar EXCEL</button>
+											<button type="button" class="btn btn-outline-success" style="height:38px; width: 150px;"  onclick="searchSESESP()">Descargar EXCEL</button>
 							
 											<!--<button type="button" class="btn btn-outline-success" style="height:38px; width: 100px;"  onclick="testm(null)">test</button>-->
 							
@@ -165,11 +153,11 @@
 									</header>
 									<ul>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="admin.php">SENAP</a></li>
-										<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Microdato</a></li>
+										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">Microdato</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="avp.php">Exportar Base de datos histórica</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="norma_tecnica.php">Norma Técnica</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="censo_procu.php">Censo procuración de justicia</a></li>
-										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="incidencia_sesesp.php">Incidencia delictiva SESESP</a></li>
+										<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Incidencia delictiva SESESP</a></li>
 									</ul>
 								</nav>
 
