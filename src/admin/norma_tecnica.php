@@ -100,7 +100,7 @@
 							
 										<div class="form-buttons">		
 							
-											<button type="button" class="btn btn-outline-primary" style="height:38px; width: 150px;"  onclick="executeNT()">Ejecutar</button>
+											<button type="button" class="btn btn-outline-primary" style="height:38px; width: 150px;"  onclick="getNT()">Ejecutar</button>
 							
 											<!--<button type="button" class="btn btn-outline-success" style="height:38px; width: 100px;"  onclick="testm(null)">test</button>-->
 							
