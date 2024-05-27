@@ -14,7 +14,7 @@ function getNT(){
         let search_date = getLocalDateFormat(document.getElementById('main-search-search-month').value);
 
         $.ajax({
-            url: 'service/get_nt_procedure_data.php',
+            url: 'service/nt/get_nt_procedure_data.php',
             type: 'POST',
             dataType: "JSON",
             data: {
@@ -55,7 +55,7 @@ function getNTVictims(attr){
         let search_date = getLocalDateFormat(document.getElementById('main-search-search-month').value);
 
         $.ajax({
-            url: 'service/get_nt_procedure_data.php',
+            url: 'service/nt/get_nt_procedure_data.php',
             type: 'POST',
             dataType: "JSON",
             data: {

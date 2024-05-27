@@ -15,7 +15,6 @@ if($conn){
 
     $row_count = sqlsrv_num_rows( $stmt );
 
-    $json = '';
     $return = array();
 
     if($row_count != 0){
@@ -31,7 +30,7 @@ if($conn){
             }
         }
 
-        while( $row = sqlsrv_fetch_array($stmt) ) {
+        while($row = sqlsrv_fetch_array($stmt)) {
 
             $current_row = array();
 
@@ -41,18 +40,13 @@ if($conn){
 
             }
 
-            //array_push($data, array( $current_row['Inciso'] => $current_row));
-            //$data += array($current_row['Inciso'] => $current_row);
-
             $data += array($current_row['ClasificacionVictimaID'] => $current_row);
-            
         }
             
         $return = array(
             'state' => 'success',
             'data' => $data
         );
-        
     }
     else{
         $return = array(

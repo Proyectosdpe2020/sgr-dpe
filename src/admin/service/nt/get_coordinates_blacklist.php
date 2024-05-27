@@ -15,7 +15,6 @@ if($conn){
 
     $row_count = sqlsrv_num_rows( $stmt );
 
-    $json = '';
     $return = array();
 
     if($row_count != 0){
@@ -31,61 +30,29 @@ if($conn){
             }
         }
 
-        while( $row = sqlsrv_fetch_array($stmt) ) {
-
-            /*$current_row = array();
-
-            for($i=0; $i<count($fields); $i++){
-
-                $current_row += [$fields[$i] => $row[$fields[$i]]];
-
-            }*/
-
-            //array_push($data, array( $current_row['Inciso'] => $current_row));
-            //$data += array($current_row['Inciso'] => $current_row);
-
-            //$data += array($current_row['Hoja'] => $current_row);
-
-            $coord = $row['Letra'].''.$row['Posicion'];
-
-            $c_array = array();
+        while($row = sqlsrv_fetch_array($stmt)){
 
             if(isset($data[$row['Hoja']])){
-
-                //array_push($data[$row['Hoja']], $coord);
-
+                
                 if(!isset($data[$row['Hoja']][$row['Letra']])){
 
                     $data[$row['Hoja']] += array($row['Letra'] => array());
-
                 }
-                    
-
-                //$data[$row['Hoja']] += array($row['Letra'] => $row['Posicion']);
                 
                 array_push($data[$row['Hoja']][$row['Letra']], $row['Posicion']);
             }
             else{
 
-                //array_push($data[$row['Hoja']], $coord);
-
                 $data += array($row['Hoja'] => array());
-
                 $data[$row['Hoja']] += array($row['Letra'] => array());
-
                 array_push($data[$row['Hoja']][$row['Letra']], $row['Posicion']);
-            }
-
-
-            
-            
+            }  
         }
             
         $return = array(
             'state' => 'success',
             'data' => $data
         );
-        
     }
     else{
         $return = array(
