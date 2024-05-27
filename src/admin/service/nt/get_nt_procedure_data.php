@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../../../service/connection.php");
+include("../../../../service/connection.php");
 
 $conn = $connections['incidencia_sicap']['conn'];
 
