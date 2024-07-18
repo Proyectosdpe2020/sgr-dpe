@@ -28,6 +28,12 @@ function cleanTextInjec($str){
 	$str=str_ireplace(";", "", $str);
 	$str=str_ireplace("::", "", $str);
 	$str=str_ireplace("'", "", $str);
+	$str=str_ireplace("select", "", $str);
+	$str=str_ireplace("insert", "", $str);
+	$str=str_ireplace("update", "", $str);
+	$str=str_ireplace("delete", "", $str);
+	$str=str_ireplace("drop", "", $str);
+	$str=str_ireplace("truncate", "", $str);
 	$str=trim($str);
 	$str=stripslashes($str);
 

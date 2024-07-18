@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Proyectosdpe2020/sgr-dpe#readme",
   "dependencies": {
     "bootstrap": "^4.6.0",
+    "datatables": "^1.10.18",
     "jquery": "^3.6.0",
     "sweetalert2": "^10.16.5"
   }
