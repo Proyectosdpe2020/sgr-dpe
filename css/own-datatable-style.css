@@ -9,27 +9,12 @@
     font-weight: bold !important;
 }
 
-
 .dataTables_paginate span .current{
     border: 0 !important;
-
-   /* align-items: center !important;
-    background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB) !important;
-    
-    box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px !important;
-    box-sizing: border-box !important;
-    color: #FFFFFF !important;*/
 }
 
 .dataTables_paginate span .current:hover{
     border: 0 !important;
-
-   /* align-items: center !important;
-    background-image: linear-gradient(144deg,#AF40FF, #5B42F3 50%,#00DDEB) !important;
-    
-    box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px !important;
-    box-sizing: border-box !important;
-    color: #FFFFFF !important;*/
 }
 
 table.data-table{
@@ -49,7 +34,6 @@ table.data-table{
     border-radius: 0.25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-
 
 table tr th{
     cursor: pointer;
@@ -76,7 +60,6 @@ table tr td{
 }
 
 .data-table tr td{
-    text-align: center;
     border: solid 1px #ccc;
 }
 
@@ -142,4 +125,12 @@ table tr td{
 .warning-status{
     background-color: #ffc107; 
     color: white;
+}
+
+.update-row{
+    background-color: #fff3cd !important;
+}
+
+.error-row{
+    background-color: #f8d7da !important;
 }

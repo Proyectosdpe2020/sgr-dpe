@@ -1,3 +1,17 @@
+$(document).ready(function(){
+
+    checkSession({
+        success: {
+            function: null
+        },
+        failed: {
+            function: redirectTo,
+            attr: '../../index.html'
+        },
+        location: '../../service/check_session.php'
+    });
+});
+
 function validateNumber(evt) {
     
 	var theEvent = evt || window.event;
@@ -17,59 +31,6 @@ function validateNumber(evt) {
     if(theEvent.preventDefault) 
         theEvent.preventDefault();
 	}
-}
-
-function validateForm(section){
-
-    let attr = {};
-    let validated = false;
-
-    checkCompletedFields({
-        fields: [
-            {
-                id: 'search-month'
-            }
-        ]
-    });
-
-    if(document.getElementById('search-month')){
-        if(document.getElementById('search-month').value == ''){
-            Swal.fire('Campos faltantes', 'Tiene que completar alguno de los campos para completar la busqueda', 'warning');
-        }
-        else{
-            
-            date = document.getElementById('search-month').value;
-            d = new Date(date+'-01');
-            d.setHours(d.getHours()+6); 
-            attr = {
-                month: (d.getMonth()+1),
-                year: d.getFullYear()
-            }
-            validated = true;
-        }
-    }
-
-    if(validated){
-        console.log(sections[section].search_file, attr);
-        $.ajax({
-            url:'service/'+sections[section].search_file,
-            type:'POST',
-            dataType: "json",
-            data: attr,
-            cache:false
-        }).done(function(response){
-            console.log(response);
-            test = response;
-            drawRecordsTable({
-                data: response,
-                file: 'templates/tables/'+section+'_table.php',
-                element_id: 'records-section'
-            });
-        });
-    }
-    else{
-        //Swal.fire('Error', 'Ha ocurrido un error, vuelva a intentarlo', 'error');
-    }
 }
 
 function checkCompletedFields(attr){

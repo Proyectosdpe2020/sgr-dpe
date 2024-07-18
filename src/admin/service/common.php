@@ -166,4 +166,75 @@ function executeDumpQuery2($attr){
 	}
 }
 
+function getGenericData($attr){
+
+	if($attr->conn){
+		
+		$stmt = sqlsrv_query($attr->conn, $attr->sql, $attr->params, $attr->options);
+		$row_count = sqlsrv_num_rows($stmt);
+		$return = array();
+
+		if($row_count != 0){
+			
+			$fields = array();
+			$data = array();
+
+			foreach(sqlsrv_field_metadata($stmt) as $fieldMetadata){
+				foreach( $fieldMetadata as $name => $value){
+					if($name == 'Name'){
+						array_push($fields, $value);
+					}
+				}
+			}
+			
+			while($row = sqlsrv_fetch_array($stmt)){
+				$current_row = array();
+				for($i=0; $i<count($fields); $i++){
+					$current_row += [$fields[$i] => $row[$fields[$i]]];
+				}
+				array_push($data, $current_row);
+			}
+				
+			return array(
+				'state' => 'success',
+				'data' => $data
+			);
+		}
+		else{
+			return array(
+				'state' => 'not_found',
+				'data' => null
+			);
+		}
+	}
+	else{
+		return array(
+            'state' => 'fail',
+            'data' => null
+        );
+	}
+}
+
+function updateGenericData($attr){
+
+	if($attr->conn){
+		
+		$stmt = sqlsrv_query($attr->conn, $attr->sql);
+		$return = array();
+
+		sqlsrv_next_result($stmt); 
+		sqlsrv_fetch($stmt); 
+
+		return array(
+			'state' => 'success',
+			'data' => null
+		);
+	}
+	else{
+		return array(
+            'state' => 'fail',
+            'data' => null
+        );
+	}
+}
 ?>

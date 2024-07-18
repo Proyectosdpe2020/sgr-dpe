@@ -2289,3 +2289,15 @@ button,
 #sidebar .toggle{
   color: #152F4A !important;
 }
+
+table tbody tr td div{
+  display: none;
+}
+
+table tbody tr td input{
+  border: 0 !important;
+  background: unset !important;
+  outline: none !important;
+  line-height: 2em !important;
+  width: 100% !important;
+}

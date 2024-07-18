@@ -1,7 +1,5 @@
-$(document).ready(function(){ 
-
+$(document).ready(function(){
     jQuery('#login-form').submit(login);
-	
 });
 
 function login(){
@@ -22,22 +20,7 @@ function login(){
 
             if(response.data != null){
                 setSessionVariables('user', response.data.user);
-                //showLoading(true);
-
-                switch(response.data.user.type){
-                    case 1:
-                        redirectTo('src/admin/admin.php');
-                        break;
-                    case 2:
-                        redirectTo('src/main/main.php');
-                        break;
-                    case 4:
-                        redirectTo('src/admin/admin.php');
-                        break;
-                    default:
-                        redirectTo('src/main/main.php');
-                        break;
-                }
+                redirectTo('src/admin/senap.php');
             }
             else{
                 Swal.fire('Usuario incorrecto', 'Intentelo de nuevo!', 'warning');
@@ -46,8 +29,6 @@ function login(){
         else{
             Swal.fire('Oops...', 'Ha fallado la conexión!', 'error');
         }
-        
-    });  
-    
+    });
     return false;
 }

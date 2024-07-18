@@ -12,7 +12,6 @@
 		<link rel="stylesheet" href="assets/css/main.css"/>
 		<link rel="stylesheet" href="assets/css/styles.css"/>
 
-		<!--<link rel="stylesheet" href="../../css/styles.css">-->
 		<link rel="stylesheet" href="../../css/styles.css">
 		<link rel="stylesheet" href="../../css/dropdown-style.css">
 		<link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
@@ -23,20 +22,17 @@
 
 		<script src="../../js/script.js"></script>
 		<script src="js/script.js"></script>
-		<script src="js/sesesp.js"></script>
 	</head>
 	<body class="is-preload">
 
 		<div class="loader-div"></div>
-
+		
 		<div id="wrapper">
-
 			<div id="main">
 				<header id="navbar">
 					<div class="dropdown username-section">
 						<div class="dropbtn">
 							<img onclick="myFunction()" src="../../assets/img/user.png" alt="">
-
 							<div onclick="myFunction()">
 								<div id="username"><?php echo $_SESSION['user_data']['name'].' '.$_SESSION['user_data']['paternal_surname'].' '.$_SESSION['user_data']['maternal_surname']; ?></div>
 								<div id="role">Administrador</div>
@@ -50,23 +46,60 @@
 				</header>
 
 				<div class="background-header">
-					<h1>INCIDENCIA SESESP</h1>
+					<h1>SENAP</h1>
 				</div>
 
 				<div class="inner">
 					<section>
-						<form class="search-form" action="#">
-							<div class="form-row">
-								<div class="col-md-6 form-group">
-									<label style="font-weight:bold">Mes y año: *</label>
-									<input id="main-search-search-month" type="month" class="form-control" required="true">	
+						<div class="form-top-Buttons" id="senap-menu">
+							<button type="button" class="btn btn-outline-primary senap-menu-button left-button" id="reports" style="height:38px; width: 150px;" onclick="changeSenapForm('reports')" disabled> Reportes </button>
+							<button type="button" class="btn btn-outline-primary senap-menu-button right-button" id="dump" style="height:38px; width: 150px;" onclick="changeSenapForm('dump')"> Volcado </button>
+						</div>
+
+						<br>
+
+						<div id="senap-form-section">
+							<form class="search-form" action="#">
+								<div class="form-row">
+									<div class="col-md-6 form-group">
+
+										<label style="font-weight:bold">Opción: *</label>
+					
+										<select id="main-search-option" class="form-control" required="true">									
+											<option value ="1" selected>Noticia criminal</option>
+											<option value ="2">Carpeta de investigación</option>
+											<option value ="3">Etapa de investigación</option>
+											<option value ="4">Actos de investigación</option>
+											<option value ="5">Delitos</option>
+											<option value ="6">Bienes asegurados</option>
+											<option value ="7">Victimas-Delitos</option>
+											<option value ="8">Imputados-Delitos</option>
+											<option value ="9">Victima-Imputado</option>
+											<option value ="10">Determinación</option>
+											<option value ="11">Proceso</option>
+											<option value ="12">Mandamientos Judiciales</option>
+											<option value ="13">Investigación Complementaria</option>
+											<option value ="14">Medidas Cautelares</option>
+											<option value ="15">Etapa Intermedia</option>
+											<option value ="16">MASC</option>
+											<option value ="17">Sobreseimientos</option>
+											<option value ="18">Suspensión Condicional</option>
+											<option value ="19">Sentencias</option>
+										</select>
+									</div>
+					
+									<div class="col-md-6 form-group">
+										<label style="font-weight:bold">Mes y año: *</label>
+										<input id="main-search-search-month" type="month" class="form-control" required="true">
+									</div>
 								</div>
-							</div>
-							
-							<div class="form-buttons">
-								<button type="button" class="btn btn-outline-success rounded-button" onclick="searchSESESP()">Descargar EXCEL</button>
-							</div>
-						</form>
+					
+								<div class="form-buttons">
+									<button type="button" class="btn btn-outline-success rounded-button" onclick="searchSenap('xlsx')">Descargar EXCEL</button>
+									<button type="button" class="btn btn-outline-primary rounded-button" onclick="searchSenap('csv')">Descargar CSV</button>
+								</div>
+							</form>
+						</div>
 					</section>
 				</div>
 			</div>
@@ -75,16 +108,16 @@
 				<div class="inner">
 					<nav id="menu">
 						<header class="major">
-							<!--<h2><img src="../../assets/img/fge.png" alt="" width="40" height="40">&nbsp;BASES NACIONALES</h2>-->
 							<h2><a id="text-logo">FGE</a>&nbsp;&nbsp;&nbsp;BASES NACIONALES</h2>
 						</header>
+
 						<ul>
-							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="senap.php">SENAP</a></li>
-							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">Microdato</a></li>
+							<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">SENAP</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">MICRODATO</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="avp.php">Exportar Base de datos histórica</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="norma_tecnica.php">Norma Técnica</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="censo_procu.php">Censo procuración de justicia</a></li>
-							<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Incidencia delictiva SESESP</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="incidencia_sesesp.php">Incidencia delictiva SESESP</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación víctimas</a></li>
 						</ul>
 					</nav>
@@ -94,10 +127,8 @@
 					</footer>
 				</div>
 			</div>
-
-
 		</div>
-		
+
 		<script src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/browser.min.js"></script>
 		<script src="assets/js/breakpoints.min.js"></script>
