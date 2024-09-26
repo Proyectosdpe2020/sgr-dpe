@@ -11,7 +11,7 @@ $year = $_POST['year'];
 $db_search_conditions = "YEAR(c.FechaInicio) IN ($year) AND MONTH(c.FechaInicio) IN ($month)";
 
 $db_query = "SELECT DISTINCT MONTH(c.FechaInicio) AS 'month', YEAR(c.FechaInicio) AS 'year'
-FROM [PRUEBA].[dbo].[BienesAsegurados] ba inner join Carpeta c on ba.CarpetaID = c.CarpetaID";
+FROM [PRUEBA].[dbo].[BienesAsegurados] ba inner join [EJERCICIOS2].[dbo].[Carpetas] c on ba.ejercicios_id = c.id";
 
 if($conn){
     $sql = "$db_query WHERE $db_search_conditions";

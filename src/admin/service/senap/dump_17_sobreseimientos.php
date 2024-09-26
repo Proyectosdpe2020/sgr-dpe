@@ -40,14 +40,15 @@ ELSE s.[idTipoSobreseimiento]
 END AS 'TipoSobreseimiento'
 ,c.CarpetaID
 ,c.FechaInicio
-FROM [PRUEBA].[dbo].[Carpeta] c 
+,c.id as 'ejercicios_id'
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
 LEFT JOIN [ESTADISTICAV2].[senap].[sobreseimientos] s
 ON s.idEstatusNucs = en.idEstatusNucs
 WHERE en.idEstatus IN(89, 90, 91, 93, 99)) sobres
 
-LEFT JOIN dbo.Procesos proces ON proces.CarpetaID = sobres.CarpetaID";
+LEFT JOIN dbo.Procesos proces ON proces.ejercicios_id = sobres.ejercicios_id";
 
 
 

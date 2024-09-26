@@ -18,11 +18,11 @@ $db_insert_table = "[dbo].[MandamientosJudiciales]
 ,[FechaLibramientoMJ]
 ,[CatEstatusMJID]
 ,[FechaCumplimientoMJ]
-,[CarpetaID],[ProcesoID])";
+,[CarpetaID],[ProcesoID],[ejercicios_id])";
 
 $db_insert_conditions = "YEAR(manju.FechaInicio) IN ($year) AND MONTH(manju.FechaInicio) IN ($month)";
 
-$db_query = "SELECT manju.FechaSolicitudMJ, manju.CatTipoMandamientoID, manju.FechaLibramientoMJ, manju.CatEstatusMJID, manju.FechaCumplimientoMJ, manju.CarpetaID, proces.ProcesoID FROM
+$db_query = "SELECT manju.FechaSolicitudMJ, ctm.senap_id as 'CatTipoMandamientoID', manju.FechaLibramientoMJ, manju.CatEstatusMJID, manju.FechaCumplimientoMJ, manju.CarpetaID, proces.ProcesoID, proces.ejercicios_id FROM
 (SELECT
 'MJUD'+CONVERT(varchar(10), en.idEstatusNucs) AS 'MandamientoJudicialID',
 CONVERT(date, en.fecha, 5) AS 'FechaSolicitudMJ',
@@ -43,8 +43,9 @@ ELSE 3
 END AS 'CatEstatusMJID',
 oa.fechaCumplimento AS 'FechaCumplimientoMJ',
 c.CarpetaID,
-c.FechaInicio
-FROM [PRUEBA].[dbo].[Carpeta] c 
+c.FechaInicio,
+c.id AS 'ejercicios_id'
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
 INNER JOIN [ESTADISTICAV2].[dbo].[estatus] e
@@ -53,7 +54,9 @@ LEFT JOIN [ESTADISTICAV2].[senap].[ordenesAprehension] oa
 ON en.idEstatusNucs = oa.idEstatusNucs
 WHERE en.idEstatus IN (50, 53, 57, 58) ) manju
 
-LEFT JOIN dbo.Procesos proces ON proces.CarpetaID = manju.CarpetaID";
+--LEFT JOIN dbo.Procesos proces ON proces.CarpetaID = manju.CarpetaID
+LEFT JOIN dbo.Procesos proces ON proces.ejercicios_id = manju.ejercicios_id
+LEFT JOIN CatTipoMandamientos ctm ON ctm.TipoMandamientoID = manju.CatTipoMandamientoID";
 
 
 

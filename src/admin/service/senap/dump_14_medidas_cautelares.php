@@ -37,11 +37,11 @@ WHEN 29 THEN 12
 WHEN 30 THEN 13
 WHEN 31 THEN 14
 WHEN 95 THEN 15
-ELSE 16
+ELSE 17
 END AS 'CatTipoMedidaCautelarID',
 c.CarpetaID,
 c.FechaInicio
-FROM [PRUEBA].[dbo].[Carpeta] c 
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
 WHERE idEstatus IN (17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 95) ) medc

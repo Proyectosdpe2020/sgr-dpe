@@ -19,16 +19,17 @@ $db_insert_table = "[dbo].[Determinaciones]
 ,[AcuerdosReparatorios]
 ,[ReactivacionCarpeta]
 ,[FechaDeterminacion]
-,[TipoCriteriosOportunidad])";
+,[TipoCriteriosOportunidad]
+,[ejercicios_id])";
 
 $db_insert_conditions = "YEAR(deter.FechaInicio) IN ($year) AND MONTH(deter.FechaInicio) IN ($month) AND deter.SentidoDeterminacion NOT IN (0)";
 
-$db_query = "SELECT deter.CarpetaID, deter.EstatusCarpeta, deter.SentidoDeterminacion, deter.AcuerdosReparatorios, deter.ReactivacionCarpeta, deter.FechaDeterminacion, deter.TipoCriteriosOportunidad
+$db_query = "SELECT deter.CarpetaID, deter.EstatusCarpeta, deter.SentidoDeterminacion, deter.AcuerdosReparatorios, deter.ReactivacionCarpeta, deter.FechaDeterminacion, deter.TipoCriteriosOportunidad, deter.id
 
 FROM
 (
 SELECT c.CarpetaID,
-cd.CatEstatusCarpetaID AS 'EstatusCarpeta',
+cd.CatEstatusCarpetaID AS 'EstatusCarpeta', c.id,
 CASE 
 WHEN r.idEstatus IN (22) AND se.idSentencia IS NULL THEN 0
 ELSE cd.CatDeterminacionID
@@ -38,7 +39,7 @@ NULL AS 'ReactivacionCarpeta',
 r.fecha AS 'FechaDeterminacion',
 co.idTipoCriterioOportunidad AS 'TipoCriteriosOportunidad',
 c.FechaInicio
-FROM [PRUEBA].[dbo].[Carpeta] c 
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 LEFT JOIN [ESTADISTICAV2].[dbo].[estatusNucsCarpetas] r
 ON c.CarpetaID = r.idCarpeta
 LEFT JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en

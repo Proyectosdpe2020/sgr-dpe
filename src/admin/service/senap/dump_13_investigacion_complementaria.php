@@ -20,14 +20,14 @@ $db_insert_table = "[dbo].[InvestigacionComplementaria]
 ,[MedidaCautelar]
 ,[FechaCierreInvestigacion]
 ,[FormuloAcusacion]
-,[CarpetaID],[ProcesoID])";
+,[CarpetaID],[ProcesoID],[ejercicios_id])";
 
 $db_insert_conditions = "YEAR(invcomp.FechaInicio) IN ($year) AND MONTH(invcomp.FechaInicio) IN ($month)";
 
-$db_query = "SELECT 
+$db_query = "SELECT DISTINCT
 invcomp.FormulacionImputacion, invcomp.FechaFormulacionImputacion, invcomp.ResolucionAutoVinculacionProceso,
 invcomp.FechaAutoVinculacionProceso, invcomp.MedidaCautelar, invcomp.FechaCierreInvestigacion, invcomp.FormuloAcusacion,
-invcomp.CarpetaID, proces.ProcesoID
+abs(invcomp.CarpetaID), proces.ProcesoID, proces.ejercicios_id
 FROM 
 (SELECT
 'AVP'+CONVERT(varchar(10), en.idEstatusNucs) AS 'InvestigacionComplementariaID',
@@ -53,8 +53,9 @@ WHEN 1 THEN 1
 ELSE 0
 END AS 'FormuloAcusacion',
 c.CarpetaID,
-c.FechaInicio
-FROM [PRUEBA].[dbo].[Carpeta] c 
+c.FechaInicio,
+c.id AS 'ejercicios_id'
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
@@ -70,8 +71,8 @@ avp.fechaAutoVincuProc
 FROM [ESTADISTICAV2].[senap].[autoVincuProc] avp
 INNER JOIN PRUEBA.dbo.Resoluciones res
 ON avp.ResolucionID = res.ResolucionID
-INNER JOIN PRUEBA.dbo.Carpeta c
-ON res.CarpetaID = c.CarpetaID) subavp
+INNER JOIN EJERCICIOS2.dbo.Carpeta c
+ON res.CarpetaID = abs(c.CarpetaID)) subavp
 
 ON c.NUC = subavp.NUC collate Modern_Spanish_CI_AI
 
@@ -83,7 +84,7 @@ avp.fechaAutoVincuProc
 FROM [ESTADISTICAV2].[senap].[autoVincuProc] avp
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON avp.idEstatusNucs = en.idEstatusNucs
-INNER JOIN PRUEBA.dbo.Carpeta c
+INNER JOIN EJERCICIOS2.dbo.Carpeta c
 ON en.nuc = c.NUC collate Modern_Spanish_CI_AI) subavpnuevos
 
 ON c.NUC = subavpnuevos.NUC collate Modern_Spanish_CI_AI
@@ -114,8 +115,9 @@ NULL AS 'FechaAutoVinculacionProceso',
 NULL AS 'FechaCierreInvestigacion',
 0 AS 'FormuloAcusacion',
 c.CarpetaID,
-c.FechaInicio
-FROM [PRUEBA].[dbo].[Carpeta] c 
+c.FechaInicio,
+c.id AS 'ejercicios_id'
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
@@ -125,7 +127,7 @@ ON fi.idEstatusNucs = en.idEstatusNucs
 
 WHERE en.idEstatus = 10) invcomp
 
-LEFT JOIN dbo.Procesos proces ON proces.CarpetaID = invcomp.CarpetaID";
+LEFT JOIN dbo.Procesos proces ON proces.ejercicios_id = invcomp.ejercicios_id";
 
 
 

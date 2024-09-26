@@ -15,12 +15,13 @@ $db_insert_fields = "";
 $db_insert_table = "[dbo].[ActosInvestigacion]
 ([CarpetaID]
 ,[CatTipoActosInvestigacionID]
-,[CatClasificacionActoID])";
+,[CatClasificacionActoID]
+,[ejercicios_id])";
 
 $db_insert_conditions = "YEAR(c.FechaInicio) IN ($year) AND MONTH(c.FechaInicio) IN ($month)";
 
-$db_query = "SELECT c.CarpetaID, act.CatTipoActosInvestigacionID, act.CatClasificacionActosID
-FROM [PRUEBA].[dbo].[Carpeta] c 
+$db_query = "SELECT c.CarpetaID, act.CatTipoActosInvestigacionID, act.CatClasificacionActosID, c.id
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN
 (
 

@@ -49,9 +49,10 @@ END AS 'TipoCumplimiento',
 ac.[Fecha] AS 'FechaCumplimientoMASC',
 ac.[MontoRecuperado] AS 'MontoReparacionDano',
 c.CarpetaID,
-c.FechaInicio
+c.FechaInicio,
+c.id as 'ejercicios_id'
 FROM
-[PRUEBA].[dbo].[Carpeta] c 
+[EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN
 [EJERCICIOS].[dbo].[AcuerdosCelebrados] ac
 ON c.NUC = ac.NUC collate Modern_Spanish_CI_AI
@@ -59,7 +60,7 @@ LEFT JOIN
 [EJERCICIOS].[dbo].[CarpetasRecibidas] cr
 ON cr.NUC = ac.NUC) masc
 
-LEFT JOIN dbo.Procesos proces ON proces.CarpetaID = masc.CarpetaID";
+LEFT JOIN dbo.Procesos proces ON proces.ejercicios_id = masc.ejercicios_id";
 
 
 
