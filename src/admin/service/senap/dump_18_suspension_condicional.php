@@ -56,14 +56,15 @@ WHEN '1900-01-01' THEN NULL
 ELSE sc.[fechaCumplimentoSuspCondPro]
 END AS 'FechaCumplimentoSuspensionCondicionalProceso',
 c.CarpetaID,
-c.FechaInicio
-FROM [PRUEBA].[dbo].[Carpeta] c 
+c.FechaInicio,
+c.id as 'ejercicios_id'
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
 INNER JOIN [ESTADISTICAV2].[senap].[suspCondProc] sc
 ON sc.idEstatusNucs = en.idEstatusNucs) susco
 
-LEFT JOIN dbo.Procesos proces ON proces.CarpetaID = susco.CarpetaID";
+LEFT JOIN dbo.Procesos proces ON proces.ejercicios_id = susco.ejercicios_id";
 
 
 

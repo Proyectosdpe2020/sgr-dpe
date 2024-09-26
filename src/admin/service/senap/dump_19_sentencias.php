@@ -81,11 +81,12 @@ FROM
 ,se.[sentenciaEncuentraFirme] AS 'SentenciaFirme'
 ,c.CarpetaID
 ,c.FechaInicio
+,c.id as 'ejercicios_id'
 
 FROM [ESTADISTICAV2].[senap].[sentencias] se
 INNER JOIN [PRUEBA].[dbo].[Resoluciones] res
 ON se.ResolucionID = res.ResolucionID
-INNER JOIN [PRUEBA].[dbo].[Carpeta] c 
+INNER JOIN [EJERCICIOS2].[dbo].[Carpetas] c 
 ON res.CarpetaID = c.CarpetaID
 
 LEFT JOIN
@@ -109,7 +110,7 @@ ON rd.idEstatusNucs = en.idEstatusNucs) subrda
 
 ON c.NUC = subrda.nuc collate Modern_Spanish_CI_AI) sen
 
-LEFT JOIN dbo.Procesos proces ON proces.CarpetaID = sen.CarpetaID";
+LEFT JOIN dbo.Procesos proces ON proces.ProcesoID = sen.ejercicios_id";
 
 
 

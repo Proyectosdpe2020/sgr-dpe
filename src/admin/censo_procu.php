@@ -1,4 +1,9 @@
-<?php session_start(); ?>
+<?php session_start();
+if($_SESSION['user_data']['id'] == 5){
+	header('Location: validacion_victimas.php');
+    exit();
+}
+?>
 <!DOCTYPE HTML>
 <html>
 	<head>

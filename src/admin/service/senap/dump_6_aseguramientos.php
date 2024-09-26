@@ -16,83 +16,47 @@ $db_insert_table = "[dbo].[BienesAsegurados]
 ([CatBienAseguradoID]
 ,[Cantidad]
 ,[CatUnidadMedidaID]
-,[CarpetaID])";
+,[CarpetaID]
+,[ejercicios_id])";
 
 $db_insert_conditions = "YEAR(c.FechaInicio) IN ($year) AND MONTH(c.FechaInicio) IN ($month)";
 
-$db_query = "SELECT ase.CatBienAseguradoID, ase.CantidadBienAsegurado, ase.CatUnidadMedidaID, c.CarpetaID
-FROM [PRUEBA].[dbo].[Carpeta] c 
+$db_query = "SELECT ase.CatBienAseguradoID, ase.CantidadBienAsegurado, ase.CatUnidadMedidaID, c.CarpetaID, c.id
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN
 (
 (SELECT 
-	'DROG'+CONVERT(varchar(10), id) AS 'SEC',
-	CASE idTipoDroga
-	WHEN 1 THEN 58
-	WHEN 2 THEN 59
-	WHEN 3 THEN 60
-	WHEN 4 THEN 61
-	WHEN 5 THEN 62
-	WHEN 6 THEN 63
-	WHEN 7 THEN 64
-	WHEN 8 THEN 65
-	WHEN 9 THEN 66
-	WHEN 10 THEN 67
-	WHEN 11 THEN 68
-	ELSE 0
-	END AS 'CatBienAseguradoID',
+	'DROG'+CONVERT(varchar(10), d.id) AS 'SEC',
+	cd.senap_id AS 'CatBienAseguradoID',
 	Cantidad AS 'CantidadBienAsegurado',
-	CASE idUnidadMedida
-	WHEN 0 THEN 25
-	ELSE idUnidadMedida
-	END AS 'CatUnidadMedidaID',
+	cm.senap_id AS 'CatUnidadMedidaID',
 	CarpetaID
-	FROM [PRUEBA].[dbo].[carpetaDroga] WHERE idTipoDroga NOT IN (0))
+	FROM [PRUEBA].[dbo].[carpetaDroga] d INNER JOIN [PRUEBA].[dbo].[carpetaTipoDroga] cd
+	ON d.idTipoDroga = cd.id INNER JOIN [PRUEBA].[dbo].[carpetaUnidadMedida] cm ON cm.id = d.idUnidadMedida
+	WHERE idTipoDroga != 0 AND Cantidad != 0 AND idUnidadMedida != 0)
 
 UNION
 
 (SELECT 
-	'FORES'+CONVERT(varchar(10), id) AS 'SEC',
-	CASE idTipoMadera
-	WHEN 1 THEN 69
-	WHEN 2 THEN 70
-	WHEN 3 THEN 71
-	WHEN 4 THEN 72
-	WHEN 5 THEN 73
-	WHEN 6 THEN 74
-	WHEN 7 THEN 75
-	WHEN 8 THEN 76
-	WHEN 9 THEN 77
-	WHEN 10 THEN 78
-	WHEN 11 THEN 79
-	WHEN 12 THEN 80
-	WHEN 13 THEN 81
-	WHEN 14 THEN 82
-	WHEN 15 THEN 83
-	WHEN 16 THEN 84
-	WHEN 17 THEN 85
-	WHEN 18 THEN 86
-	ELSE 0
-	END AS 'CatBienAseguradoID',
-	cantidad AS 'CantidadBienAsegurado',
-	CASE idUnidadMedida
-	WHEN 0 THEN 13
-	ELSE idUnidadMedida
-	END AS 'CatUnidadMedidaID',
+	'FORES'+CONVERT(varchar(10), m.id) AS 'SEC',
+	NULL AS 'CatBienAseguradoID',
+	ABS(cantidad) AS 'CantidadBienAsegurado',
+	cm.senap_id AS 'CatUnidadMedidaID',
 	CarpetaID
-	FROM [PRUEBA].[dbo].[carpetaMadera] WHERE idTipoMadera NOT IN (0))
+	FROM [PRUEBA].[dbo].[carpetaMadera] m INNER JOIN [PRUEBA].[dbo].[carpetaUnidadMedida] cm ON cm.id = m.idUnidadMedida
+	WHERE idTipoMadera NOT IN (0) AND Cantidad != 0 AND idUnidadMedida != 0)
 
 UNION
 
 (SELECT 
-	'ARM'+CONVERT(varchar(10), id) AS 'SEC',
-	CASE idTipo
-	WHEN 0 THEN 0
-	ELSE idTipo
-	END AS 'CatBienAseguradoID',
+	'ARM'+CONVERT(varchar(10), ca.id) AS 'SEC',
+	ta.senap_id AS 'CatBienAseguradoID',
 	1 AS 'CantidadBienAsegurado',
-	22 AS 'CatUnidadMedidaID',
+	7 AS 'CatUnidadMedidaID',
 	CarpetaID
-	FROM [PRUEBA].[dbo].[carpetaArma] WHERE idTipo NOT IN (0) AND idTipo < 58)
+	FROM [PRUEBA].[dbo].[carpetaArma] ca INNER JOIN [PRUEBA].[dbo].[carpetaTipoArma] ta
+	ON ta.id = ca.idTipo
+	WHERE idTipo NOT IN (0))
 
 ) ase
 ON c.CarpetaID = ase.CarpetaID";

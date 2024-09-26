@@ -24,7 +24,7 @@ $db_insert_table = "[dbo].[EtapaIntermedia]
 
 $db_insert_conditions = "YEAR(einter.FechaInicio) IN ($year) AND MONTH(einter.FechaInicio) IN ($month)";
 
-$db_query = "SELECT einter.FechaEscritoAcusacion, einter.CelebracionAudienciaIntermedia, einter.FechaAudienciaIntermedia,
+$db_query = "SELECT DISTINCT einter.FechaEscritoAcusacion, einter.CelebracionAudienciaIntermedia, einter.FechaAudienciaIntermedia,
 einter.PresentacionMediosPrueba, einter.MediosPrueba, einter.AcuerdosProbatorios, einter.DictoAutoAperturaJuicioOral, einter.CarpetaID, proces.ProcesoID
 FROM
 (SELECT 
@@ -52,7 +52,8 @@ WHEN subai.DictoAutoAperturaJuicioOral IS NULL THEN 0
 ELSE subai.DictoAutoAperturaJuicioOral
 END AS 'DictoAutoAperturaJuicioOral',
 submc.CarpetaID,
-submc.FechaInicio
+submc.FechaInicio,
+submc.ejercicios_id
 FROM
 
 (SELECT 
@@ -63,9 +64,9 @@ FROM
 	ELSE mc.[fechaEscritoAcusacion]
 	END AS 'FechaEscritoAcusacion',
 	c.CarpetaID,
-	c.FechaInicio
-
-FROM [PRUEBA].[dbo].[Carpeta] c 
+	c.FechaInicio,
+	c.id as 'ejercicios_id'
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
 INNER JOIN [ESTADISTICAV2].[senap].[medidaCautelar] mc
@@ -105,9 +106,9 @@ LEFT JOIN
 	ELSE 0
 	END AS 'DictoAutoAperturaJuicioOral',
 	c.CarpetaID,
-	c.FechaInicio
-
-FROM [PRUEBA].[dbo].[Carpeta] c 
+	c.FechaInicio,
+	c.id as 'ejercicios_id'
+FROM [EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
 INNER JOIN [ESTADISTICAV2].[senap].[audienciasIntermedias] ai
@@ -115,7 +116,7 @@ ON ai.idEstatusNucs = en.idEstatusNucs
 ) subai
 ON submc.nuc = subai.nuc) einter
 
-LEFT JOIN dbo.Procesos proces ON proces.CarpetaID = einter.CarpetaID";
+LEFT JOIN dbo.Procesos proces ON proces.ejercicios_id = einter.ejercicios_id";
 
 
 
