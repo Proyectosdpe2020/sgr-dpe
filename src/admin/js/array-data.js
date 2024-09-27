@@ -114,6 +114,26 @@ function getTableFormElementsBySearchOP(attr){
                 id: 'age',
                 type: 'text',
                 json_key: 'age'
+            },
+            {
+                id: 'gener',
+                type: 'text',
+                json_key: 'gener'
+            },
+            {
+                id: 'name',
+                type: 'text',
+                json_key: 'name'
+            },
+            {
+                id: 'ap',
+                type: 'text',
+                json_key: 'ap'
+            },
+            {
+                id: 'am',
+                type: 'text',
+                json_key: 'am'
             }
         ],
         unknown_gener: [

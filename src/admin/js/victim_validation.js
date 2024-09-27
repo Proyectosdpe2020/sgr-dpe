@@ -619,3 +619,118 @@ function addRowElement(attr){
         }
     }
 }
+
+function showOtherVictims(attr){
+
+    console.log('show other: ', attr.id);
+
+    if(attr.id != null && attr.id != undefined && attr.id != ''){
+
+        getOtherVictims({
+            file_location: 'service/victim_validation/get_other_victims_by_id.php',
+            post_data: {
+                id: attr.id,
+                cid: attr.cid
+            },
+            success: {
+                function: setModal,
+                attr: {
+                    file_location: 'templates/modals/unknown_age_gener_modal.php',
+                    element_modal_section_id: 'victim-validation-default-modal-section',
+                    post_data: {
+                        id: attr.id,
+                        cid: attr.cid,
+                        nuc: attr.nuc
+                    },
+                    success: {
+                        functions: [
+                            {
+                                function: showModal,
+                                attr: {
+                                    show: true,
+                                    modal_id: 'large-modal'
+                                }
+                            }
+                        ]
+                    },
+                }
+            }
+        });
+    }
+}
+
+function getOtherVictims(attr){
+
+    if(attr.post_data != null){
+        $.ajax({
+            url: attr.file_location,
+            type: 'POST',
+            dataType: "JSON",
+            data: attr.post_data,
+            cache: false
+        }).done(function(response){ 
+
+            console.log('response de rejected: ', response);
+
+            console.log('to modal: ', attr.success.attr);
+
+            if(response.state == 'success'){
+                attr.success.attr.post_data = {
+                    ...attr.success.attr.post_data,
+                    victims: JSON.stringify(response.data)
+                }
+                
+            }
+
+            if(attr.success != undefined && attr.success != null){
+
+                attr.success.function(attr.success.attr);
+            }
+
+        });
+    }
+}
+
+function setModal(attr){
+
+    console.log('set modal: ', attr);
+
+    if(attr.post_data != null){
+        $.ajax({
+            url: attr.file_location,
+            type: 'POST',
+            dataType: "html",
+            data: attr.post_data,
+            cache: false
+        }).done(function(response){
+
+            $('#'+attr.element_modal_section_id).html(response);
+
+            /*if(attr.success != undefined){
+                attr.success.function(attr.success.attr);
+            }*/
+
+            if(attr.success != undefined){
+                for(func in attr.success.functions){
+                    attr.success.functions[func].function(attr.success.functions[func].attr);
+                }
+            }
+
+            
+
+        });
+    }
+}
+
+function showModal(attr){
+
+    if(attr.modal_id != null && attr.show != null){
+
+        if(attr.show){
+            $('#'+attr.modal_id).modal('show');
+        }
+        else{
+            $('#'+attr.modal_id).modal('hide');
+        }
+    }
+}

@@ -339,6 +339,14 @@ tr{
     box-shadow: 2px 2px 3px #999;
 }
 
+.form-buttons .btn-outline-danger{
+    background-color: orangered;
+    color: #FFF;
+    border-color: orangered;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+}
+
 .form-buttons .btn-outline-success:hover{
     background-color: white;
     color: #0C9;
@@ -351,6 +359,14 @@ tr{
     background-color: white;
     color: rgb(0, 139, 204);
     border-color: rgb(0, 139, 204);
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+}
+
+.form-buttons .btn-outline-danger:hover{
+    background-color: white;
+    color: orangered;
+    border-color: orangered;
     text-align: center;
     box-shadow: 2px 2px 3px #999;
 }

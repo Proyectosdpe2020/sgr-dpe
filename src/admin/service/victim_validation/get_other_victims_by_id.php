@@ -4,28 +4,21 @@ include("../../../../service/connection.php");
 include("../common.php");
 
 $conn = $connections['incidencia_sicap']['conn'];
-$year_month = isset($_POST['year_month']) ? $_POST['year_month'] : null;
+$id = isset($_POST['id']) ? $_POST['id'] : null;
+$cid = isset($_POST['cid']) ? $_POST['cid'] : null;
 
-if($conn && $year_month != null){
+if($conn && $id != null && $cid != null){
 
-    $year = date('Y', strtotime($year_month));
-    $month = date('m', strtotime($year_month));
-
-    $sql = "SELECT DISTINCT [VictimaID] AS 'id'
+    $sql = "SELECT [VictimaID] AS 'id'
 	                ,[Nombre]
                     ,[Paterno]
                     ,[Materno]
                     ,[Edad]
                     ,[Sexo]
                     ,[NUC]
-                    ,c.[CarpetaID] AS 'cid'
                 FROM dbo.Victimas v 
                     INNER JOIN dbo.Carpetas c ON c.CarpetaID = v.CarpetaID
-                        WHERE year(FechaInicio) = $year
-                        AND month(FechaInicio) = $month
-                        AND Victima = 1
-                        AND Contar = 1
-                        AND (Edad = 0 OR Sexo = 3)";
+                        WHERE c.CarpetaID = $cid AND VictimaID != $id";
 
     $return = getGenericData(
         (object) array(
