@@ -36,3 +36,12 @@
 .search-form .form-buttons{
     display: ruby-text;
 }
+
+.modal-header{
+    background-color: #152F4A;
+}
+
+.modal-header h5{
+    font-size: 18pt;
+    color: white;
+}
