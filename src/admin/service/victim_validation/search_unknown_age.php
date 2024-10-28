@@ -25,7 +25,7 @@ if($conn && $year_month != null){
                         AND month(FechaInicio) = $month
                         AND Victima = 1
                         AND Contar = 1
-                        AND (Edad = 0 OR Sexo = 3)";
+                        AND (Edad = 0 OR Sexo = 3) AND Sexo != 0";
 
     $return = getGenericData(
         (object) array(

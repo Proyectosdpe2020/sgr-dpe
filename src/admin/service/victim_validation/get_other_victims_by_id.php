@@ -9,7 +9,7 @@ $cid = isset($_POST['cid']) ? $_POST['cid'] : null;
 
 if($conn && $id != null && $cid != null){
 
-    $sql = "SELECT [VictimaID] AS 'id'
+    $sql = "SELECT DISTINCT [VictimaID] AS 'id'
 	                ,[Nombre]
                     ,[Paterno]
                     ,[Materno]
@@ -18,7 +18,7 @@ if($conn && $id != null && $cid != null){
                     ,[NUC]
                 FROM dbo.Victimas v 
                     INNER JOIN dbo.Carpetas c ON c.CarpetaID = v.CarpetaID
-                        WHERE c.CarpetaID = $cid AND VictimaID != $id";
+                        WHERE c.CarpetaID = $cid AND VictimaID != $id AND Victima = 1";
 
     $return = getGenericData(
         (object) array(
