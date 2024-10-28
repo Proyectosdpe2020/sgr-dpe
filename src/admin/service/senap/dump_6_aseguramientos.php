@@ -27,9 +27,9 @@ INNER JOIN
 (
 (SELECT 
 	'DROG'+CONVERT(varchar(10), d.id) AS 'SEC',
-	cd.senap_id AS 'CatBienAseguradoID',
+	cd.CatBienAseguradoID AS 'CatBienAseguradoID',
 	Cantidad AS 'CantidadBienAsegurado',
-	cm.senap_id AS 'CatUnidadMedidaID',
+	cm.id AS 'CatUnidadMedidaID',
 	CarpetaID
 	FROM [PRUEBA].[dbo].[carpetaDroga] d INNER JOIN [PRUEBA].[dbo].[carpetaTipoDroga] cd
 	ON d.idTipoDroga = cd.id INNER JOIN [PRUEBA].[dbo].[carpetaUnidadMedida] cm ON cm.id = d.idUnidadMedida
@@ -38,19 +38,8 @@ INNER JOIN
 UNION
 
 (SELECT 
-	'FORES'+CONVERT(varchar(10), m.id) AS 'SEC',
-	NULL AS 'CatBienAseguradoID',
-	ABS(cantidad) AS 'CantidadBienAsegurado',
-	cm.senap_id AS 'CatUnidadMedidaID',
-	CarpetaID
-	FROM [PRUEBA].[dbo].[carpetaMadera] m INNER JOIN [PRUEBA].[dbo].[carpetaUnidadMedida] cm ON cm.id = m.idUnidadMedida
-	WHERE idTipoMadera NOT IN (0) AND Cantidad != 0 AND idUnidadMedida != 0)
-
-UNION
-
-(SELECT 
 	'ARM'+CONVERT(varchar(10), ca.id) AS 'SEC',
-	ta.senap_id AS 'CatBienAseguradoID',
+	ta.CatBienAseguradoID AS 'CatBienAseguradoID',
 	1 AS 'CantidadBienAsegurado',
 	7 AS 'CatUnidadMedidaID',
 	CarpetaID
