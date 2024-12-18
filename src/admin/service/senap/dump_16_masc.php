@@ -21,15 +21,16 @@ $db_insert_table = "[dbo].[MASC]
 ,[MontoReparacionDano]
 ,[CarpetaID],[ProcesoID])";
 
-$db_insert_conditions = "YEAR(masc.FechaInicio) IN ($year) AND MONTH(masc.FechaInicio) IN ($month)";
+//$db_insert_conditions = "YEAR(masc.FechaInicio) IN ($year) AND MONTH(masc.FechaInicio) IN ($month)";
 
-$db_query = "SELECT masc.AutoridadDerivaMASC, masc.FechaDerivaMASC, masc.TipoMASC, masc.TipoCumplimiento, masc.FechaCumplimientoMASC, masc.MontoReparacionDano, masc.CarpetaID, proces.ProcesoID
+$db_insert_conditions = "( year(FechaInicio) = 2023 or (year(FechaInicio) = 2024 and month(FechaInicio) <= 6) )";
+
+$db_query = "SELECT sub_masc.AutoridadDerivaMASC, sub_masc.FechaDerivaMASC, sub_masc.TipoMASC, sub_masc.TipoCumplimiento, sub_masc.FechaCumplimientoMASC, sub_masc.MontoReparacionDano, sub_masc.CarpetaID, sub_masc.ProcesoID
+FROM (
+SELECT DISTINCT masc.MASCID, masc.AutoridadDerivaMASC, masc.FechaDerivaMASC, masc.TipoMASC, masc.TipoCumplimiento, masc.FechaCumplimientoMASC, masc.MontoReparacionDano, masc.CarpetaID, proces.ProcesoID, FechaInicio
 FROM
 (SELECT 
-CASE 
-WHEN cr.CarpetaRecibidaID IS NOT NULL THEN 'MASCCR'+CONVERT(varchar(10), cr.CarpetaRecibidaID)
-ELSE 'MASCAC'+CONVERT(varchar(10), ac.AcuerdoCelebradoID)
-END AS 'MASCID',
+CONCAT(cr.CarpetaRecibidaID, ac.AcuerdoCelebradoID) as 'MASCID',
 1 AS 'AutoridadDerivaMASC',
 CASE
 WHEN cr.[Fecha] IS NOT NULL THEN cr.[Fecha]
@@ -54,13 +55,13 @@ c.id as 'ejercicios_id'
 FROM
 [EJERCICIOS2].[dbo].[Carpetas] c 
 INNER JOIN
-[EJERCICIOS].[dbo].[AcuerdosCelebrados] ac
-ON c.NUC = ac.NUC collate Modern_Spanish_CI_AI
-LEFT JOIN
 [EJERCICIOS].[dbo].[CarpetasRecibidas] cr
-ON cr.NUC = ac.NUC) masc
-
-LEFT JOIN dbo.Procesos proces ON proces.ejercicios_id = masc.ejercicios_id";
+ON cr.NUC = c.NUC collate Modern_Spanish_CI_AI
+LEFT JOIN 
+[EJERCICIOS].[dbo].[AcuerdosCelebrados] ac
+ON ac.CarpetaRecibidaID = cr.CarpetaRecibidaID) masc
+LEFT JOIN dbo.Procesos proces ON proces.ejercicios_id = masc.ejercicios_id
+) sub_masc";
 
 
 

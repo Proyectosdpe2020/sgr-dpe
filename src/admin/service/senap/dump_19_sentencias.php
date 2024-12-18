@@ -24,7 +24,9 @@ $db_insert_table = "[dbo].[Sentencias]
 ,[SentenciaFirme]
 ,[CarpetaID],[ProcesoID])";
 
-$db_insert_conditions = "YEAR(sen.FechaInicio) IN ($year) AND MONTH(sen.FechaInicio) IN ($month)";
+//$db_insert_conditions = "YEAR(sen.FechaInicio) IN ($year) AND MONTH(sen.FechaInicio) IN ($month)";
+
+$db_insert_conditions = "((month(sen.FechaInicio) in (1,2,3,4,5,6) and year(sen.FechaInicio)=2024) or year(sen.FechaInicio)=2023)";
 
 $db_query = "SELECT 
 CASE sen.FechaAudienciaJuicio
@@ -84,33 +86,43 @@ FROM
 ,c.id as 'ejercicios_id'
 
 FROM [ESTADISTICAV2].[senap].[sentencias] se
-INNER JOIN [PRUEBA].[dbo].[Resoluciones] res
-ON se.ResolucionID = res.ResolucionID
+INNER JOIN [ESTADISTICAV2].dbo.estatusNucs es
+ON se.idEstatusNucs = es.idEstatusNucs
 INNER JOIN [EJERCICIOS2].[dbo].[Carpetas] c 
-ON res.CarpetaID = c.CarpetaID
+ON c.NUC = es.nuc collate Modern_Spanish_CI_AI
 
 LEFT JOIN
 
 (SELECT en.nuc
-,au.[fechaAudienciaJuicio]
-,au.[idTipoPruebasAudiencia]
+,subaj_menor_fecha.[fechaAudienciaJuicio]
+,subaj_menor_fecha.[idTipoPruebasAudiencia]
 FROM [ESTADISTICAV2].[dbo].[estatusNucs] en 
-INNER JOIN [ESTADISTICAV2].[senap].[audienciasJuicio] au
-ON au.idEstatusNucs = en.idEstatusNucs) subaud
+INNER JOIN (
+    SELECT aj.idEstatusNucs, aj.fechaAudienciaJuicio, aj.idTipoPruebasAudiencia,
+           ROW_NUMBER() OVER (PARTITION BY nuc ORDER BY fechaAudienciaJuicio ASC) AS fila
+    FROM [ESTADISTICAV2].[senap].[audienciasJuicio] aj INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en ON en.idEstatusNucs = aj.idEstatusNucs
+) AS subaj_menor_fecha
+ON subaj_menor_fecha.idEstatusNucs = en.idEstatusNucs where fila = 1) subaud
 
 ON c.NUC = subaud.nuc collate Modern_Spanish_CI_AI
 
 LEFT JOIN
 
 (SELECT en.nuc
-,rd.[montoReparacionDanio]
+,subrd_mayor_registro.[montoReparacionDanio]
 FROM [ESTADISTICAV2].[dbo].[estatusNucs] en 
-INNER JOIN [ESTADISTICAV2].[senap].[reparacionDanios] rd
-ON rd.idEstatusNucs = en.idEstatusNucs) subrda
+INNER JOIN (
+	SELECT rd.idEstatusNucs, rd.montoReparacionDanio,
+           ROW_NUMBER() OVER (PARTITION BY nuc ORDER BY idReparacionDanio DESC) AS fila
+    FROM [ESTADISTICAV2].[senap].[reparacionDanios] rd INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en ON en.idEstatusNucs = rd.idEstatusNucs
+
+) AS subrd_mayor_registro
+
+ON subrd_mayor_registro.idEstatusNucs = en.idEstatusNucs WHERE fila = 1) subrda
 
 ON c.NUC = subrda.nuc collate Modern_Spanish_CI_AI) sen
 
-LEFT JOIN dbo.Procesos proces ON proces.ProcesoID = sen.ejercicios_id";
+LEFT JOIN dbo.Procesos proces ON proces.ejercicios_id = sen.ejercicios_id";
 
 
 

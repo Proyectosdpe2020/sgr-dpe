@@ -22,7 +22,9 @@ $db_insert_table = "[dbo].[InvestigacionComplementaria]
 ,[FormuloAcusacion]
 ,[CarpetaID],[ProcesoID],[ejercicios_id])";
 
-$db_insert_conditions = "YEAR(invcomp.FechaInicio) IN ($year) AND MONTH(invcomp.FechaInicio) IN ($month)";
+//$db_insert_conditions = "YEAR(invcomp.FechaInicio) IN ($year) AND MONTH(invcomp.FechaInicio) IN ($month)";
+
+$db_insert_conditions = "( year(FechaInicio) = 2023 or (year(FechaInicio) = 2024 and month(FechaInicio) <= 6) )";
 
 $db_query = "SELECT DISTINCT
 invcomp.FormulacionImputacion, invcomp.FechaFormulacionImputacion, invcomp.ResolucionAutoVinculacionProceso,
