@@ -19,7 +19,9 @@ $db_insert_table = "[dbo].[Sobreseimientos]
 ,[TipoSobreseimiento]
 ,[CarpetaID],[ProcesoID])";
 
-$db_insert_conditions = "YEAR(sobres.FechaInicio) IN ($year) AND MONTH(sobres.FechaInicio) IN ($month)";
+//$db_insert_conditions = "YEAR(sobres.FechaInicio) IN ($year) AND MONTH(sobres.FechaInicio) IN ($month)";
+
+$db_insert_conditions = "( year(FechaInicio) = 2023 or (year(FechaInicio) = 2024 and month(FechaInicio) <= 6) )";
 
 $db_query = "SELECT sobres.EtapaDictoSobreseimiento, sobres.CausaSobreseimiento, sobres.FechDictoSobreseimiento, sobres.TipoSobreseimiento, sobres.CarpetaID, proces.ProcesoID
 FROM

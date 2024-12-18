@@ -13,8 +13,7 @@ $db_search_fields = "";
 $db_insert_fields = "";
 
 $db_insert_table = "[dbo].[Procesos]
-([ImputadoID]
-,[NumeroAsuntoCausaPenal]
+([NumeroAsuntoCausaPenal]
 ,[FechaIngresoCausaPenal]
 ,[CelebracionAudienciaInicial]
 ,[MotivoAudienciaInicial]
@@ -22,12 +21,13 @@ $db_insert_table = "[dbo].[Procesos]
 ,[CarpetaID]
 ,[ejercicios_id])";
 
-$db_insert_conditions = "YEAR(proce.FechaInicio) IN ($year) AND MONTH(proce.FechaInicio) IN ($month)";
+//$db_insert_conditions = "YEAR(proce.FechaInicio) IN ($year) AND MONTH(proce.FechaInicio) IN ($month)";
 
-$db_query = "SELECT proce.ImputadoID, proce.NumeroAsuntoCausaPenal, proce.FechaIngresoCausaPenal, proce.CelebracionAudienciaInicial, proce.MotivoAudienciaInicial, proce.FechaAudienciaInicial, proce.CarpetaID, proce.ejercicios_id FROM
+$db_insert_conditions = "( year(FechaInicio) = 2023 or (year(FechaInicio) = 2024 and month(FechaInicio) <= 6) )";
+
+$db_query = "SELECT proce.NumeroAsuntoCausaPenal, proce.FechaIngresoCausaPenal, proce.CelebracionAudienciaInicial, proce.MotivoAudienciaInicial, proce.FechaAudienciaInicial, proce.CarpetaID, proce.ejercicios_id FROM
 (SELECT
 CONVERT(varchar(10), c.CarpetaID)+CONVERT(varchar(10), en.idEstatusNucs) AS 'ProcesoID',
-i.ImputadoID,
 j.causaPenal AS 'NumeroAsuntoCausaPenal',
 CONVERT(date, j.fechaCausaPenal, 5) AS 'FechaIngresoCausaPenal',
 j.audienciaInicial AS 'CelebracionAudienciaInicial',
@@ -41,14 +41,8 @@ c.CarpetaID,
 c.FechaInicio,
 c.id as 'ejercicios_id'
 FROM [EJERCICIOS2].[dbo].[Carpetas] c 
-INNER JOIN [PRUEBA].[dbo].[Involucrado] inv
-ON abs(c.CarpetaID) = inv.InvolucradoID
-INNER JOIN [PRUEBA].[dbo].[Imputado] i
-ON inv.InvolucradoID = i.InvolucradoID
 INNER JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en 
 ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
-INNER JOIN [ESTADISTICAV2].[dbo].[estatus] e
-ON e.idEstatus = en.idEstatus
 INNER JOIN [ESTADISTICAV2].[senap].[judicializadas] j
 ON en.idEstatusNucs = j.idEstatusNucs
 LEFT JOIN CatMotivosAudienciaInicial cma
