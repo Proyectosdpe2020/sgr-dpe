@@ -20,6 +20,7 @@ if($conn){
                 ,[Estatus]
             FROM [EJERCICIOS2].[dbo].[UsuariosBasesNacionales]
             WHERE [Usuario] = '$user'
+            AND [Contrasena] = '$pass'
             AND Estatus = 1";
 
     $params = array();
