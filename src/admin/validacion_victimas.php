@@ -111,7 +111,7 @@
 
 							<ul>
 <?php
-									if($_SESSION['user_data']['id'] != 5){
+									if($_SESSION['user_data']['id'] != 4 && $_SESSION['user_data']['id'] != 5 && $_SESSION['user_data']['id'] != 8){
 ?>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="senap.php">SENAP</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">Microdato</a></li>
@@ -122,6 +122,11 @@
 										<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Validación de víctimas</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="producto_estadistico.php">Producto estadístico</a></li>
 <?php
+									}
+									else{
+?>
+										<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Validación de víctimas</a></li>
+<?php										
 									}
 ?>
 							</ul>
