@@ -1,5 +1,5 @@
 <?php session_start();
-if($_SESSION['user_data']['id'] == 5){
+if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_SESSION['user_data']['id'] == 8){
 	header('Location: validacion_victimas.php');
     exit();
 }
