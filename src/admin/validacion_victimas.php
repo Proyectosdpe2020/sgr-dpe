@@ -10,13 +10,13 @@
 
 		<link rel="shortcut icon" href="../../assets/img/fge.png"/>
 
-		<link rel="stylesheet" href="assets/css/main.css"/>
-		<link rel="stylesheet" href="assets/css/styles.css"/>
-		<link rel="stylesheet" href="../../css/styles.css"/>
-		<link rel="stylesheet" href="../../css/own-datatable-style.css"/>
+		<link rel="stylesheet" href="assets/css/main.css?v=<?php echo time(); ?>"/>
+		<link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>"/>
+		<link rel="stylesheet" href="../../css/styles.css?v=<?php echo time(); ?>"/>
+		<link rel="stylesheet" href="../../css/own-datatable-style.css?v=<?php echo time(); ?>"/>
 		
-		<link rel="stylesheet" href="../../css/styles.css">
-		<link rel="stylesheet" href="../../css/dropdown-style.css">
+		<link rel="stylesheet" href="../../css/styles.css?v=<?php echo time(); ?>">
+		<link rel="stylesheet" href="../../css/dropdown-style.css?v=<?php echo time(); ?>">
 		<link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="../../node_modules/datatables/media/css/jquery.dataTables.min.css">
 
@@ -27,13 +27,13 @@
 		<script src="//cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"></script>
 		<script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
-		<script src="../../js/script.js"></script>
+		<script src="../../js/script.js?v=<?php echo time(); ?>"></script>
 
-		<script src="js/array-data.js"></script>
-		<script src="js/common-script.js"></script>
-		<script src="js/handle_data.js"></script>
-		<script src="js/script.js"></script>
-		<script src="js/victim_validation.js"></script>
+		<script src="js/array-data.js?v=<?php echo time(); ?>"></script>
+		<script src="js/common-script.js?v=<?php echo time(); ?>"></script>
+		<script src="js/handle_data.js?v=<?php echo time(); ?>"></script>
+		<script src="js/script.js?v=<?php echo time(); ?>"></script>
+		<script src="js/victim_validation.js?v=<?php echo time(); ?>"></script>
 	</head>
 	<body class="is-preload">
 
