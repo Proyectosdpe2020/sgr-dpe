@@ -14,21 +14,21 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
 		<meta http-equiv="pragma" content="no-cache"/>
 
 		<link rel="shortcut icon" href="../../assets/img/fge.png"/>
-		<link rel="stylesheet" href="assets/css/main.css"/>
-		<link rel="stylesheet" href="assets/css/styles.css"/>
+		<link rel="stylesheet" href="assets/css/main.css?v=<?php echo time(); ?>"/>
+		<link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>"/>
 
 		<!--<link rel="stylesheet" href="../../css/styles.css">-->
-		<link rel="stylesheet" href="../../css/styles.css">
-		<link rel="stylesheet" href="../../css/dropdown-style.css">
+		<link rel="stylesheet" href="../../css/styles.css?v=<?php echo time(); ?>">
+		<link rel="stylesheet" href="../../css/dropdown-style.css?v=<?php echo time(); ?>">
 		<link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
 
 		<script src="../../node_modules/jquery/dist/jquery.min.js" ></script>
 		<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" ></script>
 		<script src="../../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
-		<script src="../../js/script.js"></script>
-		<script src="js/script.js"></script>
-		<script src="js/sesesp.js"></script>
+		<script src="../../js/script.js?v=<?php echo time(); ?>"></script>
+		<script src="js/script.js?v=<?php echo time(); ?>"></script>
+		<script src="js/sesesp.js?v=<?php echo time(); ?>"></script>
 	</head>
 	<body class="is-preload">
 
