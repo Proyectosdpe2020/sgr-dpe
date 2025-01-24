@@ -1,6 +1,6 @@
 <?php session_start();
 include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
-if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_SESSION['user_data']['id'] == 8){
+if ($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_SESSION['user_data']['id'] == 8) {
     header('Location: validacion_victimas.php');
     exit();
 }
@@ -29,7 +29,7 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
 
     <script src="../../js/script.js?v=<?php echo time(); ?>"></script>
     <script src="js/script.js?v=<?php echo time(); ?>"></script>
-    
+
     <style>
         .loader-div {
             display: none;
@@ -140,9 +140,9 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
                                 <option value="11">Noviembre</option>
                                 <option value="12">Diciembre</option>
                             </select>
-
+                            <br>
                             <label for="endMonthMunicipio">Mes final: *</label>
-                            <select id="endMonthMunicipio" name="mesFin" required>
+                            <select id="endMonthMunicipio" name="mesFin" required disabled>
                                 <option value="" selected disabled>-- Selecciona --</option>
                                 <option value="1">Enero</option>
                                 <option value="2">Febrero</option>
@@ -157,7 +157,7 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
                                 <option value="11">Noviembre</option>
                                 <option value="12">Diciembre</option>
                             </select>
-
+                            <br>
                             <label for="yearMunicipio">Año: *</label>
                             <select id="yearMunicipio" name="anio" required>
                                 <option value="" selected disabled>-- Selecciona --</option>
@@ -179,8 +179,17 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
                                 <option value="2015">2015</option>
                             </select>
                             </br>
-                            <button type="button" class="btn btn-outline-secondary rounded-button" style="width: 253px;" onclick="setActionAndSubmit('service/producto_estadistico/generate_pdf_municipio.php')">Generar PDF por municipio</button>
-                            <button type="button" class="btn btn-outline-success rounded-button" style="width: 260px;" onclick="setActionAndSubmit('service/producto_estadistico/generate_excel_municipio.php')">Generar EXCEL por municipio</button>
+                            <label for="tipoReporte">Tipo de reporte: *</label>
+                            <select id="tipoReporte" name="tipoReporte" required>
+                                <option value="" selected disabled>-- Selecciona --</option>
+                                <option value="conComparativo">Con comparativo</option>
+                                <option value="sinComparativo">Sin comparativo</option>
+                            </select>
+                            <br>
+                            <button type="button" class="btn btn-outline-secondary rounded-button" style="width: 253px;"
+                                onclick="submitReport('municipio', 'pdf')">Generar PDF por municipio</button>
+                            <button type="button" class="btn btn-outline-success rounded-button" style="width: 260px;"
+                                onclick="submitReport('municipio', 'excel')">Generar EXCEL por municipio</button>
                         </form>
                     </div>
 
@@ -203,9 +212,9 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
                                 <option value="11">Noviembre</option>
                                 <option value="12">Diciembre</option>
                             </select>
-
+                            <br>
                             <label for="endMonthDistrito">Mes final: *</label>
-                            <select id="endMonthDistrito" name="mesFin" required>
+                            <select id="endMonthDistrito" name="mesFin" required disabled>
                                 <option value="" selected disabled>-- Selecciona --</option>
                                 <option value="1">Enero</option>
                                 <option value="2">Febrero</option>
@@ -220,7 +229,7 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
                                 <option value="11">Noviembre</option>
                                 <option value="12">Diciembre</option>
                             </select>
-
+                            <br>
                             <label for="yearDistrito">Año: *</label>
                             <select id="yearDistrito" name="anio" required>
                                 <option value="" selected disabled>-- Selecciona --</option>
@@ -242,14 +251,56 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
                                 <option value="2015">2015</option>
                             </select>
                             </br>
-                            <button type="button" class="btn btn-outline-secondary rounded-button" style="width: 253px;" onclick="setActionAndSubmit('service/producto_estadistico/generate_pdf_distrito.php')">Generar PDF por distrito</button>
-                            <button type="button" class="btn btn-outline-success rounded-button" style="width: 260px;" onclick="setActionAndSubmit('service/producto_estadistico/generate_excel_distrito.php')">Generar EXCEL por distrito</button>
+                            <label for="tipoReporte2">Tipo de reporte: *</label>
+                            <select id="tipoReporte2" name="tipoReporte2" required>
+                                <option value="" selected disabled>-- Selecciona --</option>
+                                <option value="conComparativo">Con comparativo</option>
+                                <option value="sinComparativo">Sin comparativo</option>
+                            </select>
+                            <br>
+                            <button type="button" class="btn btn-outline-secondary rounded-button" style="width: 253px;"
+                                onclick="submitReport('distrito', 'pdf')">Generar PDF por distrito</button>
+                            <button type="button" class="btn btn-outline-success rounded-button" style="width: 260px;"
+                                onclick="submitReport('distrito', 'excel')">Generar EXCEL por distrito</button>
                         </form>
                     </div>
                 </section>
             </div>
 
             <script>
+                function setupMonthSelection(startMonthId, endMonthId) {
+                    const startMonthSelect = document.getElementById(startMonthId);
+                    const endMonthSelect = document.getElementById(endMonthId);
+
+                    startMonthSelect.addEventListener("change", () => {
+                        const selectedStartMonth = parseInt(startMonthSelect.value);
+
+                        // Limpiar las opciones del mes final
+                        endMonthSelect.innerHTML = '<option value="" selected disabled>-- Selecciona --</option>';
+
+                        // Agregar solo los meses válidos
+                        for (let month = selectedStartMonth; month <= 12; month++) {
+                            const option = document.createElement("option");
+                            option.value = month;
+
+                            // Convertir el nombre del mes a formato con la primera letra en mayúscula
+                            const monthName = new Intl.DateTimeFormat("es-ES", {
+                                month: "long"
+                            }).format(new Date(0, month - 1));
+                            option.textContent = monthName.charAt(0).toUpperCase() + monthName.slice(1); // Primera letra en mayúscula
+
+                            endMonthSelect.appendChild(option);
+                        }
+
+                        // Habilitar el mes final una vez que se haya seleccionado un mes inicial
+                        endMonthSelect.disabled = false;
+                    });
+                }
+
+                // Llamar a la función para ambos formularios
+                setupMonthSelection("startMonthMunicipio", "endMonthMunicipio");
+                setupMonthSelection("startMonthDistrito", "endMonthDistrito");
+
                 function setActionAndSubmit(actionUrl) {
                     // Determina qué formulario se va a enviar
                     let formToSubmit;
@@ -273,6 +324,25 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
                     formToSubmit.submit();
                 }
 
+                function submitReport(reportType, type) {
+                    // Obtener el valor del tipo de reporte correspondiente
+                    const tipoReporte = document.getElementById(reportType === "municipio" ? "tipoReporte" : "tipoReporte2").value;
+
+                    // Determinar la URL en función del tipo de reporte y el formato 
+                    let actionUrl;
+                    if (tipoReporte === "conComparativo") {
+                        actionUrl = type === "pdf" ?
+                            `service/producto_estadistico/generate_pdf_${reportType}.php` :
+                            `service/producto_estadistico/generate_excel_${reportType}.php`;
+                    } else if (tipoReporte === "sinComparativo") {
+                        actionUrl = type === "pdf" ?
+                            `service/producto_estadistico/generate_pdf_${reportType}2.php` :
+                            `service/producto_estadistico/generate_excel_${reportType}2.php`;
+                    }
+
+                    // Establecer la acción y enviar el formulario
+                    setActionAndSubmit(actionUrl);
+                }
 
                 // Función para cambiar entre los formularios
                 function changeForm(formType) {
@@ -323,17 +393,23 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
                 }
 
                 document.getElementById("pdfFormMunicipio").addEventListener("submit", function(event) {
-                    const startMonth = document.getElementById("startMonthMunicipio").value;
-                    const endMonth = document.getElementById("endMonthMunicipio").value;
-                    const year = document.getElementById("yearMunicipio").value;
+                    const startMonth = parseInt(document.getElementById("startMonthMunicipio").value);
+                    const endMonth = parseInt(document.getElementById("endMonthMunicipio").value);
+                    const year = parseInt(document.getElementById("yearMunicipio").value);
 
                     if (!startMonth || !endMonth || !year) {
-                        event.preventDefault(); // Detiene el envío del formulario
+                        event.preventDefault(); // Detener el envío del formulario
                         alert("Por favor, llena todos los campos obligatorios antes de continuar.");
+                        return;
+                    }
+
+                    if (endMonth < startMonth) {
+                        event.preventDefault(); // Detener el envío del formulario
+                        alert("El mes final no puede ser anterior al mes inicial.");
+                        return;
                     }
                 });
             </script>
-
         </div>
 
         <div id="sidebar">
@@ -345,10 +421,10 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
 
                     <ul>
 
-<?php
-                        if($_SESSION['user_data']['id'] != 6){
-?>
-                            
+                        <?php
+                        if ($_SESSION['user_data']['id'] != 6) {
+                        ?>
+
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="senap.php">SENAP</a></li>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">Microdato</a></li>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="avp.php">Exportar base de datos histórica</a></li>
@@ -357,16 +433,15 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="incidencia_sesesp.php">Incidencia delictiva SESESP</a></li>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación de víctimas</a></li>
                             <li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Producto estadístico</a></li>
-<?php
-                        }
-                        else{
-?>
+                        <?php
+                        } else {
+                        ?>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="senap.php">SENAP</a></li>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="censo_procu.php">Censo procuración de justicia</a></li>
                             <li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Producto estadístico</a></li>
-<?php										
+                        <?php
                         }
-?>
+                        ?>
                     </ul>
                 </nav>
 
