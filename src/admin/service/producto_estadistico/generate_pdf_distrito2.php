@@ -159,42 +159,37 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
         $pdf->Ln(3);
 
         // Ordenar los delitos por el total de delitos en orden descendente para cada distrito
-    foreach ($delitos as $delito => $años) {
-        // Calcular el total de delitos para cada delito (sumando los valores por cada año)
-        $totalDelitos = array_sum($años);
-        $delitos[$delito]['total'] = $totalDelitos;  // Añadir el total como valor
-    }
+        foreach ($delitos as $delito => $años) {
+            // Calcular el total de delitos para cada delito (sumando los valores por cada año)
+            $totalDelitos = array_sum($años);
+            $delitos[$delito]['total'] = $totalDelitos;  // Añadir el total como valor
+        }
 
-    // Ordenar los delitos en base al total del año seleccionado
-    uasort($delitos, function ($a, $b) use ($anio) {
-        $totalA = isset($a[$anio]) ? $a[$anio] : 0; 
-        $totalB = isset($b[$anio]) ? $b[$anio] : 0; 
-        return $totalB - $totalA; // Orden descendente
-    });
+        // Ordenar los delitos en base al total del año seleccionado
+        uasort($delitos, function ($a, $b) use ($anio) {
+            $totalA = isset($a[$anio]) ? $a[$anio] : 0;
+            $totalB = isset($b[$anio]) ? $b[$anio] : 0;
+            return $totalB - $totalA; // Orden descendente
+        });
 
-    // Obtener los 5 primeros delitos más frecuentes
-    $topDelitos = array_slice($delitos, 0, 5, true);
+        // Obtener los 5 primeros delitos más frecuentes
+        $topDelitos = array_slice($delitos, 0, 5, true);
 
-        // Colores para cada año
-        $colorAnioMinus2 = [192, 159, 119]; // Año -2
-        $colorAnioMinus1 = [21, 47, 74];    // Año -1
-        $colorAnioActual = [198, 198, 198]; // Año actual
+        // Colores el año
+        $colorAnioActual = [21, 47, 74]; // Año actual
 
         // Preparar los datos para la gráfica de barras
         $delitosNames = array();
         $delitosValues = array();
 
         foreach ($topDelitos as $delito => $años) {
-            $totalAnioMinus2 = isset($años[$anio - 2]) ? $años[$anio - 2] : 0;
-            $totalAnioMinus1 = isset($años[$anio - 1]) ? $años[$anio - 1] : 0;
             $totalAnio = isset($años[$anio]) ? $años[$anio] : 0;
-
             $delitosNames[] = utf8_decode($delito);
-            $delitosValues[] = [$totalAnioMinus2, $totalAnioMinus1, $totalAnio];
+            $delitosValues[] = [$totalAnio];
         }
 
         // Tamaño y posiciones
-        $graphX = 211.4; // X de inicio
+        $graphX = 171.4; // X de inicio
         $graphY = $pdf->GetY() + 50; // Y de inicio
         $graphWidth = 30; // Ancho de la gráfica
         $graphHeight = 40; // Altura de la gráfica
@@ -210,56 +205,29 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
 
         // Mostrar el nombre del municipio encima de la gráfica
         $pdf->SetXY($municipioX, $municipioY); // Posición exacta para el texto
-        $pdf->SetFont('Arial', 'B', 10); 
-        $pdf->SetTextColor(0, 0, 0); 
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->SetTextColor(0, 0, 0);
         $pdf->Cell(0, 10, utf8_decode(mb_strtoupper($distrito)), 0, 0, 'L');
         $pdf->Ln(5);
-        $comparativoX = $graphX + 49.5;
+        $comparativoX = $graphX + 9.5;
         $pdf->SetXY($comparativoX, $pdf->GetY());
         $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(0, 10, utf8_decode(mb_strtoupper("Comparativo de $textoMesInicio - $textoMesFin " . ($anio - 2) . " - " . ($anio - 1) . " - $anio")), 0, 1, 'C');
+        $pdf->Cell(0, 10, utf8_decode(mb_strtoupper("Periodo de $textoMesInicio - $textoMesFin $anio")), 0, 1, 'C');
         $pdf->SetY($graphY);
 
         // Calcular el ancho total de la gráfica
         $graphTotalWidth = count($delitosValues) * ($spaceBetweenDelitos + $barWidth * 3) - 33.9; // Ancho total de la gráfica
 
         // Calcular la posición final de la gráfica
-        $legendY = $graphY + $graphHeight + 10; 
+        $legendY = $graphY + $graphHeight + 10;
 
         // Calcular la posición X centrada
         $legendTotalWidth = 40; // Ancho estimado (cuadro + espacio + texto)
         $legendX = $graphX + ($graphTotalWidth - $legendTotalWidth) / 2 + 15; // Centrar la leyenda respecto al ancho total de la gráfica
 
-        // Dibujar la leyenda explicativa de los colores
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->SetTextColor(0, 0, 0); 
-
-        // Leyenda Año -2
-        $pdf->SetXY($legendX, $legendY); // Posición inicial para la leyenda
-        $pdf->SetFillColor($colorAnioMinus2[0], $colorAnioMinus2[1], $colorAnioMinus2[2]); // Color del año -2
-        $pdf->Rect($pdf->GetX(), $pdf->GetY(), 4, 4, 'F'); // Cuadro de color reducido a 4x4
-        $pdf->SetXY($legendX + 6, $legendY); // Mover el texto del año más a la derecha 
-        $pdf->Cell(0, 4, utf8_decode($anio - 2), 0, 1, 'L');
-
-        // Leyenda Año -1
-        $pdf->SetXY($legendX, $pdf->GetY() + 3); // Ajustar posición para la siguiente línea
-        $pdf->SetFillColor($colorAnioMinus1[0], $colorAnioMinus1[1], $colorAnioMinus1[2]); // Color del año -1
-        $pdf->Rect($pdf->GetX(), $pdf->GetY(), 4, 4, 'F'); // Cuadro de color reducido a 4x4
-        $pdf->SetXY($legendX + 6, $pdf->GetY()); // Mover el texto del año más a la derecha
-        $pdf->Cell(0, 4, utf8_decode($anio - 1), 0, 1, 'L'); 
-
-        // Leyenda Año actual
-        $pdf->SetXY($legendX, $pdf->GetY() + 3); // Ajustar posición para la siguiente línea
-        $pdf->SetFillColor($colorAnioActual[0], $colorAnioActual[1], $colorAnioActual[2]); // Color del año actual
-        $pdf->Rect($pdf->GetX(), $pdf->GetY(), 4, 4, 'F'); // Cuadro de color reducido a 4x4
-        $pdf->SetXY($legendX + 6, $pdf->GetY()); // Mover el texto del año más a la derecha
-        $pdf->Cell(0, 4, utf8_decode($anio), 0, 1, 'L'); 
-
-        $pdf->Ln(10);
-
         // Dibujar la gráfica de barras
         $pdf->SetFillColor(200, 220, 255); // Color de relleno de las barras
-        $pdf->SetTextColor(0, 0, 0); 
+        $pdf->SetTextColor(0, 0, 0);
 
         foreach ($delitosValues as $index => $values) {
             $delitoName = $delitosNames[$index];
@@ -269,13 +237,8 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
 
                 $barX = $graphX + $index * ($barWidth + $spaceBetweenDelitos) + $yearIndex * ($barWidth + $spaceBetweenBars);
 
-                if ($yearIndex == 0) {
-                    $pdf->SetFillColor($colorAnioMinus2[0], $colorAnioMinus2[1], $colorAnioMinus2[2]); // Año -2
-                } elseif ($yearIndex == 1) {
-                    $pdf->SetFillColor($colorAnioMinus1[0], $colorAnioMinus1[1], $colorAnioMinus1[2]); // Año -1
-                } else {
-                    $pdf->SetFillColor($colorAnioActual[0], $colorAnioActual[1], $colorAnioActual[2]); // Año actual
-                }
+                // Seleccionar el color correspondiente al año
+                $pdf->SetFillColor($colorAnioActual[0], $colorAnioActual[1], $colorAnioActual[2]); // Año actual
 
                 $pdf->Rect($barX, $graphY + $graphHeight - $barHeight, $barWidth, $barHeight, 'F');
 
@@ -284,11 +247,26 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
                 $pdf->SetFont('Arial', 'B', 6);
                 $pdf->Text($barX - 1, $graphY + $graphHeight - $barHeight - 2, number_format($value, 0, '.', ','));
             }
-            $currentY += 30;
         }
+
+        // Ajustar la posición de la leyenda debajo de la gráfica
+        $legendY = $graphY + $graphHeight + 10; // Espacio extra de 10 unidades debajo de la gráfica
+        $pdf->SetY($legendY);
+
+        // Dibujar la leyenda explicativa de los colores
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->SetTextColor(0, 0, 0);
+
+        // Leyenda Año actual
+        $pdf->SetX($legendX); // Establece la posición horizontal de la leyenda
+        $pdf->SetFillColor($colorAnioActual[0], $colorAnioActual[1], $colorAnioActual[2]); // Color del año actual
+        $pdf->Rect($pdf->GetX(), $pdf->GetY(), 4, 4, 'F'); // Cuadro de color reducido a 4x4
+        $pdf->SetX($legendX + 6); // Mover el texto del año más a la derecha
+        $pdf->Cell(0, 4, utf8_decode($anio), 0, 1, 'L');
+
         //Añadir los nombres de los delitos debajo de las barras
         $pdf->SetFont('Arial', '', 6);
-        $pdf->SetTextColor(0, 0, 0); 
+        $pdf->SetTextColor(0, 0, 0);
         $maxLength = 16;
 
         foreach ($delitosValues as $index => $values) {
@@ -303,7 +281,7 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
             $textX = $graphX + $index * ($barWidth + $spaceBetweenDelitos) + ($groupWidth - $pdf->GetStringWidth($delitoName)) / 2;
 
             // Calcular posición Y debajo de la gráfica
-            $textY = $graphY + $graphHeight + 5; 
+            $textY = $graphY + $graphHeight + 5;
 
             // Dibujar el nombre del delito
             $pdf->Text($textX, $textY, $delitoName);
@@ -326,26 +304,14 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
         $pdf->SetTextColor(255, 255, 255);
         $pdf->SetLineWidth(0.5);
         $pdf->SetFont('Arial', 'B', 9);
-        $pdf->Cell($colWidthNumero, 14, utf8_decode('NÚMERO'), 1, 0, 'C', true);
-        $pdf->Cell($colWidthDelito, 14, utf8_decode('DELITOS'), 1, 0, 'C', true);
-        $pdf->Cell($colWidthAnio * 3, 7, utf8_decode('TOTAL'), 1, 0, 'C', true);
-        $pdf->Cell(30, 7, utf8_decode('DIFERENCIA'), 1, 0, 'C', true);
-        $pdf->Cell(27, 7, utf8_decode('PORCENTAJE'), 1, 0, 'C', true);
+        $pdf->Cell($colWidthNumero, 7, utf8_decode('NÚMERO'), 1, 0, 'C', true);
+        $pdf->Cell($colWidthDelito, 7, utf8_decode('DELITOS'), 1, 0, 'C', true);
+        $pdf->Cell($colWidthAnio, 7, utf8_decode('TOTAL'), 1, 0, 'C', true);
         $pdf->Ln();
         $espacioExtra = 51.5;
         $pdf->Cell($espacioExtra, 7, '', 0, 0, 'C');
-        $pdf->Cell($colWidthAnio, 7, utf8_decode($anio - 2), 1, 0, 'C', true);
-        $pdf->Cell($colWidthAnio, 7, utf8_decode($anio - 1), 1, 0, 'C', true);
-        $pdf->Cell($colWidthAnio, 7, utf8_decode($anio), 1, 0, 'C', true);
-        $pdf->SetFont('Arial', 'B', 7.5);
-        $pdf->Cell($colWidthAnio, 7, utf8_decode(($anio - 2) . '-' . $anio), 1, 0, 'C', true);
-        $pdf->Cell($colWidthAnio, 7, utf8_decode(($anio - 1) . '-' . $anio), 1, 0, 'C', true);
-        $pdf->SetFont('Arial', 'B', 9);
-        $pdf->Cell(27, 7, utf8_decode(($anio - 1) . '-' . $anio), 1, 1, 'C', true);
 
-        // Inicializar las sumas por cada año
-        $sumaAnioMinus2 = 0;
-        $sumaAnioMinus1 = 0;
+        // Inicializar las suma
         $sumaAnio = 0;
 
         // Mostrar los delitos por municipio
@@ -375,128 +341,24 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
             $pdf->Cell($colWidthDelito, 7, $abbreviatedDelito, 1, 0, 'L', true);
 
             // Delitos por año
-            $totalAnioMinus2 = isset($años[$anio - 2]) ? $años[$anio - 2] : 0;
-            $totalAnioMinus1 = isset($años[$anio - 1]) ? $años[$anio - 1] : 0;
             $totalAnio = isset($años[$anio]) ? $años[$anio] : 0;
 
             // Mostrar los valores para cada año
-            $pdf->Cell($colWidthAnio, 7, number_format($totalAnioMinus2, 0, '.', ','), 1, 0, 'C', true);
-            $pdf->Cell($colWidthAnio, 7, number_format($totalAnioMinus1, 0, '.', ','), 1, 0, 'C', true);
             $pdf->Cell($colWidthAnio, 7, number_format($totalAnio, 0, '.', ','), 1, 0, 'C', true);
 
-
             // Sumar los valores para los totales de cada año
-            $sumaAnioMinus2 += $totalAnioMinus2;
-            $sumaAnioMinus1 += $totalAnioMinus1;
             $sumaAnio += $totalAnio;
 
-            // Calcular las diferencias 
-            $diffAnoMinus1 = $totalAnio - $totalAnioMinus1;  // Diferencia entre el año actual y el anterior
-            $diffAnoMinus2 = $totalAnio - $totalAnioMinus2;  // Diferencia entre el año actual y el año antepasado
-
-            // Calcular el porcentaje 
-            if ($totalAnioMinus1 > 0) {
-                $porcentajeAnoMinus1 = ($diffAnoMinus1 / $totalAnioMinus1) * 100;
-                $porcentajeText = number_format($porcentajeAnoMinus1, 2) . '%';  // Porcentaje calculado
-            } else {
-                $porcentajeText = 'NC';  // No calculado si el divisor es cero
-            }
-
-            // Mostrar las diferencias con colores dinámicos
-            if ($diffAnoMinus2 > 0) {
-                $pdf->SetTextColor(255, 0, 0); // Rojo para positivo
-            } else {
-                $pdf->SetTextColor(0, 0, 255); // Azul para negativo o cero
-            }
-            $pdf->Cell($colWidthAnio, 7, $diffAnoMinus2, 1, 0, 'C', true);
-
-            if ($diffAnoMinus1 > 0) {
-                $pdf->SetTextColor(255, 0, 0); // Rojo para positivo
-            } else {
-                $pdf->SetTextColor(0, 0, 255); // Azul para negativo o cero
-            }
-            $pdf->Cell($colWidthAnio, 7, $diffAnoMinus1, 1, 0, 'C', true);
-
-            // Mostrar porcentaje
-            if ($porcentajeText === 'NC') {
-                $pdf->SetTextColor(0, 0, 0);
-                $pdf->Cell(27, 7, $porcentajeText, 1, 1, 'C', true);  // Mostrar "NC" en lugar de porcentaje
-            } else {
-                // Determinar flecha y color
-                if ($porcentajeAnoMinus1 > 0) {
-                    $flecha = 'D:/xampp/htdocs/sgr-dpe/assets/img/up.png'; // Ruta de la imagen de flecha hacia arriba
-                    $color = [255, 0, 0];  // Rojo para positivo
-                } elseif ($porcentajeAnoMinus1 < 0) {
-                    $flecha = 'D:/xampp/htdocs/sgr-dpe/assets/img/down.png'; // Ruta de la imagen de flecha hacia abajo
-                    $color = [0, 0, 255]; // Azul para negativo
-                } else {
-                    $flecha = '';  // Sin flecha
-                    $color = [0, 0, 0]; // Color negro para 0%
-                }
-
-                // Mostrar porcentaje
-                $porcentajeTextFormatted = number_format($porcentajeAnoMinus1, 2) . '%';
-                $pdf->SetTextColor($color[0], $color[1], $color[2]);
-
-                // Insertar porcentaje en celda
-                $startX = $pdf->GetX(); // Obtener posición inicial X
-                $startY = $pdf->GetY(); // Obtener posición inicial Y
-                $pdf->Cell(27, 7, $porcentajeTextFormatted, 1, 0, 'C', true);
-
-                // Insertar la flecha (si aplica)
-                if ($flecha !== '') {
-                    $imageX = $startX + 5; // Ajustar posición X de la imagen dentro de la celda
-                    $imageY = $startY + 1.5; // Ajustar posición Y para centrar la imagen verticalmente
-                    $pdf->Image($flecha, $imageX, $imageY, 3, 3); // Insertar imagen (ancho y alto de 3)
-                }
-
-                // Restablecer el color a negro
-                $pdf->SetTextColor(0, 0, 0);
-                $pdf->Ln(); // Mover a la siguiente línea
-            }
+            // Restablecer el color a negro
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->Ln(); // Mover a la siguiente línea
         }
         //Fila de los totales
         $pdf->SetFont('Arial', 'B', 8);
         $pdf->SetX($leftMargin);
         $pdf->Cell($colWidthNumero + $colWidthDelito, 7, 'TOTAL', 1, 0, 'C');
-        $pdf->Cell($colWidthAnio, 7, number_format($sumaAnioMinus2, 0, '.', ','), 1, 0, 'C');  // Total para el año -2
-        $pdf->Cell($colWidthAnio, 7, number_format($sumaAnioMinus1, 0, '.', ','), 1, 0, 'C');  // Total para el año -1
         $pdf->Cell($colWidthAnio, 7, number_format($sumaAnio, 0, '.', ','), 1, 0, 'C');  // Total para el año actual
 
-
-        // Cálculo de las diferencias para el total
-        $diffTotalMinus2 = $sumaAnio - $sumaAnioMinus2;  // Diferencia para el año -2
-        $diffTotalMinus1 = $sumaAnio - $sumaAnioMinus1;  // Diferencia para el año -1
-
-        // Mostrar diferencias y porcentajes para los totales
-        if ($diffTotalMinus2 < 0 || $diffTotalMinus2 == 0) {
-            $pdf->SetTextColor(0, 0, 255); // Azul para negativo o cero
-        } else {
-            $pdf->SetTextColor(255, 0, 0); // Rojo para positivo
-        }
-        $pdf->Cell($colWidthAnio, 7, number_format($diffTotalMinus2, 0, '.', ','), 1, 0, 'C');
-
-        if ($diffTotalMinus1 < 0 || $diffTotalMinus1 == 0) {
-            $pdf->SetTextColor(0, 0, 255); // Azul para negativo o cero
-        } else {
-            $pdf->SetTextColor(255, 0, 0); // Rojo para positivo
-        }
-        $pdf->Cell($colWidthAnio, 7, number_format($diffTotalMinus1, 0, '.', ','), 1, 0, 'C');
-
-        // Calcular porcentaje para el total
-        $porcentajeTotal = $sumaAnioMinus1 > 0 ? ($diffTotalMinus1 / $sumaAnioMinus1) * 100 : 0;
-        $porcentajeTotalText = number_format($porcentajeTotal, 2) . '%';
-
-        // Cambiar el color del porcentaje
-        if ($porcentajeTotal < 0) {
-            $pdf->SetTextColor(0, 0, 255); // Azul para porcentaje negativo
-        } else {
-            $pdf->SetTextColor(255, 0, 0); // Rojo para porcentaje positivo
-        }
-        $pdf->Cell(27, 7, $porcentajeTotalText, 1, 1, 'C');
-
-        // Restablecer el color a negro después de mostrar los datos
-        $pdf->SetTextColor(0, 0, 0);
     }
     $pdf->Ln(10); // Espaciado entre Fiscalías
     // Mostrar PDF
