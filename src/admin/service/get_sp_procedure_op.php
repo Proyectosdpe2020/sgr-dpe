@@ -15,6 +15,7 @@ $procedure_op = array(
 		3 => array(
 			1 => array(
 				'3-1-TotalDeCarpetas',
+				'3-2-TotalDeCarpetasporFormadeInicio',
 				'3-3-TotaldeDenunciasporCompetencia'
 			),
 			2 => array(
