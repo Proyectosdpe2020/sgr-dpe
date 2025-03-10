@@ -84,11 +84,13 @@ if($_SESSION['user_data']['id'] == 5){
 						<ul>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="senap.php">SENAP</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">Microdato</a></li>
-							<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Exportar Base de datos histórica</a></li>
-							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="norma_tecnica.php">Norma Técnica</a></li>
+							<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Exportar base de datos histórica</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="norma_tecnica.php">Norma técnica</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="censo_procu.php">Censo procuración de justicia</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="incidencia_sesesp.php">Incidencia delictiva SESESP</a></li>
-							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación víctimas</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación de víctimas</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="producto_estadistico.php">Producto estadístico</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="SESNSP.php">Consulta preliminar SESNSP</a></li>
 						</ul>
 					</nav>
 					

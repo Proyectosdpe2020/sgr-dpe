@@ -70,7 +70,7 @@ if($_SESSION['user_data']['id'] == 5){
 
 										<label style="font-weight:bold">Opción: *</label>
 					
-										<select id="main-search-option" class="form-control" required="true">									
+										<select id="main-search-option" class="form-control" required="true">								
 											<option value ="1" selected>Noticia criminal</option>
 											<option value ="2">Carpeta de investigación</option>
 											<option value ="3">Etapa de investigación</option>
@@ -122,12 +122,14 @@ if($_SESSION['user_data']['id'] == 5){
 									if($_SESSION['user_data']['id'] != 6){
 ?>
 										
-										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">MICRODATO</a></li>
-										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="avp.php">Exportar Base de datos histórica</a></li>
-										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="norma_tecnica.php">Norma Técnica</a></li>
+										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">Microdato</a></li>
+										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="avp.php">Exportar base de datos histórica</a></li>
+										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="norma_tecnica.php">Norma técnica</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="censo_procu.php">Censo procuración de justicia</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="incidencia_sesesp.php">Incidencia delictiva SESESP</a></li>
-										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación víctimas</a></li>
+										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación de víctimas</a></li>
+										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="producto_estadistico.php">Producto estadístico</a></li>
+										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="SESNSP.php">Consulta preliminar SESNSP</a></li>
 <?php
 									}
 ?>
