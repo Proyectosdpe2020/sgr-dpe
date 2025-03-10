@@ -92,6 +92,7 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
 							<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Incidencia delictiva SESESP</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación de víctimas</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="producto_estadistico.php">Producto estadístico</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="SESNSP.php">Consulta preliminar SESNSP</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sedena.php">Consulta SEDENA</a></li>
 						</ul>
 					</nav>
