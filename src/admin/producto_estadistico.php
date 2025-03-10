@@ -1,6 +1,6 @@
 <?php session_start();
-include('C:/xampp/htdocs/sgr-dpe/service/connection.php');
-if ($_SESSION['user_data']['id'] == 5) {
+include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
+if ($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_SESSION['user_data']['id'] == 8) {
     header('Location: validacion_victimas.php');
     exit();
 }
@@ -16,19 +16,20 @@ if ($_SESSION['user_data']['id'] == 5) {
     <meta http-equiv="pragma" content="no-cache" />
 
     <link rel="shortcut icon" href="../../assets/img/fge.png" />
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/main.css?v=<?php echo time(); ?>" />
+    <link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>" />
 
-    <link rel="stylesheet" href="../../css/styles.css">
-    <link rel="stylesheet" href="../../css/dropdown-style.css">
+    <link rel="stylesheet" href="../../css/styles.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../../css/dropdown-style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
 
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
-    <script src="../../js/script.js"></script>
-    <script src="js/script.js"></script>
+    <script src="../../js/script.js?v=<?php echo time(); ?>"></script>
+    <script src="js/script.js?v=<?php echo time(); ?>"></script>
+
     <style>
         .loader-div {
             display: none;
@@ -176,10 +177,8 @@ if ($_SESSION['user_data']['id'] == 5) {
                                 <option value="2017">2017</option>
                                 <option value="2016">2016</option>
                                 <option value="2015">2015</option>
-
-                                <!-- Añadir más años según la disponibilidad de datos -->
                             </select>
-                            <br>
+                            </br>
                             <label for="tipoReporte">Tipo de reporte: *</label>
                             <select id="tipoReporte" name="tipoReporte" required>
                                 <option value="" selected disabled>-- Selecciona --</option>
@@ -250,9 +249,8 @@ if ($_SESSION['user_data']['id'] == 5) {
                                 <option value="2017">2017</option>
                                 <option value="2016">2016</option>
                                 <option value="2015">2015</option>
-                                <!-- Añadir más años según la disponibilidad de datos -->
                             </select>
-                            <br>
+                            </br>
                             <label for="tipoReporte2">Tipo de reporte: *</label>
                             <select id="tipoReporte2" name="tipoReporte2" required>
                                 <option value="" selected disabled>-- Selecciona --</option>
@@ -317,7 +315,7 @@ if ($_SESSION['user_data']['id'] == 5) {
                     for (let select of selects) {
                         if (!select.value) {
                             alert("Por favor, llena todos los campos obligatorios antes de continuar.");
-                            return;
+                            return; // Detener la ejecución si algún campo no está completo
                         }
                     }
 
@@ -412,7 +410,6 @@ if ($_SESSION['user_data']['id'] == 5) {
                     }
                 });
             </script>
-
         </div>
 
         <div id="sidebar">
@@ -423,9 +420,11 @@ if ($_SESSION['user_data']['id'] == 5) {
                     </header>
 
                     <ul>
+
                         <?php
                         if ($_SESSION['user_data']['id'] != 6) {
                         ?>
+
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="senap.php">SENAP</a></li>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">Microdato</a></li>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="avp.php">Exportar base de datos histórica</a></li>
@@ -433,11 +432,17 @@ if ($_SESSION['user_data']['id'] == 5) {
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="censo_procu.php">Censo procuración de justicia</a></li>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="incidencia_sesesp.php">Incidencia delictiva SESESP</a></li>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación de víctimas</a></li>
+                            <li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Producto estadístico</a></li>
+                            <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sedena.php">Consulta SEDENA</a></li>
+                        <?php
+                        } else {
+                        ?>
+                            <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="senap.php">SENAP</a></li>
+                            <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="censo_procu.php">Censo procuración de justicia</a></li>
+                            <li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Producto estadístico</a></li>
                         <?php
                         }
                         ?>
-                        <li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Producto estadístico</a></li>
-                        <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="SESNSP.php">Consulta preliminar SESNSP</a></li>
                     </ul>
                 </nav>
 

@@ -26,9 +26,18 @@
         <tr id="<?php echo 'robbery-months-old-row-'.$element['id']; ?>">
             <td class="center-text"><?php echo $i; ?></td>
             <td class="bold-text center-text"><?php echo $element['NUC']; ?></td>
-            <td class="center-text"><?php echo $element['Nombre']; ?></td>
-            <td class="center-text"><?php echo $element['Paterno']; ?></td>
-            <td class="center-text"><?php echo $element['Materno']; ?></td>
+            <td class="bold-text center-text">
+                <div><?php echo $element['Nombre']; ?></div>
+                <input class="input-custom-cell" type="text" id="<?php echo 'name-'.$element['id']; ?>" name="name" value="<?php echo $element['Nombre']; ?>" onchange="onchangeElementTable({<?php echo 'id: '.$element['id'].', search_op: `'.$search_op.'`'; ?>})">
+            </td>
+            <td class="bold-text center-text">
+                <div><?php echo $element['Paterno']; ?></div>
+                <input class="input-custom-cell" type="text" id="<?php echo 'ap-'.$element['id']; ?>" name="ap" value="<?php echo $element['Paterno']; ?>" onchange="onchangeElementTable({<?php echo 'id: '.$element['id'].', search_op: `'.$search_op.'`'; ?>})">
+            </td>
+            <td class="bold-text center-text">
+                <div><?php echo $element['Materno']; ?></div>
+                <input class="input-custom-cell" type="text" id="<?php echo 'am-'.$element['id']; ?>" name="am" value="<?php echo $element['Materno']; ?>" onchange="onchangeElementTable({<?php echo 'id: '.$element['id'].', search_op: `'.$search_op.'`'; ?>})">
+            </td>
             <td class="bold-text"><?php echo $element['DelitoAgrupado']; ?></td>
             <td>
                 <div><?php echo $element['Edad']; ?></div>

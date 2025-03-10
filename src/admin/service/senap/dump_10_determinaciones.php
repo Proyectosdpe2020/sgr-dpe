@@ -22,37 +22,23 @@ $db_insert_table = "[dbo].[Determinaciones]
 ,[TipoCriteriosOportunidad]
 ,[ejercicios_id])";
 
-$db_insert_conditions = "YEAR(deter.FechaInicio) IN ($year) AND MONTH(deter.FechaInicio) IN ($month) AND deter.SentidoDeterminacion NOT IN (0)";
+$db_insert_conditions = "(idCarpeta<>0) and (month(c.FechaInicio) in (1,2,3,4,5,6) and year(c.FechaInicio)=2024) or year(c.FechaInicio)=2023) deter
+	 inner join [PRUEBA].[dbo].[CatDeterminaciones] cd on cd.CatEstatusResolucionesID = deter.idEstatus";
 
-$db_query = "SELECT deter.CarpetaID, deter.EstatusCarpeta, deter.SentidoDeterminacion, deter.AcuerdosReparatorios, deter.ReactivacionCarpeta, deter.FechaDeterminacion, deter.TipoCriteriosOportunidad, deter.id
-
-FROM
-(
-SELECT c.CarpetaID,
-cd.CatEstatusCarpetaID AS 'EstatusCarpeta', c.id,
-CASE 
-WHEN r.idEstatus IN (22) AND se.idSentencia IS NULL THEN 0
-ELSE cd.CatDeterminacionID
-END AS 'SentidoDeterminacion',
-ar.idTipoAcuerdoReparatorio AS 'AcuerdosReparatorios',
-NULL AS 'ReactivacionCarpeta',
-r.fecha AS 'FechaDeterminacion',
-co.idTipoCriterioOportunidad AS 'TipoCriteriosOportunidad',
-c.FechaInicio
-FROM [EJERCICIOS2].[dbo].[Carpetas] c 
-LEFT JOIN [ESTADISTICAV2].[dbo].[estatusNucsCarpetas] r
-ON c.CarpetaID = r.idCarpeta
-LEFT JOIN [ESTADISTICAV2].[dbo].[estatusNucs] en
-ON c.NUC = en.nuc collate Modern_Spanish_CI_AI
-LEFT JOIN [ESTADISTICAV2].[senap].[acuerdosReparatorios] ar
-ON ar.idEstatusNucs = en.idEstatusNucs
-LEFT JOIN [ESTADISTICAV2].[senap].[criteriosOportunidad] co
-ON en.idEstatusNucs = co.idEstatusNucs
-INNER JOIN CatDeterminaciones cd 
-ON r.idEstatus = cd.CatEstatusResolucionesID
-LEFT JOIN [ESTADISTICAV2].[senap].[sentencias] se
-ON en.idEstatusNucs = se.idEstatusNucs
-) deter";
+$db_query = "SELECT deter.idCarpeta as 'CarpetaID', cd.CatEstatusCarpetaID as 'EstatusCarpeta', cd.CatDeterminacionID as 'SentidoDeterminacion', deter.acuerdo as 'AcuerdosReparatorios', 
+NULL as 'ReactivacionCarpeta', deter.fecha as 'FechaDeterminacion', deter.criterioOportunidad as 'TipoCriteriosOportunidad', deter.id from 
+(SELECT distinct
+		c.FechaInicio,
+      estadis.[idCarpeta]
+	  ,estadis.nuc
+	  ,estadis.[idEstatus]
+	  ,estadis.fecha
+	  ,c.id
+	  ,(select top 1 CatDeterminacionID from [PRUEBA].[dbo].[CatDeterminaciones] where estadis.idEstatus=[PRUEBA].[dbo].[CatDeterminaciones].[CatEstatusResolucionesID]) determinacion
+	  ,(select top 1 [idTipoAcuerdoReparatorio] FROM [ESTADISTICAV2].[senap].[acuerdosReparatorios] acuerdo left join [ESTADISTICAV2].[dbo].estatusNucs estatus on acuerdo.idEstatusNucs=estatus.idEstatusNucs where estatus.nuc=estadis.nuc and estadis.idEstatus=23) as acuerdo
+	  ,(select top 1 idTipoSentencia FROM [ESTADISTICAV2].[senap].[sentencias] sentencia left join [ESTADISTICAV2].[dbo].estatusNucs estatus on sentencia.idEstatusNucs=estatus.idEstatusNucs where estatus.nuc=estadis.nuc) as sentencia
+	  ,(select top 1 idTipoCriterioOportunidad FROM [ESTADISTICAV2].[senap].[criteriosOportunidad] criterio left join [ESTADISTICAV2].[dbo].estatusNucs estatus on criterio.idEstatusNucs=estatus.idEstatusNucs where estatus.nuc=estadis.nuc) as criterioOportunidad
+     FROM [ESTADISTICAV2].[dbo].[estatusNucsCarpetas] estadis inner join [EJERCICIOS2].[dbo].[Carpetas] c on abs(c.CarpetaID) = estadis.idCarpeta";
 
 
 

@@ -3,11 +3,14 @@ header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetm
 header('Content-Disposition: attachment;filename="reporte_distrito.xlsx"');
 header('Cache-Control: max-age=0');
 session_start();
-include('C:/xampp/htdocs/sgr-dpe/service/connection.php');
-require('C:/xampp/htdocs/sgr-dpe/vendor/autoload.php');  // PhpSpreadsheet library
+include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
+require('D:/xampp/htdocs/sgr-dpe/vendor/autoload.php');  // PhpSpreadsheet library
 
-use PhpOffice\PhpSpreadsheet\{Spreadsheet, IOFactory};
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 // Obtener la conexión para la base de datos EJERCICIOS2
 $conn = $connections['incidencia_sicap']['conn'];
@@ -38,8 +41,8 @@ if ($conn && $mesInicio && $mesFin && $anio) {
     ];
 
     // Convertir los meses a texto
-    $textoMesInicio = $mesesTexto[$mesInicio] ?? 'Mes inválido';
-    $textoMesFin = $mesesTexto[$mesFin] ?? 'Mes inválido';
+    $textoMesInicio = array_key_exists($mesInicio, $mesesTexto) ? $mesesTexto[$mesInicio] : 'Mes inválido';
+    $textoMesFin = array_key_exists($mesFin, $mesesTexto) ? $mesesTexto[$mesFin] : 'Mes inválido';
 
     // Crear un nuevo objeto Spreadsheet
     $spreadsheet = new Spreadsheet();
@@ -50,7 +53,7 @@ if ($conn && $mesInicio && $mesFin && $anio) {
     $sqlDelitosComparativos = "
     SELECT Distrito, 
            DelitoAgrupado, 
-           Año,
+           Año AS Anio,
            SUM(TotalDelitos) AS TotalDelitos
     FROM (
         SELECT Distrito, 
@@ -76,7 +79,7 @@ if ($conn && $mesInicio && $mesFin && $anio) {
 
     $delitosComparativos = [];
     while ($row = sqlsrv_fetch_array($stmtDelitosComparativos, SQLSRV_FETCH_ASSOC)) {
-        $delitosComparativos[$row['Distrito']][$row['DelitoAgrupado']][$row['Año']] = $row['TotalDelitos'];
+        $delitosComparativos[$row['Distrito']][$row['DelitoAgrupado']][$row['Anio']] = $row['TotalDelitos'];
     }
 
     $rowNum = 1;
@@ -102,9 +105,9 @@ if ($conn && $mesInicio && $mesFin && $anio) {
 
         // Ordenar los delitos por el total del año actual
         uasort($delitos, function ($a, $b) use ($anio) {
-            $totalA = isset($a[$anio]) ? $a[$anio] : 0;
-            $totalB = isset($b[$anio]) ? $b[$anio] : 0;
-            return $totalB <=> $totalA;
+            $totalA = isset($a[$anio]) ? $a[$anio] : 0; 
+            $totalB = isset($b[$anio]) ? $b[$anio] : 0; 
+            return $totalB - $totalA; 
         });
 
         // Inicializar acumuladores

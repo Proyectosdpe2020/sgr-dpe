@@ -15,3 +15,7 @@ var victim_handle_data = {
     "table_has_changed": false,
     "table_data_to_update": {}
 }
+
+var sedena_handle_data = {
+    "crimes": []
+}

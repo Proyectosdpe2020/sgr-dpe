@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('C:/xampp/htdocs/sgr-dpe/service/connection.php');
-require('C:/xampp/htdocs/sgr-dpe/fpdf/fpdf.php');
+include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
+require('D:/xampp/htdocs/sgr-dpe/fpdf/fpdf.php');
 
 $conn = $connections['incidencia_sicap']['conn'];
 
@@ -69,8 +69,8 @@ FROM Totales;
     ];
 
     // Convertir los meses a texto
-    $textoMesInicio = $mesesTexto[$mesInicio] ?? 'Mes inválido';
-    $textoMesFin = $mesesTexto[$mesFin] ?? 'Mes inválido';
+    $textoMesInicio = array_key_exists($mesInicio, $mesesTexto) ? $mesesTexto[$mesInicio] : 'Mes inválido';
+    $textoMesFin = array_key_exists($mesFin, $mesesTexto) ? $mesesTexto[$mesFin] : 'Mes inválido';
 
     // Configuración de PDF usando FPDF
     $pdf = new FPDF('L', 'mm', 'A4');
@@ -81,14 +81,14 @@ FROM Totales;
     $pdf->Rect(0, 0, 297, 50, 'F');
 
     // Espacios para logos
-    $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/1.3 FGE dorado.png', 20, 10, 30);
+    $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/1.3 FGE dorado.png', 20, 10, 30);
     $pageHeight = $pdf->GetPageHeight();
     $pageWidth = $pdf->GetPageWidth();
     $imageWidth = 40;
     $imageHeight = 20;
     $x = 10;
     $y = $pageHeight - $imageHeight - 10;
-    $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', $x, $y, $imageWidth, $imageHeight);
+    $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', $x, $y, $imageWidth, $imageHeight);
 
     // Título principal
     $pdf->SetTextColor(255, 255, 255); // Texto blanco
@@ -146,8 +146,8 @@ FROM Totales;
     $pdf->MultiCell(0, 5, utf8_decode('(S.I. y S.A.)'), 0, 'C');
 
     $pdf->AddPage();
-    $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/fge.png', 20, 10, 20);
-    $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', 254, 10, 35);
+    $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/fge.png', 20, 10, 20);
+    $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', 254, 10, 35);
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Cell(0, 7, utf8_decode('FISCALÍA GENERAL DEL ESTADO DE MICHOACÁN'), 0, 1, 'C');
     $pdf->SetFont('Arial', 'B', 9);
@@ -217,21 +217,17 @@ FROM Totales;
     // Consulta SQL para obtener los delitos agrupados por Fiscalía, Municipio y tipo de delito
     $sqlDelitosComparativos = "
  SELECT Fiscalia, 
-        Municipio, 
-        DelitoAgrupado, 
-        Año,
-        COUNT(*) AS TotalDelitos
- FROM carpetasMapas
- WHERE Mes BETWEEN $mesInicio AND $mesFin
-   AND Año IN ($anio, $anio - 1, $anio - 2)
-   AND (DelitoAgrupado IS NOT NULL AND DelitoAgrupado <> '')
-   AND Contar=1
- GROUP BY Fiscalia, Municipio, DelitoAgrupado, Año
- ORDER BY Fiscalia, 
-          Municipio, 
-          SUM(COUNT(*)) OVER (PARTITION BY Fiscalia, Municipio, DelitoAgrupado) DESC, -- Total combinado por delito
-          DelitoAgrupado, 
-          Año DESC
+       Municipio, 
+       DelitoAgrupado, 
+       Año AS Anio,
+       COUNT(*) AS TotalDelitos
+FROM carpetasMapas
+WHERE Mes BETWEEN $mesInicio AND $mesFin
+  AND Año IN ($anio, $anio - 1, $anio - 2)
+  AND (DelitoAgrupado IS NOT NULL AND DelitoAgrupado <> '')
+  AND Contar=1
+GROUP BY Fiscalia, Municipio, DelitoAgrupado, Año
+ORDER BY Fiscalia, Municipio, SUM(COUNT(*)) OVER (PARTITION BY Fiscalia, Municipio, DelitoAgrupado) DESC, DelitoAgrupado, Año DESC;
  ";
 
     $stmtDelitosComparativos = sqlsrv_query($conn, $sqlDelitosComparativos);
@@ -242,7 +238,7 @@ FROM Totales;
 
     $delitosComparativos = [];
     while ($row = sqlsrv_fetch_array($stmtDelitosComparativos, SQLSRV_FETCH_ASSOC)) {
-        $delitosComparativos[$row['Fiscalia']][$row['Municipio']][$row['DelitoAgrupado']][$row['Año']] = $row['TotalDelitos'];
+        $delitosComparativos[$row['Fiscalia']][$row['Municipio']][$row['DelitoAgrupado']][$row['Anio']] = $row['TotalDelitos'];
     }
 
     foreach ($delitosComparativos as $fiscalia => $municipios) {
@@ -258,14 +254,14 @@ FROM Totales;
         $pdf->Rect(0, 0, 297, 50, 'F');
 
         // Espacios para logos
-        $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/1.3 FGE dorado.png', 20, 10, 30);
+        $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/1.3 FGE dorado.png', 20, 10, 30);
         $pageHeight = $pdf->GetPageHeight();
         $pageWidth = $pdf->GetPageWidth();
         $imageWidth = 40;
         $imageHeight = 20;
         $x = 10;
         $y = $pageHeight - $imageHeight - 10;
-        $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', $x, $y, $imageWidth, $imageHeight);
+        $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', $x, $y, $imageWidth, $imageHeight);
 
         // Título principal
         $pdf->SetTextColor(255, 255, 255); // Texto blanco
@@ -339,8 +335,8 @@ FROM Totales;
 
         foreach ($municipios as $municipio => $delitos) {
             $pdf->AddPage();
-            $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/fge.png', 20, 10, 20);
-            $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', 254, 10, 35);
+            $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/fge.png', 20, 10, 20);
+            $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', 254, 10, 35);
             $pdf->SetFont('Arial', 'B', 12);
             $pdf->Cell(0, 10, utf8_decode(mb_strtoupper("FISCALÍA GENERAL DEL ESTADO DE MICHOACÁN")), 0, 1, 'C');
             $pdf->SetFont('Arial', 'B', 10);

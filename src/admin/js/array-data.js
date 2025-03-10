@@ -148,6 +148,21 @@ function getTableFormElementsBySearchOP(attr){
                 id: 'age',
                 type: 'text',
                 json_key: 'age'
+            },
+            {
+                id: 'name',
+                type: 'text',
+                json_key: 'name'
+            },
+            {
+                id: 'ap',
+                type: 'text',
+                json_key: 'ap'
+            },
+            {
+                id: 'am',
+                type: 'text',
+                json_key: 'am'
             }
         ],
         crimes_by_unknown_gener: [
@@ -155,6 +170,21 @@ function getTableFormElementsBySearchOP(attr){
                 id: 'gener',
                 type: 'text',
                 json_key: 'gener'
+            },
+            {
+                id: 'name',
+                type: 'text',
+                json_key: 'name'
+            },
+            {
+                id: 'ap',
+                type: 'text',
+                json_key: 'ap'
+            },
+            {
+                id: 'am',
+                type: 'text',
+                json_key: 'am'
             }
         ],
         crimes_by_moral: [
@@ -162,6 +192,21 @@ function getTableFormElementsBySearchOP(attr){
                 id: 'gener',
                 type: 'text',
                 json_key: 'gener'
+            },
+            {
+                id: 'name',
+                type: 'text',
+                json_key: 'name'
+            },
+            {
+                id: 'ap',
+                type: 'text',
+                json_key: 'ap'
+            },
+            {
+                id: 'am',
+                type: 'text',
+                json_key: 'am'
             }
         ],
         robbery_months_old: [
@@ -169,6 +214,21 @@ function getTableFormElementsBySearchOP(attr){
                 id: 'age',
                 type: 'text',
                 json_key: 'age'
+            },
+            {
+                id: 'name',
+                type: 'text',
+                json_key: 'name'
+            },
+            {
+                id: 'ap',
+                type: 'text',
+                json_key: 'ap'
+            },
+            {
+                id: 'am',
+                type: 'text',
+                json_key: 'am'
             }
         ]
     };

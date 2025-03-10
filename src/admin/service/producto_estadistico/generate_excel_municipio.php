@@ -3,10 +3,11 @@ header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetm
 header('Content-Disposition: attachment;filename="reporte_municipio.xlsx"');
 header('Cache-Control: max-age=0');
 session_start();
-include('C:/xampp/htdocs/sgr-dpe/service/connection.php');
-require('C:/xampp/htdocs/sgr-dpe/vendor/autoload.php');
+include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
+require('D:/xampp/htdocs/sgr-dpe/vendor/autoload.php');  
 
-use PhpOffice\PhpSpreadsheet\{Spreadsheet, IOFactory};
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
@@ -67,7 +68,7 @@ $data = [];
 $totalDelitosAll = 0; // Variable para el total de todos los delitos
 
 while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-    $data[] = $row; // Recopilamos los resultados en un array
+    $data[] = $row; // Recopilar los resultados en un arreglo
     $totalDelitosAll += $row['totalDelitos']; // Sumar el total de delitos de todos los municipios
 }
 
@@ -76,20 +77,20 @@ $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle('RELACIÓN DE MUNICIPIOS');
 
-// Encabezado principal
+// Encabezado 
 $sheet->setCellValue('A1', 'FISCALÍA GENERAL DEL ESTADO DE MICHOACÁN');
 $sheet->mergeCells("A1:D1");
 $sheet->getStyle("A1")->getFont()->setBold(true)->setSize(16);
 $sheet->getStyle("A1")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
-// Subtítulo
+// Iítulo
 $sheet->setCellValue('A2', "RELACIÓN DE MUNICIPIOS");
 $sheet->mergeCells("A2:D2");
 $sheet->getStyle("A2")->getFont()->setBold(true)->setSize(14);
 $sheet->getStyle("A2")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A2")->getAlignment()->setWrapText(true); // Permitir texto en varias líneas
+$sheet->getStyle("A2")->getAlignment()->setWrapText(true); 
 
-// Encabezados de la tabla (a partir de la fila 4)
+// Encabezados de la tabla 
 $rowNum = 4; // Comenzar en la fila 4
 $sheet->setCellValue('A' . $rowNum, 'NÚMERO');
 $sheet->setCellValue('B' . $rowNum, 'MUNICIPIO');
@@ -97,9 +98,9 @@ $sheet->setCellValue('C' . $rowNum, 'NÚMERO DE DELITOS');
 $sheet->setCellValue('D' . $rowNum, 'LUGAR');
 
 // Estilo de los encabezados de la tabla
-$sheet->getStyle("A$rowNum:D$rowNum")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF'); // Texto blanco
-$sheet->getStyle("A$rowNum:D$rowNum")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); // Fondo azul oscuro
-$sheet->getStyle("A$rowNum:D$rowNum")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Centrar texto
+$sheet->getStyle("A$rowNum:D$rowNum")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF'); 
+$sheet->getStyle("A$rowNum:D$rowNum")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); 
+$sheet->getStyle("A$rowNum:D$rowNum")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); 
 $sheet->getStyle("A$rowNum:D$rowNum")->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
 // Ajuste de altura para encabezados
@@ -142,7 +143,7 @@ foreach ($data as $row) {
     $rowNum++;
 }
 
-// Agregar un resumen al final
+// Agregar un total al final
 $sheet->setCellValue('B' . $rowNum, 'TOTAL');
 $sheet->setCellValue('C' . $rowNum, $totalDelitosAll);
 $sheet->getStyle('C' . $rowNum)->getNumberFormat()->setFormatCode('#,##0');
@@ -153,7 +154,7 @@ $sheet->getStyle('A1:D' . ($rowNum))->applyFromArray([
     'borders' => [
         'allBorders' => [
             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
-            'color' => ['argb' => '646464'],
+            'color' => ['rgb' => '646464'],
         ],
     ],
 ]);
@@ -176,12 +177,12 @@ $sheet->getStyle('C117')->getFont()->setBold(false);
 $sheet->getColumnDimension('B')->setWidth(30); // Municipio
 $sheet->getColumnDimension('C')->setWidth(20); // Número de Delitos
 
-// Segunda consulta para obtener delitos agrupados por Fiscalía, Municipio y tipo de delito
+// Segunda consulta SQL
 $sqlDelitosComparativos = "
     SELECT Fiscalia, 
         Municipio, 
         DelitoAgrupado, 
-        Año,
+        Año AS Anio,
         COUNT(*) AS TotalDelitos
  FROM carpetasMapas
  WHERE Mes BETWEEN $mesInicio AND $mesFin
@@ -204,15 +205,14 @@ if ($stmtDelitosComparativos === false) {
     die(print_r(sqlsrv_errors(), true));
 }
 
-// Crear el array de delitos comparativos
+// Crear el arreglo de delitos comparativos
 $delitosComparativos = [];
 
-// Supongamos que obtienes resultados de la base de datos
 while ($row = sqlsrv_fetch_array($stmtDelitosComparativos, SQLSRV_FETCH_ASSOC)) {
     $fiscalia = $row['Fiscalia'];
     $municipio = $row['Municipio'];
     $delito = $row['DelitoAgrupado'];
-    $rowAnio = $row['Año'];
+    $rowAnio = $row['Anio'];
     $totalDelitos = $row['TotalDelitos'];
 
     // Inicializar la estructura si no existe
@@ -224,7 +224,7 @@ while ($row = sqlsrv_fetch_array($stmtDelitosComparativos, SQLSRV_FETCH_ASSOC)) 
     $delitosComparativos[$fiscalia][$municipio][$delito][$rowAnio] = $totalDelitos;
 }
 
-// Crear una nueva hoja para los delitos comparativos
+// Crear una nueva hoja para la incidencia delictiva
 $sheetComparativos = $spreadsheet->createSheet();
 $sheetComparativos->setTitle('INCIDENCIA DELICTIVA');
 
@@ -232,34 +232,36 @@ $rowNumComparativos = 1; // Comienza en la fila 1
 
 $colorAlternoComparativos = true;
 
-// Encabezado principal
+//Encabezado 
 $sheetComparativos->setCellValue('A1', 'FISCALÍA GENERAL DEL ESTADO DE MICHOACÁN');
 $sheetComparativos->mergeCells("A1:H1");
 $sheetComparativos->getStyle("A1")->getFont()->setBold(true)->setSize(16);
 $sheetComparativos->getStyle("A1")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); 
 
-// Encabezado del municipio y periodo
-$sheetComparativos->setCellValue('A2', "INCIDENCIA DELICTIVA POR AVERIGUACIÓN PREVIA");
+//Título
+$sheetComparativos->setCellValue('A2', "INCIDENCIA DELICTIVA");
 $sheetComparativos->mergeCells("A2:H2");
 $sheetComparativos->getStyle("A2")->getFont()->setBold(true)->setSize(14); 
-$sheetComparativos->getStyle("A2")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); 
+$sheetComparativos->getStyle("A2")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
 $rowNumComparativos = 5; 
 
 foreach ($delitosComparativos as $fiscalia => $municipios) {
+
     // Escribir la fiscalía
     $sheetComparativos->setCellValue('A' . $rowNumComparativos, mb_strtoupper("Fiscalía $fiscalia"));
     $sheetComparativos->mergeCells("A$rowNumComparativos:H$rowNumComparativos");
-    $sheetComparativos->getStyle("A$rowNumComparativos")->getFont()->setBold(true)->setSize(14)->getColor()->setRGB('FFFFFF'); // Fuente blanca
-    $sheetComparativos->getStyle("A$rowNumComparativos")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); // Fondo #152f4a
+    $sheetComparativos->getStyle("A$rowNumComparativos")->getFont()->setBold(true)->setSize(14)->getColor()->setRGB('FFFFFF'); 
+    $sheetComparativos->getStyle("A$rowNumComparativos")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); 
     $rowNumComparativos++;
 
     foreach ($municipios as $municipio => $delitos) {
+
         // Escribir el municipio
         $sheetComparativos->setCellValue('A' . $rowNumComparativos, mb_strtoupper("$municipio"));
         $sheetComparativos->mergeCells("A$rowNumComparativos:H$rowNumComparativos");
-        $sheetComparativos->getStyle("A$rowNumComparativos")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF'); // Fuente blanca
-        $sheetComparativos->getStyle("A$rowNumComparativos")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); // Fondo #152f4a
+        $sheetComparativos->getStyle("A$rowNumComparativos")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF'); 
+        $sheetComparativos->getStyle("A$rowNumComparativos")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); 
         $rowNumComparativos++;
 
         // Encabezados
@@ -271,17 +273,17 @@ foreach ($delitosComparativos as $fiscalia => $municipios) {
         $sheetComparativos->setCellValue('F' . $rowNumComparativos, 'DIF. ' . ($anio - 2) . '-' . $anio);
         $sheetComparativos->setCellValue('G' . $rowNumComparativos, 'DIF. ' . ($anio - 1) . '-' . $anio);
         $sheetComparativos->setCellValue('H' . $rowNumComparativos, 'PORCENTAJE');
-        $sheetComparativos->getStyle("A$rowNumComparativos:H$rowNumComparativos")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF'); // Fuente blanca
-        $sheetComparativos->getStyle("A$rowNumComparativos:H$rowNumComparativos")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); // Fondo #152f4a
+        $sheetComparativos->getStyle("A$rowNumComparativos:H$rowNumComparativos")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF'); 
+        $sheetComparativos->getStyle("A$rowNumComparativos:H$rowNumComparativos")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); 
         $rowNumComparativos++;
 
         $numDelito = 1;
 
         // Ordenar los delitos por el total del año actual
         uasort($delitos, function ($a, $b) use ($anio) {
-            $totalA = isset($a[$anio]) ? $a[$anio] : 0;
-            $totalB = isset($b[$anio]) ? $b[$anio] : 0;
-            return $totalB <=> $totalA;
+            $totalA = isset($a[$anio]) ? $a[$anio] : 0; 
+            $totalB = isset($b[$anio]) ? $b[$anio] : 0; 
+            return $totalB - $totalA; 
         });
 
         // Inicializar acumuladores
@@ -316,13 +318,14 @@ foreach ($delitosComparativos as $fiscalia => $municipios) {
                     ->setRGB('FFFFFF');
             }
 
-            $sheetComparativos->setCellValue('A' . $rowNumComparativos, $numDelito);
+            $sheetComparativos->setCellValue('A' . $rowNumComparativos, $numDelito); 
             $sheetComparativos->setCellValue('B' . $rowNumComparativos, $delito);
             $sheetComparativos->setCellValue('C' . $rowNumComparativos, $anioMinus2);
             $sheetComparativos->setCellValue('D' . $rowNumComparativos, $anioMinus1);
             $sheetComparativos->setCellValue('E' . $rowNumComparativos, $anioActual);
             $sheetComparativos->setCellValue('F' . $rowNumComparativos, $diffMinus2);
             $sheetComparativos->setCellValue('G' . $rowNumComparativos, $diffMinus1);
+
             // Mostrar porcentaje con las flechas
             $porcentajeText = ($porcentaje === 'NC') ? 'NC' : $porcentaje . '%';
             $sheetComparativos->setCellValue('H' . $rowNumComparativos, $porcentajeText);
@@ -373,7 +376,7 @@ foreach ($delitosComparativos as $fiscalia => $municipios) {
                 $flecha = ($porcentaje > 0) ? 'up.png' : (($porcentaje < 0) ? 'down.png' : '');
                 if ($flecha) {
                     // Ruta de la imagen de la flecha
-                    $flechaPath = 'C:/xampp/htdocs/sgr-dpe/assets/img/' . $flecha;
+                    $flechaPath = 'D:/xampp/htdocs/sgr-dpe/assets/img/' . $flecha;
 
                     // Crear un nuevo objeto Drawing para la flecha
                     $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
@@ -481,5 +484,5 @@ $sheetComparativos->getColumnDimension('H')->setWidth(15); // Porcentaje
 // Crear el writer de Excel y enviar al navegador
 $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 ob_end_clean();
-$writer->save('php://output'); // Esto enviará el archivo directamente al navegador
+$writer->save('php://output'); 
 exit;

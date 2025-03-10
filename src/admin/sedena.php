@@ -16,7 +16,8 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
 		<link rel="shortcut icon" href="../../assets/img/fge.png"/>
 		<link rel="stylesheet" href="assets/css/main.css?v=<?php echo time(); ?>"/>
 		<link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>"/>
-		
+		<link rel="stylesheet" href="assets/css/multiselect.css?v=<?php echo time(); ?>"/>
+
 		<!--<link rel="stylesheet" href="../../css/styles.css">-->
 		<link rel="stylesheet" href="../../css/styles.css?v=<?php echo time(); ?>">
 		<link rel="stylesheet" href="../../css/dropdown-style.css?v=<?php echo time(); ?>">
@@ -28,17 +29,21 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
 
 		<script src="../../js/script.js?v=<?php echo time(); ?>"></script>
 		<script src="js/script.js?v=<?php echo time(); ?>"></script>
-		<script src="js/nt.js?v=<?php echo time(); ?>"></script>
+		<script src="js/multiselect.js?v=<?php echo time(); ?>"></script>
+		<script src="js/handle_data.js?v=<?php echo time(); ?>"></script>
+		<script src="js/sedena.js?v=<?php echo time(); ?>"></script>
 	</head>
 	<body class="is-preload">
 
 		<div class="loader-div"></div>
+
 		<div id="wrapper">
 			<div id="main">
 				<header id="navbar">
 					<div class="dropdown username-section">
 						<div class="dropbtn">
 							<img onclick="myFunction()" src="../../assets/img/user.png" alt="">
+
 							<div onclick="myFunction()">
 								<div id="username"><?php echo $_SESSION['user_data']['name'].' '.$_SESSION['user_data']['paternal_surname'].' '.$_SESSION['user_data']['maternal_surname']; ?></div>
 								<div id="role">Administrador</div>
@@ -52,27 +57,86 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
 				</header>
 
 				<div class="background-header">
-					<h1>NORMA TÉCNICA</h1>
+					<h1>CONSULTA SEDENA</h1>
 				</div>
 
 				<div class="inner">
 					<section>
-						<form class="search-form" action="#">
+						<form class="search-form" action="#">	
+
 							<div class="form-row">
 								<div class="col-md-6 form-group">
-									<label style="font-weight:bold">Mes y año: *</label>
-									<input id="main-search-search-month" type="month" class="form-control" required="true">
+									<label style="font-weight:bold">Opción: *</label>
+				
+									<select id="main-search-option" class="form-control" required="true">									
+										<option value ="1" selected>Delitos</option>
+										<option value ="2">Víctimas</option>
+									</select>	
+								</div>
+				
+								<div class="col-md-6 form-group">
+
+								<label style="font-weight:bold">Delito: *</label>
+
+									<div id="crimes-multiselect-section">
+										<div style="color: #EE6E5A;">Cargando datos... </div>
+									</div>	
+
 								</div>
 							</div>
 
-							<div class="form-buttons">	
-								<button type="button" class="btn btn-outline-primary rounded-button" onclick="getNT()">Ejecutar</button>
+							<div class="form-row">
+								<div class="col-md-6 form-group">
+
+									<label style="font-weight:bold">Fecha de inicio 1: *</label>
+
+									<input type="date" class="form-control" id="search-initial-date">	
+
+								</div>
+
+								<div class="col-md-6 form-group">
+
+									<label style="font-weight:bold">Fecha de fin 1: *</label>
+
+									<input type="date" class="form-control" id="search-finish-date">	
+
+								</div>
 							</div>
+
+							<div class="form-row">
+								<div class="col-md-6 form-group">
+
+									<label style="font-weight:bold">Fecha de inicio 2: *</label>
+
+									<input type="date" class="form-control" id="search-initial-date-2">	
+
+								</div>
+
+								<div class="col-md-6 form-group">
+
+									<label style="font-weight:bold">Fecha de fin 2: *</label>
+
+									<input type="date" class="form-control" id="search-finish-date-2">	
+
+								</div>
+							</div>
+
+							<div class="form-buttons">
+								<div id="save-victims-button-section"></div>
+								<button type="button" class="btn rounded-button btn-outline-primary" id="search-btn" onclick="getSEDENA()">Buscar</button>
+							</div>
+
 						</form>
+						<div id="sedena-table-title"></div>
+						<div id="main-frame-sedena-section"></div>
+						
 					</section>
+
+					
+
 				</div>
 			</div>
-
+			
 			<div id="sidebar">
 				<div class="inner">
 					<nav id="menu">
@@ -82,15 +146,14 @@ if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_S
 
 						<ul>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="senap.php">SENAP</a></li>
-							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">MICRODATO</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="microdato.php">Microdato</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="avp.php">Exportar base de datos histórica</a></li>
-							<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Norma Técnica</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="norma_tecnica.php">Norma técnica</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="censo_procu.php">Censo procuración de justicia</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="incidencia_sesesp.php">Incidencia delictiva SESESP</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación de víctimas</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="producto_estadistico.php">Producto estadístico</a></li>
-							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="SESNSP.php">Consulta preliminar SESNSP</a></li>
-							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sedena.php">Consulta SEDENA</a></li>
+							<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Consulta SEDENA</a></li>
 						</ul>
 					</nav>
 

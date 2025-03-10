@@ -17,10 +17,16 @@ if($conn && $to_update != null){
 
         $obj_elem = (object) $element;
         $gener = cleanTextInjec($obj_elem->gener);
+        $name = cleanTextInjec($obj_elem->name);
+        $ap = cleanTextInjec($obj_elem->ap);
+        $am = cleanTextInjec($obj_elem->am);
         $id = cleanTextInjec($obj_elem->id);
 
         $sql = "UPDATE [EJERCICIOS2].[dbo].[Victimas]
-                    SET [Sexo] = $gener
+                    SET [Sexo] = $gener,
+                        [Nombre] = '$name',
+                        [Paterno] = '$ap',
+                        [Materno] = '$am'
                     WHERE VictimaID = $id";
                     
         $return = updateGenericData(

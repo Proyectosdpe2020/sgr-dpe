@@ -20,7 +20,9 @@ $db_insert_table = "[dbo].[MandamientosJudiciales]
 ,[FechaCumplimientoMJ]
 ,[CarpetaID],[ProcesoID],[ejercicios_id])";
 
-$db_insert_conditions = "YEAR(manju.FechaInicio) IN ($year) AND MONTH(manju.FechaInicio) IN ($month)";
+//$db_insert_conditions = "YEAR(manju.FechaInicio) IN ($year) AND MONTH(manju.FechaInicio) IN ($month)";
+
+$db_insert_conditions = "( year(FechaInicio) = 2023 or (year(FechaInicio) = 2024 and month(FechaInicio) <= 6) )";
 
 $db_query = "SELECT manju.FechaSolicitudMJ, ctm.senap_id as 'CatTipoMandamientoID', manju.FechaLibramientoMJ, manju.CatEstatusMJID, manju.FechaCumplimientoMJ, manju.CarpetaID, proces.ProcesoID, proces.ejercicios_id FROM
 (SELECT

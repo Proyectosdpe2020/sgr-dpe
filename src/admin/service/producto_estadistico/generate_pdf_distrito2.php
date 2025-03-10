@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('C:/xampp/htdocs/sgr-dpe/service/connection.php');
-require('C:/xampp/htdocs/sgr-dpe/fpdf/fpdf.php');
+include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
+require('D:/xampp/htdocs/sgr-dpe/fpdf/fpdf.php');
 
 $conn = $connections['incidencia_sicap']['conn'];
 
@@ -44,14 +44,14 @@ if ($conn && $mesInicio && $mesFin && $anio) {
     $pdf->Rect(0, 0, 297, 50, 'F');
 
     // Espacios para logos
-    $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/1.3 FGE dorado.png', 20, 10, 30);
+    $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/1.3 FGE dorado.png', 20, 10, 30);
     $pageHeight = $pdf->GetPageHeight();
     $pageWidth = $pdf->GetPageWidth();
     $imageWidth = 40;
     $imageHeight = 20;
     $x = 10;
     $y = $pageHeight - $imageHeight - 10;
-    $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', $x, $y, $imageWidth, $imageHeight);
+    $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', $x, $y, $imageWidth, $imageHeight);
 
     // Encabezado
     $pdf->SetTextColor(255, 255, 255);
@@ -147,8 +147,8 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
         $pdf->SetLeftMargin($leftMargin);
         $pdf->SetRightMargin($pageWidth - $leftMargin - $totalContentWidth);
         $pdf->AddPage();
-        $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/fge.png', 20, 10, 20);
-        $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', 254, 10, 35);
+        $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/fge.png', 20, 10, 20);
+        $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', 254, 10, 35);
         $pdf->SetFont('Arial', 'B', 12);
         $pdf->Cell(0, 10, utf8_decode(mb_strtoupper("FISCALÍA GENERAL DEL ESTADO DE MICHOACÁN")), 0, 1, 'C');
         $pdf->SetFont('Arial', 'B', 10);

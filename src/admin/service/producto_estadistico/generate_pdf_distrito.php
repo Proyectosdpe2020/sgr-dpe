@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('C:/xampp/htdocs/sgr-dpe/service/connection.php');
-require('C:/xampp/htdocs/sgr-dpe/fpdf/fpdf.php');
+include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
+require('D:/xampp/htdocs/sgr-dpe/fpdf/fpdf.php');
 
 $conn = $connections['incidencia_sicap']['conn'];
 
@@ -15,7 +15,7 @@ $anio = intval($_POST['anio']);
 
 if ($conn && $mesInicio && $mesFin && $anio) {
 
-    // Array para convertir números de mes a texto
+    // Arreglo para convertir números de mes a texto
     $mesesTexto = [
         1 => 'Enero',
         2 => 'Febrero',
@@ -32,8 +32,8 @@ if ($conn && $mesInicio && $mesFin && $anio) {
     ];
 
     // Convertir los meses a texto
-    $textoMesInicio = $mesesTexto[$mesInicio] ?? 'Mes inválido';
-    $textoMesFin = $mesesTexto[$mesFin] ?? 'Mes inválido';
+    $textoMesInicio = array_key_exists($mesInicio, $mesesTexto) ? $mesesTexto[$mesInicio] : 'Mes inválido';
+    $textoMesFin = array_key_exists($mesFin, $mesesTexto) ? $mesesTexto[$mesFin] : 'Mes inválido';
 
     // Configuración de PDF usando FPDF
     $pdf = new FPDF('L', 'mm', 'A4');
@@ -44,24 +44,24 @@ if ($conn && $mesInicio && $mesFin && $anio) {
     $pdf->Rect(0, 0, 297, 50, 'F');
 
     // Espacios para logos
-    $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/1.3 FGE dorado.png', 20, 10, 30);
+    $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/1.3 FGE dorado.png', 20, 10, 30);
     $pageHeight = $pdf->GetPageHeight();
     $pageWidth = $pdf->GetPageWidth();
     $imageWidth = 40;
     $imageHeight = 20;
     $x = 10;
     $y = $pageHeight - $imageHeight - 10;
-    $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', $x, $y, $imageWidth, $imageHeight);
+    $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', $x, $y, $imageWidth, $imageHeight);
 
-    // Título principal
-    $pdf->SetTextColor(255, 255, 255); // Texto blanco
+    // Encabezado
+    $pdf->SetTextColor(255, 255, 255);
     $pdf->SetFont('Arial', 'B', 24);
     $pdf->SetY(15); // Posiciona en la parte superior
     $pdf->SetX(50); // Desplaza hacia la derecha
     $pdf->Cell(0, 10, utf8_decode('FISCALÍA GENERAL DEL ESTADO DE MICHOACÁN'), 0, 1, 'C');
     $pdf->Ln(5);
 
-    // Texto descriptivo debajo del título
+    // Título principal
     $pdf->SetTextColor(255, 255, 255);
     $pdf->SetFont('Arial', '', 18);
     $pdf->Cell(0, 10, utf8_decode('ESTADÍSTICA DE INCIDENCIA DELICTIVA'), 0, 1, 'C');
@@ -69,13 +69,13 @@ if ($conn && $mesInicio && $mesFin && $anio) {
     // Espacio entre el bloque azul y el contenido
     $pdf->SetY(90);
 
-    // Título "MUNICIPIOS"
+    // Título "DISTRITOS JUDICIALES"
     $pdf->SetFont('Arial', 'B', 40);
     $pdf->SetTextColor(0, 0, 0);
     $pdf->Cell(0, 10, utf8_decode('DISTRITOS JUDICIALES'), 0, 1, 'C');
     $pdf->Ln(5);
 
-    // Línea divisoria decorativa
+    // Línea divisoria 
     $pdf->SetDrawColor(100, 100, 100); // Gris
     $pdf->SetLineWidth(0.8);
     $pdf->Line(20, $pdf->GetY(), 277, $pdf->GetY());
@@ -87,7 +87,7 @@ if ($conn && $mesInicio && $mesFin && $anio) {
     $width = 257; // Ancho del rectángulo (toda la página menos márgenes)
     $height = 25; // Alto del rectángulo, ajustado al contenido
 
-    // Dibujar el rectángulo gris claro
+    // Dibujar el rectángulo 
     $pdf->SetFillColor(200, 200, 200);
     $pdf->Rect($x, $y, $width, $height, 'F');
 
@@ -111,7 +111,7 @@ if ($conn && $mesInicio && $mesFin && $anio) {
     $sqlDelitosComparativos = "
     SELECT Distrito, 
        DelitoAgrupado, 
-       Año,
+       Año AS Anio,
        SUM(TotalDelitos) AS TotalDelitos
 FROM (
     SELECT Distrito, 
@@ -137,7 +137,7 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
 
     $delitosComparativos = [];
     while ($row = sqlsrv_fetch_array($stmtDelitosComparativos, SQLSRV_FETCH_ASSOC)) {
-        $delitosComparativos[$row['Distrito']][$row['DelitoAgrupado']][$row['Año']] = $row['TotalDelitos'];
+        $delitosComparativos[$row['Distrito']][$row['DelitoAgrupado']][$row['Anio']] = $row['TotalDelitos'];
     }
 
     foreach ($delitosComparativos as $distrito => $delitos) {
@@ -147,8 +147,8 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
         $pdf->SetLeftMargin($leftMargin);
         $pdf->SetRightMargin($pageWidth - $leftMargin - $totalContentWidth);
         $pdf->AddPage();
-        $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/fge.png', 20, 10, 20);
-        $pdf->Image('C:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', 254, 10, 35);
+        $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/fge.png', 20, 10, 20);
+        $pdf->Image('D:/xampp/htdocs/sgr-dpe/assets/img/Mich.png', 254, 10, 35);
         $pdf->SetFont('Arial', 'B', 12);
         $pdf->Cell(0, 10, utf8_decode(mb_strtoupper("FISCALÍA GENERAL DEL ESTADO DE MICHOACÁN")), 0, 1, 'C');
         $pdf->SetFont('Arial', 'B', 10);
@@ -159,21 +159,21 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
         $pdf->Ln(3);
 
         // Ordenar los delitos por el total de delitos en orden descendente para cada distrito
-        foreach ($delitos as $delito => $años) {
-            // Calcular el total de delitos para cada delito (sumando los valores por cada año)
-            $totalDelitos = array_sum($años);
-            $delitos[$delito]['total'] = $totalDelitos;  // Añadir el total como valor
-        }
+    foreach ($delitos as $delito => $años) {
+        // Calcular el total de delitos para cada delito (sumando los valores por cada año)
+        $totalDelitos = array_sum($años);
+        $delitos[$delito]['total'] = $totalDelitos;  // Añadir el total como valor
+    }
 
-        // Ordenar los delitos en base al total del año seleccionado
-        uasort($delitos, function ($a, $b) use ($anio) {
-            $totalA = isset($a[$anio]) ? $a[$anio] : 0; // Total para el año seleccionado en el delito A
-            $totalB = isset($b[$anio]) ? $b[$anio] : 0; // Total para el año seleccionado en el delito B
-            return $totalB - $totalA; // Orden descendente
-        });
+    // Ordenar los delitos en base al total del año seleccionado
+    uasort($delitos, function ($a, $b) use ($anio) {
+        $totalA = isset($a[$anio]) ? $a[$anio] : 0; 
+        $totalB = isset($b[$anio]) ? $b[$anio] : 0; 
+        return $totalB - $totalA; // Orden descendente
+    });
 
-        // Obtener los 5 primeros delitos más frecuentes
-        $topDelitos = array_slice($delitos, 0, 5, true);
+    // Obtener los 5 primeros delitos más frecuentes
+    $topDelitos = array_slice($delitos, 0, 5, true);
 
         // Colores para cada año
         $colorAnioMinus2 = [192, 159, 119]; // Año -2
@@ -198,20 +198,20 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
         $graphY = $pdf->GetY() + 50; // Y de inicio
         $graphWidth = 30; // Ancho de la gráfica
         $graphHeight = 40; // Altura de la gráfica
-        $barWidth = 3; // Ancho de cada barra (ajustado a un valor mayor para mayor visibilidad)
-        $spaceBetweenBars = 2; // Espacio entre barras dentro de un mismo delito (ajustado)
-        $spaceBetweenDelitos = 14; // Espacio entre diferentes delitos (ajustado para más claridad)
+        $barWidth = 3; // Ancho de cada barra 
+        $spaceBetweenBars = 2; // Espacio entre barras dentro de un mismo delito 
+        $spaceBetweenDelitos = 14; // Espacio entre diferentes delitos
         $maxValue = max(array_map('max', $delitosValues)); // Valor máximo para ajustar las barras
 
-        $municipioX = $graphX + 30; // Coordenada X (ajustada a la derecha, alineada con la gráfica)
+        $municipioX = $graphX + 30; // Coordenada X 
         $municipioY = $graphY - 20;
 
         $currentY = $graphY;
 
         // Mostrar el nombre del municipio encima de la gráfica
         $pdf->SetXY($municipioX, $municipioY); // Posición exacta para el texto
-        $pdf->SetFont('Arial', 'B', 10); // Configura la fuente
-        $pdf->SetTextColor(0, 0, 0); // Color negro
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->SetTextColor(0, 0, 0); 
         $pdf->Cell(0, 10, utf8_decode(mb_strtoupper($distrito)), 0, 0, 'L');
         $pdf->Ln(5);
         $comparativoX = $graphX + 49.5;
@@ -224,7 +224,7 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
         $graphTotalWidth = count($delitosValues) * ($spaceBetweenDelitos + $barWidth * 3) - 33.9; // Ancho total de la gráfica
 
         // Calcular la posición final de la gráfica
-        $legendY = $graphY + $graphHeight + 10; // Posicionar la leyenda 10 unidades debajo de la gráfica
+        $legendY = $graphY + $graphHeight + 10; 
 
         // Calcular la posición X centrada
         $legendTotalWidth = 40; // Ancho estimado (cuadro + espacio + texto)
@@ -232,34 +232,34 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
 
         // Dibujar la leyenda explicativa de los colores
         $pdf->SetFont('Arial', '', 8);
-        $pdf->SetTextColor(0, 0, 0); // Color negro para el texto
+        $pdf->SetTextColor(0, 0, 0); 
 
         // Leyenda Año -2
         $pdf->SetXY($legendX, $legendY); // Posición inicial para la leyenda
         $pdf->SetFillColor($colorAnioMinus2[0], $colorAnioMinus2[1], $colorAnioMinus2[2]); // Color del año -2
         $pdf->Rect($pdf->GetX(), $pdf->GetY(), 4, 4, 'F'); // Cuadro de color reducido a 4x4
-        $pdf->SetXY($legendX + 6, $legendY); // Mover el texto del año más a la derecha (6 unidades después del cuadro)
-        $pdf->Cell(0, 4, utf8_decode($anio - 2), 0, 1, 'L'); // Texto del año
+        $pdf->SetXY($legendX + 6, $legendY); // Mover el texto del año más a la derecha 
+        $pdf->Cell(0, 4, utf8_decode($anio - 2), 0, 1, 'L');
 
         // Leyenda Año -1
         $pdf->SetXY($legendX, $pdf->GetY() + 3); // Ajustar posición para la siguiente línea
         $pdf->SetFillColor($colorAnioMinus1[0], $colorAnioMinus1[1], $colorAnioMinus1[2]); // Color del año -1
         $pdf->Rect($pdf->GetX(), $pdf->GetY(), 4, 4, 'F'); // Cuadro de color reducido a 4x4
         $pdf->SetXY($legendX + 6, $pdf->GetY()); // Mover el texto del año más a la derecha
-        $pdf->Cell(0, 4, utf8_decode($anio - 1), 0, 1, 'L'); // Texto del año
+        $pdf->Cell(0, 4, utf8_decode($anio - 1), 0, 1, 'L'); 
 
         // Leyenda Año actual
         $pdf->SetXY($legendX, $pdf->GetY() + 3); // Ajustar posición para la siguiente línea
         $pdf->SetFillColor($colorAnioActual[0], $colorAnioActual[1], $colorAnioActual[2]); // Color del año actual
         $pdf->Rect($pdf->GetX(), $pdf->GetY(), 4, 4, 'F'); // Cuadro de color reducido a 4x4
         $pdf->SetXY($legendX + 6, $pdf->GetY()); // Mover el texto del año más a la derecha
-        $pdf->Cell(0, 4, utf8_decode($anio), 0, 1, 'L'); // Texto del año
+        $pdf->Cell(0, 4, utf8_decode($anio), 0, 1, 'L'); 
 
         $pdf->Ln(10);
 
         // Dibujar la gráfica de barras
         $pdf->SetFillColor(200, 220, 255); // Color de relleno de las barras
-        $pdf->SetTextColor(0, 0, 0); // Color del texto
+        $pdf->SetTextColor(0, 0, 0); 
 
         foreach ($delitosValues as $index => $values) {
             $delitoName = $delitosNames[$index];
@@ -279,14 +279,16 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
 
                 $pdf->Rect($barX, $graphY + $graphHeight - $barHeight, $barWidth, $barHeight, 'F');
 
+                $formattedValue = number_format($value);
+
                 $pdf->SetFont('Arial', 'B', 6);
                 $pdf->Text($barX - 1, $graphY + $graphHeight - $barHeight - 2, number_format($value, 0, '.', ','));
             }
             $currentY += 30;
         }
-        //Añadir los nombres de los delitos debajo de las barras**
-        $pdf->SetFont('Arial', '', 6); // Configura la fuente para los nombres de los delitos
-        $pdf->SetTextColor(0, 0, 0); // Asegura que el texto sea negro
+        //Añadir los nombres de los delitos debajo de las barras
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->SetTextColor(0, 0, 0); 
         $maxLength = 16;
 
         foreach ($delitosValues as $index => $values) {
@@ -301,7 +303,7 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
             $textX = $graphX + $index * ($barWidth + $spaceBetweenDelitos) + ($groupWidth - $pdf->GetStringWidth($delitoName)) / 2;
 
             // Calcular posición Y debajo de la gráfica
-            $textY = $graphY + $graphHeight + 5; // Ajusta 5 unidades debajo de la base de la gráfica
+            $textY = $graphY + $graphHeight + 5; 
 
             // Dibujar el nombre del delito
             $pdf->Text($textX, $textY, $delitoName);
@@ -355,7 +357,7 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
         $colorAlterno = true;
 
         foreach ($delitos as $delito => $años) {
-            // Alternar colores de fondo (blanco y gris)
+            // Alternar colores de fondo 
             if ($colorAlterno) {
                 $pdf->SetFillColor(198, 198, 198); // Gris claro
             } else {
@@ -381,6 +383,7 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
             $pdf->Cell($colWidthAnio, 7, number_format($totalAnioMinus2, 0, '.', ','), 1, 0, 'C', true);
             $pdf->Cell($colWidthAnio, 7, number_format($totalAnioMinus1, 0, '.', ','), 1, 0, 'C', true);
             $pdf->Cell($colWidthAnio, 7, number_format($totalAnio, 0, '.', ','), 1, 0, 'C', true);
+
 
             // Sumar los valores para los totales de cada año
             $sumaAnioMinus2 += $totalAnioMinus2;
@@ -421,10 +424,10 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
             } else {
                 // Determinar flecha y color
                 if ($porcentajeAnoMinus1 > 0) {
-                    $flecha = 'C:/xampp/htdocs/sgr-dpe/assets/img/up.png'; // Ruta de la imagen de flecha hacia arriba
+                    $flecha = 'D:/xampp/htdocs/sgr-dpe/assets/img/up.png'; // Ruta de la imagen de flecha hacia arriba
                     $color = [255, 0, 0];  // Rojo para positivo
                 } elseif ($porcentajeAnoMinus1 < 0) {
-                    $flecha = 'C:/xampp/htdocs/sgr-dpe/assets/img/down.png'; // Ruta de la imagen de flecha hacia abajo
+                    $flecha = 'D:/xampp/htdocs/sgr-dpe/assets/img/down.png'; // Ruta de la imagen de flecha hacia abajo
                     $color = [0, 0, 255]; // Azul para negativo
                 } else {
                     $flecha = '';  // Sin flecha
@@ -497,7 +500,7 @@ ORDER BY Distrito, DelitoAgrupado, Año DESC;
     }
     $pdf->Ln(10); // Espaciado entre Fiscalías
     // Mostrar PDF
-    $pdf->Output();
+    $pdf->Output('I', 'reporte_distrito.pdf');
 } else {
     echo "Error en la conexión o en los datos del formulario.";
 }

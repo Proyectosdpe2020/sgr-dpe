@@ -1,5 +1,5 @@
 <?php session_start();
-if($_SESSION['user_data']['id'] == 5){
+if($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_SESSION['user_data']['id'] == 8){
 	header('Location: validacion_victimas.php');
     exit();
 }
@@ -14,8 +14,8 @@ if($_SESSION['user_data']['id'] == 5){
 		<meta http-equiv="pragma" content="no-cache"/>
 
 		<link rel="shortcut icon" href="../../assets/img/fge.png"/>
-		<link rel="stylesheet" href="assets/css/main.css"/>
-		<link rel="stylesheet" href="assets/css/styles.css"/>
+		<link rel="stylesheet" href="assets/css/main.css?v=<?php echo time(); ?>"/>
+		<link rel="stylesheet" href="assets/css/styles.css?v=<?php echo time(); ?>"/>
 		
 		<!--<link rel="stylesheet" href="../../css/styles.css">-->
 		<link rel="stylesheet" href="../../css/styles.css">
@@ -26,9 +26,9 @@ if($_SESSION['user_data']['id'] == 5){
 		<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" ></script>
 		<script src="../../node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
 
-		<script src="../../js/script.js"></script>
-		<script src="js/script.js"></script>
-		<script src="js/avp.js"></script>
+		<script src="../../js/script.js?v=<?php echo time(); ?>"></script>
+		<script src="js/script.js?v=<?php echo time(); ?>"></script>
+		<script src="js/avp.js?v=<?php echo time(); ?>"></script>
 	</head>
 	<body class="is-preload">
 
@@ -91,6 +91,7 @@ if($_SESSION['user_data']['id'] == 5){
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación de víctimas</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="producto_estadistico.php">Producto estadístico</a></li>
 							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="SESNSP.php">Consulta preliminar SESNSP</a></li>
+							<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sedena.php">Consulta SEDENA</a></li>
 						</ul>
 					</nav>
 					

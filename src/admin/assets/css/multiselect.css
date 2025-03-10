@@ -1,0 +1,67 @@
+.multiselect{
+    width: 100%;
+}
+
+.multiselect button{
+    width: 100%;
+}
+
+.multiselect button div{
+    width: 100%;
+    display: inline-block;
+}
+
+.multiselect button div .dropdown-label{
+    width: 80%;
+    float: left;
+    text-align: left;
+}
+
+.multiselect button div .caret{
+    width: 15%;
+    float: right;
+}
+
+.multiselect .dropdown-menu li{
+    width: 100%;
+}
+
+.multiselect .dropdown-menu a{
+    cursor: pointer;
+    width: 100%;
+    border: 0px;
+    outline: 0px;
+}
+
+.multiselect .dropdown-menu li:hover{
+    background-color: #007bff;
+    color: white;
+}
+
+.multiselect ul {
+    width: 98%;
+
+    /*padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;*/
+}
+
+.multiselect ul input{
+    /*width: 10%;*/
+    cursor: pointer;
+    appearance: auto !important;
+
+}
+
+.multiselect ul label{
+    width: 90%;
+    cursor: pointer;
+    margin-bottom: 0px !important;
+    padding: 5px;
+}
+
+.multiselect .dropdown-menu.show{
+    transform: translate3d(5px, -10px, 350px) !important;
+}

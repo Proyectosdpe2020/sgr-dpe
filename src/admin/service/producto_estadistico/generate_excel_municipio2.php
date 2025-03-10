@@ -3,10 +3,11 @@ header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetm
 header('Content-Disposition: attachment;filename="reporte_municipio.xlsx"');
 header('Cache-Control: max-age=0');
 session_start();
-include('C:/xampp/htdocs/sgr-dpe/service/connection.php');
-require('C:/xampp/htdocs/sgr-dpe/vendor/autoload.php');
+include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
+require('D:/xampp/htdocs/sgr-dpe/vendor/autoload.php');
 
-use PhpOffice\PhpSpreadsheet\{Spreadsheet, IOFactory};
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
@@ -181,7 +182,7 @@ $sqlDelitosComparativos = "
     SELECT Fiscalia, 
         Municipio, 
         DelitoAgrupado, 
-        Año,
+        Año AS Anio,
         COUNT(*) AS TotalDelitos
  FROM carpetasMapas
  WHERE Mes BETWEEN $mesInicio AND $mesFin
@@ -212,7 +213,7 @@ while ($row = sqlsrv_fetch_array($stmtDelitosComparativos, SQLSRV_FETCH_ASSOC)) 
     $fiscalia = $row['Fiscalia'];
     $municipio = $row['Municipio'];
     $delito = $row['DelitoAgrupado'];
-    $rowAnio = $row['Año'];
+    $rowAnio = $row['Anio'];
     $totalDelitos = $row['TotalDelitos'];
 
     // Inicializar la estructura si no existe
@@ -274,9 +275,9 @@ foreach ($delitosComparativos as $fiscalia => $municipios) {
 
         // Ordenar los delitos por el total del año actual
         uasort($delitos, function ($a, $b) use ($anio) {
-            $totalA = isset($a[$anio]) ? $a[$anio] : 0;
-            $totalB = isset($b[$anio]) ? $b[$anio] : 0;
-            return $totalB <=> $totalA;
+            $totalA = isset($a[$anio]) ? $a[$anio] : 0; 
+            $totalB = isset($b[$anio]) ? $b[$anio] : 0; 
+            return $totalB - $totalA; 
         });
 
         // Inicializar acumuladores
