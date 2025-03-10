@@ -379,6 +379,11 @@ ORDER BY Fiscalia, Municipio, SUM(COUNT(*)) OVER (PARTITION BY Fiscalia, Municip
             $spaceBetweenDelitos = 14; // Espacio entre diferentes delitos
             $maxValue = max(array_map('max', $delitosValues)); // Valor máximo para ajustar las barras
 
+            // Add check to avoid division by zero
+            if ($maxValue == 0) {
+                $maxValue = 1; // Set a default value to avoid division by zero
+            }
+
             $municipioX = $graphX + 30; // Coordenada X (ajustada a la derecha, alineada con la gráfica)
             $municipioY = $graphY - 20;
 
