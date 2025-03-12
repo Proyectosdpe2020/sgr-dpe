@@ -1,7 +1,7 @@
 <?php
 ini_set('memory_limit', '2048M');
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="consulta_sesnsp.xlsx"');
+header('Content-Disposition: attachment;filename="consulta_cni.xlsx"');
 header('Cache-Control: max-age=0');
 session_start();
 include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
