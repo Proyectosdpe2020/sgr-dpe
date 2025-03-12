@@ -168,7 +168,7 @@ $sheet->getStyle("A1")->getFont()->setBold(true)->setSize(16);
 $sheet->getStyle("A1")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
 // Subtítulo
-$sheet->setCellValue('A2', "CONSULTA PRELIMINAR SESNSP");
+$sheet->setCellValue('A2', "CONSULTA CNI");
 $sheet->mergeCells("A2:AD2");
 $sheet->getStyle("A2")->getFont()->setBold(true)->setSize(14);
 $sheet->getStyle("A2")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
@@ -235,15 +235,15 @@ foreach ($data as $row) {
     $sheet->setCellValue('G' . $rowNum, $hora_hechos);
     $sheet->setCellValue('H' . $rowNum, $row['Delito']);
     $sheet->setCellValue('I' . $rowNum, $row['Modalidad (violencia)']);
-    $sheet->setCellValue('J' . $rowNum, isset($row['Elemento de comisión']) ? $row['Elemento de comisión'] : '');
-    $sheet->setCellValue('K' . $rowNum, isset($row['Cosumación']) ? $row['Cosumación'] : '');
+    $sheet->setCellValue('J' . $rowNum, $row['Elemento de comision']);
+    $sheet->setCellValue('K' . $rowNum, $row['Cosumacion']);
     $sheet->setCellValue('L' . $rowNum, $row['delito_clasificacion']);
     $sheet->setCellValue('M' . $rowNum, $row['modalidad_clasificacion']);
     $sheet->setCellValue('N' . $rowNum, $row['elemento_clasificacion']);
     $sheet->setCellValue('O' . $rowNum, $row['Entidad federativa']);
     $sheet->setCellValue('P' . $rowNum, $row['ID_Entidad_federativa']);
     $sheet->setCellValue('Q' . $rowNum, $row['Municipio del Hecho']);
-    $sheet->setCellValue('R' . $rowNum, isset($row['Identificador fiscalía']) ? $row['Identificador fiscalía'] : '');
+    $sheet->setCellValue('R' . $rowNum, $row['Identificador fiscalia']);
     $sheet->setCellValue('S' . $rowNum, $row['Localidad']);
     $sheet->setCellValue('T' . $rowNum, $row['ID_Localidad']);
     $sheet->setCellValue('U' . $rowNum, $row['Colonia']);
