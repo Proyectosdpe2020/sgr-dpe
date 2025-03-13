@@ -69,18 +69,19 @@ $procedure_op = array(
 				'3-38-'*/
 			),
 			9 => array(
-				'3-39-DeterminacionesEnEtapadeInvestigacion'/*,
+				'3-42-DeterminacionesEnEtapadeInvestigacion'/*,
+				'3-39-DeterminacionesEnEtapadeInvestigacion'
 				'3-40-'*/
 			),
 			10 => array(
-				'3-41-DeterminacionesPorConsumacion',
-				'3-42-DeterminacionesDesglosadasPorInciso',
-				'3-43-DeterminacionesDesglosadasPorCaracteristicasDeEjecucion',
-				'3-44-DeterminacionesDesglosadasPorTipo'
+				'3-44-DeterminacionesPorConsumacion',
+				'3-45-DeterminacionesDesglosadasPorInciso',
+				'3-46-DeterminacionesDesglosadasPorCaracteristicasDeEjecucion',
+				'3-47-DeterminacionesDesglosadasPorTipo'
 			),
 			11 => array(
-				'3-45-ImputadosEnDeterminacionesPorSexo',
-				'3-46-ImputadosEnDeterminacionesPorTipo'
+				'3-48-ImputadosEnDeterminacionesPorSexo',
+				'3-49-ImputadosEnDeterminacionesPorTipo'
 			),
 			12 => array(
 				'3-9-Complemento'
@@ -187,18 +188,18 @@ $procedure_op = array(
 				'2-38-'*/
 			),
 			9 => array(
-				'2-39-DeterminacionesEnEtapadeInvestigacion'/*,
+				'2-42-DeterminacionesEnEtapadeInvestigacion'/*,
 				'2-40-'*/
 			),
 			10 => array(
-				'2-41-DeterminacionesPorConsumacion',
-				'2-42-DeterminacionesDesglosadasPorInciso',
-				'2-43-DeterminacionesDesglosadasPorCaracteristicasDeEjecucion',
-				'2-44-DeterminacionesDesglosadasPorTipo'
+				'2-44-DeterminacionesPorConsumacion',
+				'2-45-DeterminacionesDesglosadasPorInciso',
+				'2-46-DeterminacionesDesglosadasPorCaracteristicasDeEjecucion',
+				'2-47-DeterminacionesDesglosadasPorTipo'
 			),
 			11 => array(
-				'2-45-ImputadosEnDeterminacionesPorSexo',
-				'2-46-ImputadosEnDeterminacionesPorTipo'
+				'2-48-ImputadosEnDeterminacionesPorSexo',
+				'2-49-ImputadosEnDeterminacionesPorTipo'
 			)
 		),
 		3 => array(
