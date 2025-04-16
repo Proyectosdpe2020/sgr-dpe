@@ -30,7 +30,7 @@ if ($fecha_inicial === null || $fecha_final === null) {
 
 // Consulta SQL
 $sql = "
-     SELECT DISTINCT
+      SELECT DISTINCT
     c.CarpetaID AS Id,
     c.NUC AS 'Nomenglatura_carpeta',
 	c.FechaInicio,
@@ -38,7 +38,7 @@ $sql = "
     CONVERT(VARCHAR(8), c.FechaInicio, 8) AS 'Hora Inicio',
     CONVERT(VARCHAR(2500), C.Hechos) AS hechos,
     c.CarpetaID AS Id,
-	del.DelitoID AS id_delito,
+	del.CatModalidadesID as id_delito,
     CONVERT(VARCHAR(255), mo.Nombre) AS 'Delito',
 	CONVERT(VARCHAR(3), 
         CASE WHEN c.Violencia = 1 THEN 'SI' 
@@ -79,12 +79,16 @@ $sql = "
     do.longitud AS 'longitud',
     CONVERT(VARCHAR(255), do.CalleNumero) AS 'Domicilio de los hechos',
 	c.CarpetaID AS Id,
-	del.DelitoID AS id_delito,
+	del.CatModalidadesID as id_delito,
     vic.InvolucradoID AS 'ID_Persona',
-	VictimaOfendido.Persona AS 'Tipo_Victima',
+	CASE 
+    WHEN ctv.Nombre IN ('Moral', 'Estado', 'Sociedad') THEN 'Moral'
+    WHEN ctv.Nombre = 'Física' THEN 'Física'
+	WHEN ctv.Nombre = 'Desconocido' THEN 'Física'
+	END AS Tipo_Victima,
 				CONVERT(VARCHAR(20), 
 					CASE 
-						WHEN VictimaOfendido.Persona IN (0, 2, 3, 4) THEN 'No especificado' 
+						WHEN VictimaOfendido.Persona IN (0, 3, 4) THEN 'No especificado' 
 						ELSE 'No aplica' 
 					END
 				) AS 'Tipo_Persona_Moral',
@@ -112,6 +116,7 @@ FROM dbo.Carpeta c
     LEFT JOIN PRUEBA.dbo.CatPoblacionesIndigenas indigena ON vsenap.PoblacionIndigena = indigena.PoblacionIndigenaID
 	LEFT JOIN PRUEBA.dbo.CatDiscapacidades discapacidad ON vsenap.TipoDiscapacidad = discapacidad.DiscapacidadID
     INNER JOIN dbo.DelitosVictima ON dbo.VictimaOfendido.VictimaOfendidoID = dbo.DelitosVictima.VictimaID
+	LEFT JOIN CatTipoVictima ctv ON ctv.CatTipoVictimaID = VictimaOfendido.Persona
     INNER JOIN dbo.CatModalidadesEstadisticas mo ON dbo.DelitosVictima.CatModalidadesID = mo.CatModalidadesEstadisticasID
     INNER JOIN dbo.Delito del ON c.CarpetaID = del.CarpetaID
     INNER JOIN dbo.Domicilio do ON c.CarpetaID = do.CarpetaID
@@ -190,21 +195,8 @@ $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 $sheet->setTitle('Consulta CNI');
 
-// Encabezado principal
-$sheet->setCellValue('A1', 'FISCALÍA GENERAL DEL ESTADO DE MICHOACÁN');
-$sheet->mergeCells("A1:AO1");
-$sheet->getStyle("A1")->getFont()->setBold(true)->setSize(16);
-$sheet->getStyle("A1")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
-// Subtítulo
-$sheet->setCellValue('A2', "CONSULTA CNI");
-$sheet->mergeCells("A2:AO2");
-$sheet->getStyle("A2")->getFont()->setBold(true)->setSize(14);
-$sheet->getStyle("A2")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A2")->getAlignment()->setWrapText(true); // Permitir texto en varias líneas
-
-// Encabezados de la tabla (a partir de la fila 4)
-$rowNum = 4; // Comenzar en la fila 4
+// Encabezados de la tabla (a partir de la fila 1)
+$rowNum = 1; // Comenzar en la fila 1
 $sheet->setCellValue('A' . $rowNum, 'ID');
 $sheet->setCellValue('B' . $rowNum, 'NOMENCLATURA CARPETA');
 $sheet->setCellValue('C' . $rowNum, 'FECHA INICIO');
@@ -256,7 +248,7 @@ $sheet->getStyle("A$rowNum:AO$rowNum")->getAlignment()->setVertical(Alignment::V
 // Ajuste de altura para encabezados
 $sheet->getRowDimension($rowNum)->setRowHeight(20);
 
-// Estilo alterno para las filas de datos (comenzando desde la fila 5)
+// Estilo alterno para las filas de datos (comenzando desde la fila 2)
 $rowNum++; // Moverse a la fila siguiente para los datos
 $colorAlterno = true; // Control de color alterno
 $contador = 1;
