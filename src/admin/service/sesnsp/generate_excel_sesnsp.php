@@ -1,7 +1,7 @@
 <?php
 ini_set('memory_limit', '2048M');
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="consulta_cni.xlsx"');
+header('Content-Disposition: attachment;filename="Consulta_cni.xlsx"');
 header('Cache-Control: max-age=0');
 session_start();
 include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
@@ -33,18 +33,20 @@ $sql = "
      SELECT DISTINCT
     c.CarpetaID AS Id,
     c.NUC AS 'Nomenglatura_carpeta',
-    c.FechaInicio, 
+	c.FechaInicio,
     CONVERT(VARCHAR(10), c.FechaInicio, 23) AS 'Fecha Inicio',
     CONVERT(VARCHAR(8), c.FechaInicio, 8) AS 'Hora Inicio',
     CONVERT(VARCHAR(2500), C.Hechos) AS hechos,
-    CONVERT(VARCHAR(10), c.FechaComision, 23) AS 'Fecha Hechos',
-    CONVERT(VARCHAR(8), c.FechaComision, 8) AS 'Hora Hechos',
+    c.CarpetaID AS Id,
+	del.DelitoID AS id_delito,
     CONVERT(VARCHAR(255), mo.Nombre) AS 'Delito',
-    CONVERT(VARCHAR(3), 
+	CONVERT(VARCHAR(3), 
         CASE WHEN c.Violencia = 1 THEN 'SI' 
              WHEN c.Violencia = 0 THEN 'NO' 
         END
     ) AS 'Modalidad (violencia)',
+    CONVERT(VARCHAR(10), c.FechaComision, 23) AS 'Fecha Hechos',
+    CONVERT(VARCHAR(8), c.FechaComision, 8) AS 'Hora Hechos',
     CONVERT(VARCHAR(255), dbo.CatArmas.Nombre) AS 'Elemento de comision',
     CONVERT(VARCHAR(10), 
         CASE WHEN del.Consumacion = 1 THEN 'Consumado' 
@@ -76,7 +78,16 @@ $sql = "
     do.latitud AS 'latitud',
     do.longitud AS 'longitud',
     CONVERT(VARCHAR(255), do.CalleNumero) AS 'Domicilio de los hechos',
+	c.CarpetaID AS Id,
+	del.DelitoID AS id_delito,
     vic.InvolucradoID AS 'ID_Persona',
+	VictimaOfendido.Persona AS 'Tipo_Victima',
+				CONVERT(VARCHAR(20), 
+					CASE 
+						WHEN VictimaOfendido.Persona IN (0, 2, 3, 4) THEN 'No especificado' 
+						ELSE 'No aplica' 
+					END
+				) AS 'Tipo_Persona_Moral',
     CONVERT(VARCHAR(10), 
         CASE WHEN vic.Sexo = 1 THEN 'Masculino' 
              WHEN vic.Sexo = 2 THEN 'Femenino' 
@@ -84,57 +95,75 @@ $sql = "
              ELSE 'N/A' 
         END
     ) AS 'Sexo_de_la_Victima',
+	CONVERT(VARCHAR(255), lgbtti.Nombre) AS 'Poblacion_LGBTTTI',
+	CONVERT(VARCHAR(255), indigena.Nombre) AS 'Poblacion_Indigena',
+	CONVERT(VARCHAR(255), discapacidad.Nombre) AS 'Tipo_de_Discapacidad',
+	CONVERT(VARCHAR(10), vsenap.FechaNacimiento, 23) AS 'Fecha_de_Nacimiento',
     vic.Edad AS 'Edad_de_la_Victima',
-    CONVERT(VARCHAR(255), nacion.Nombre) AS 'Nacionalidad'
+    CONVERT(VARCHAR(255), nacion.Nombre) AS 'Nacionalidad',
+    p.Nombre AS 'Relacion_imputado'  
 FROM dbo.Carpeta c
-    INNER JOIN dbo.CatUIs u ON c.CatUIsID= u.CatUIsID
-    INNER JOIN dbo.CatFiscalias fisca ON u.CatFiscaliasID=fisca.CatFiscaliasID
-    INNER JOIN dbo.Involucrado vic ON c.CarpetaID=vic.CarpetaID
-    INNER JOIN dbo.VictimaOfendido ON dbo.VictimaOfendido.InvolucradoID=vic.InvolucradoID
-    INNER JOIN dbo.DelitosVictima on dbo.VictimaOfendido.VictimaOfendidoID=dbo.DelitosVictima.VictimaID
-    INNER JOIN dbo.CatModalidadesEstadisticas mo ON dbo.DelitosVictima.CatModalidadesID=mo.CatModalidadesEstadisticasID
-    INNER JOIN dbo.Delito del ON c.CarpetaID=del.CarpetaID
-    INNER JOIN dbo.Domicilio do ON c.CarpetaID=do.CarpetaID
-    INNER JOIN dbo.CatMunicipios mun ON do.CatMunicipiosID=mun.CatMunicipiosID
-    INNER JOIN dbo.CatFiscalias fis ON fis.CatFiscaliasID=mun.CatFiscaliasID
-    INNER JOIN dbo.CatColonias ON do.CatColoniasID=dbo.CatColonias.CatColoniasID
-    LEFT JOIN dbo.CatLocalidades ON do.LocalidadID=dbo.CatLocalidades.LocalidadID
-    LEFT JOIN dbo.Catlugares ON do.CatLugaresID=dbo.CatLugares.CatLugaresID
-    INNER JOIN dbo.CatArmas ON c.TipoArma=dbo.CatArmas.Arma_ID
-    LEFT JOIN dbo.CatNacionalidades nacion on VictimaOfendido.CatNacionalidadesID = nacion.CatNacionalidadesID
-    INNER JOIN [PRUEBA].[dbo].[CatModalidadClasificacion] modalidad_clasificacion on modalidad_clasificacion.CatModalidadClasificacionID = mo.CatModalidadClasificacionID
-	INNER JOIN [PRUEBA].[dbo].[CatDelitoClasificacion] delito_clasificacion on delito_clasificacion.CatDelitoClasificacionID = modalidad_clasificacion.CatDelitoClasificacionID
-	LEFT JOIN [PRUEBA].[dbo].[CatElementoClasificacion] elemento_calsificacion 
-    ON elemento_calsificacion.CatModalidadClasificacionID = modalidad_clasificacion.CatModalidadClasificacionID
+    INNER JOIN dbo.CatUIs u ON c.CatUIsID = u.CatUIsID
+    INNER JOIN dbo.CatFiscalias fisca ON u.CatFiscaliasID = fisca.CatFiscaliasID
+    INNER JOIN dbo.Involucrado vic ON c.CarpetaID = vic.CarpetaID
+    INNER JOIN dbo.VictimaOfendido ON dbo.VictimaOfendido.InvolucradoID = vic.InvolucradoID
+    LEFT JOIN [PRUEBA].[dbo].[VictimaSENAP] vsenap ON VictimaOfendido.VictimaOfendidoID = vsenap.VictimaID
+    LEFT JOIN PRUEBA.dbo.CatPoblacionesLGBTTI lgbtti ON vsenap.PoblacionLGBTTI = lgbtti.PoblacionLGBTTIID
+    LEFT JOIN PRUEBA.dbo.CatPoblacionesIndigenas indigena ON vsenap.PoblacionIndigena = indigena.PoblacionIndigenaID
+	LEFT JOIN PRUEBA.dbo.CatDiscapacidades discapacidad ON vsenap.TipoDiscapacidad = discapacidad.DiscapacidadID
+    INNER JOIN dbo.DelitosVictima ON dbo.VictimaOfendido.VictimaOfendidoID = dbo.DelitosVictima.VictimaID
+    INNER JOIN dbo.CatModalidadesEstadisticas mo ON dbo.DelitosVictima.CatModalidadesID = mo.CatModalidadesEstadisticasID
+    INNER JOIN dbo.Delito del ON c.CarpetaID = del.CarpetaID
+    INNER JOIN dbo.Domicilio do ON c.CarpetaID = do.CarpetaID
+    INNER JOIN dbo.CatMunicipios mun ON do.CatMunicipiosID = mun.CatMunicipiosID
+    INNER JOIN dbo.CatFiscalias fis ON fis.CatFiscaliasID = mun.CatFiscaliasID
+    INNER JOIN dbo.CatColonias ON do.CatColoniasID = dbo.CatColonias.CatColoniasID
+    LEFT JOIN dbo.CatLocalidades ON do.LocalidadID = dbo.CatLocalidades.LocalidadID
+    LEFT JOIN dbo.Catlugares ON do.CatLugaresID = dbo.CatLugares.CatLugaresID
+    INNER JOIN dbo.CatArmas ON c.TipoArma = dbo.CatArmas.Arma_ID
+    LEFT JOIN dbo.CatNacionalidades nacion ON VictimaOfendido.CatNacionalidadesID = nacion.CatNacionalidadesID
+    INNER JOIN [PRUEBA].[dbo].[CatModalidadClasificacion] modalidad_clasificacion 
+        ON modalidad_clasificacion.CatModalidadClasificacionID = mo.CatModalidadClasificacionID
+    INNER JOIN [PRUEBA].[dbo].[CatDelitoClasificacion] delito_clasificacion 
+        ON delito_clasificacion.CatDelitoClasificacionID = modalidad_clasificacion.CatDelitoClasificacionID
+    LEFT JOIN [PRUEBA].[dbo].[CatElementoClasificacion] elemento_calsificacion 
+        ON elemento_calsificacion.CatModalidadClasificacionID = modalidad_clasificacion.CatModalidadClasificacionID
+        AND (
+            (c.Violencia = 1 AND elemento_calsificacion.Nombre LIKE '%Con violencia%')
+            OR (c.Violencia = 0 AND elemento_calsificacion.Nombre LIKE '%Sin violencia%')
+            OR (dbo.CatArmas.Nombre LIKE '%arma de fuego%' AND elemento_calsificacion.Nombre LIKE '%Con arma de fuego%')
+            OR (dbo.CatArmas.Nombre LIKE '%arma blanca%' AND elemento_calsificacion.Nombre LIKE '%Con arma blanca%')
+            OR (dbo.CatArmas.Nombre LIKE '%vehículo%' AND elemento_calsificacion.Nombre LIKE '%En accidente de tránsito%')
+            OR (dbo.CatArmas.Nombre LIKE '%desconocida%' AND elemento_calsificacion.Nombre LIKE '%No especificado%')
+            OR (dbo.CatArmas.Nombre LIKE '%alguna parte del cuerpo%' AND elemento_calsificacion.Nombre LIKE '%Con otro elemento%')
+            OR (dbo.CatArmas.Nombre LIKE '%otro elemento%' AND elemento_calsificacion.Nombre LIKE '%Con otro elemento%')
+            OR (
+                dbo.CatArmas.Nombre NOT LIKE '%arma de fuego%' 
+                AND dbo.CatArmas.Nombre NOT LIKE '%arma blanca%'
+                AND dbo.CatArmas.Nombre NOT LIKE '%vehículo%'
+                AND dbo.CatArmas.Nombre NOT LIKE '%desconocida%'
+                AND dbo.CatArmas.Nombre NOT LIKE '%alguna parte del cuerpo%'
+                AND dbo.CatArmas.Nombre NOT LIKE '%otro elemento%'
+                AND elemento_calsificacion.Nombre NOT LIKE '%Con violencia%'
+                AND elemento_calsificacion.Nombre NOT LIKE '%Sin violencia%'
+            )
+        )
+    INNER JOIN Involucrado i ON c.CarpetaID = i.CarpetaID 
+    INNER JOIN Imputado imp ON i.InvolucradoID = imp.InvolucradoID 
+    INNER JOIN CatParentescos p ON imp.CatParentescosID = p.CatParentescosID
+WHERE 
+    contar = 1
+    AND CAST(FechaInicio AS DATE) BETWEEN '$fecha_inicial' AND '$fecha_final'
+    AND Victima = 1
     AND (
-        (c.Violencia = 1 AND elemento_calsificacion.Nombre LIKE '%Con violencia%')
-        OR (c.Violencia = 0 AND elemento_calsificacion.Nombre LIKE '%Sin violencia%')
-        OR (dbo.CatArmas.Nombre LIKE '%arma de fuego%' AND elemento_calsificacion.Nombre LIKE '%Con arma de fuego%')
-        OR (dbo.CatArmas.Nombre LIKE '%arma blanca%' AND elemento_calsificacion.Nombre LIKE '%Con arma blanca%')
-        OR (dbo.CatArmas.Nombre LIKE '%vehículo%' AND elemento_calsificacion.Nombre LIKE '%En accidente de tránsito%')
-        OR (dbo.CatArmas.Nombre LIKE '%desconocida%' AND elemento_calsificacion.Nombre LIKE '%No especificado%')
-        OR (dbo.CatArmas.Nombre LIKE '%alguna parte del cuerpo%' AND elemento_calsificacion.Nombre LIKE '%Con otro elemento%')
-		OR (dbo.CatArmas.Nombre LIKE '%otro elemento%' AND elemento_calsificacion.Nombre LIKE '%Con otro elemento%')
-        OR (dbo.CatArmas.Nombre NOT LIKE '%arma de fuego%' 
-            AND dbo.CatArmas.Nombre NOT LIKE '%arma blanca%'
-            AND dbo.CatArmas.Nombre NOT LIKE '%vehículo%'
-            AND dbo.CatArmas.Nombre NOT LIKE '%desconocida%'
-            AND dbo.CatArmas.Nombre NOT LIKE '%alguna parte del cuerpo%'
-			AND dbo.CatArmas.Nombre NOT LIKE '%otro elemento%'
-            AND elemento_calsificacion.Nombre NOT LIKE '%Con violencia%'
-            AND elemento_calsificacion.Nombre NOT LIKE '%Sin violencia%')
+        mo.Nombre NOT LIKE '%hechos posiblemente constitutivos de delito%' 
+        AND mo.Nombre NOT LIKE '%hechos (no localizados)%'
+        AND mo.Nombre NOT LIKE '%sospecha de suicidio%'
+        AND mo.Nombre NOT LIKE '%sospecha muerte natural%'
+        AND mo.Nombre NOT LIKE '%recuperación de vehículos%'
+        AND mo.Nombre NOT LIKE '%persona no localizada%'
     )
-    WHERE 
-        contar=1
-        AND CAST(FechaInicio AS DATE) BETWEEN '$fecha_inicial' AND '$fecha_final'
-        AND Victima=1
-        AND (mo.Nombre NOT LIKE '%hechos posiblemente constitutivos de delito%' 
-             AND mo.Nombre NOT LIKE '%hechos (no localizados)%'
-             AND mo.Nombre NOT LIKE '%sospecha de suicidio%'
-             AND mo.Nombre NOT LIKE '%sospecha muerte natural%'
-             AND mo.Nombre NOT LIKE '%recuperación de vehículos%'
-             AND mo.Nombre NOT LIKE '%persona no localizada%')
-    ORDER BY c.FechaInicio ASC;
+ORDER BY c.FechaInicio ASC;
 ";
 
 // Ejecutar la consulta
@@ -159,17 +188,17 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
 // Crear un nuevo objeto Spreadsheet
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
-$sheet->setTitle('Consulta SESNSP');
+$sheet->setTitle('Consulta CNI');
 
 // Encabezado principal
 $sheet->setCellValue('A1', 'FISCALÍA GENERAL DEL ESTADO DE MICHOACÁN');
-$sheet->mergeCells("A1:AD1");
+$sheet->mergeCells("A1:AO1");
 $sheet->getStyle("A1")->getFont()->setBold(true)->setSize(16);
 $sheet->getStyle("A1")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
 // Subtítulo
 $sheet->setCellValue('A2', "CONSULTA CNI");
-$sheet->mergeCells("A2:AD2");
+$sheet->mergeCells("A2:AO2");
 $sheet->getStyle("A2")->getFont()->setBold(true)->setSize(14);
 $sheet->getStyle("A2")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle("A2")->getAlignment()->setWrapText(true); // Permitir texto en varias líneas
@@ -181,37 +210,48 @@ $sheet->setCellValue('B' . $rowNum, 'NOMENCLATURA CARPETA');
 $sheet->setCellValue('C' . $rowNum, 'FECHA INICIO');
 $sheet->setCellValue('D' . $rowNum, 'HORA INICIO');
 $sheet->setCellValue('E' . $rowNum, 'HECHOS');
-$sheet->setCellValue('F' . $rowNum, 'FECHA HECHOS');
-$sheet->setCellValue('G' . $rowNum, 'HORA HECHOS');
+$sheet->setCellValue('F' . $rowNum, 'ID');
+$sheet->setCellValue('G' . $rowNum, 'ID DELITO');
 $sheet->setCellValue('H' . $rowNum, 'DELITO');
 $sheet->setCellValue('I' . $rowNum, 'MODALIDAD (VIOLENCIA)');
-$sheet->setCellValue('J' . $rowNum, 'ELEMENTO DE COMISIÓN');
-$sheet->setCellValue('K' . $rowNum, 'CONSUMACIÓN');
-$sheet->setCellValue('L' . $rowNum, 'DELITO CLASIFICACIÓN');
-$sheet->setCellValue('M' . $rowNum, 'MODALIDAD CLASIFICACIÓN');
-$sheet->setCellValue('N' . $rowNum, 'ELEMENTO CLASIFICACIÓN');
-$sheet->setCellValue('O' . $rowNum, 'ENTIDAD FEDERATIVA');
-$sheet->setCellValue('P' . $rowNum, 'ID ENTIDAD FEDERATIVA');
-$sheet->setCellValue('Q' . $rowNum, 'MUNICIPIO DEL HECHO');
-$sheet->setCellValue('R' . $rowNum, 'IDENTIFICADOR FISCALÍA');
-$sheet->setCellValue('S' . $rowNum, 'LOCALIDAD');
-$sheet->setCellValue('T' . $rowNum, 'ID LOCALIDAD');
-$sheet->setCellValue('U' . $rowNum, 'COLONIA');
-$sheet->setCellValue('V' . $rowNum, 'ID COLONIA');
-$sheet->setCellValue('W' . $rowNum, 'CÓDIGO POSTAL');
-$sheet->setCellValue('X' . $rowNum, 'LATITUD');
-$sheet->setCellValue('Y' . $rowNum, 'LONGITUD');
-$sheet->setCellValue('Z' . $rowNum, 'DOMICILIO DE LOS HECHOS');
-$sheet->setCellValue('AA' . $rowNum, 'ID PERSONA');
-$sheet->setCellValue('AB' . $rowNum, 'SEXO DE LA VÍCTIMA');
-$sheet->setCellValue('AC' . $rowNum, 'EDAD DE LA VÍCTIMA');
-$sheet->setCellValue('AD' . $rowNum, 'NACIONALIDAD');
+$sheet->setCellValue('J' . $rowNum, 'FECHA HECHOS');
+$sheet->setCellValue('K' . $rowNum, 'HORA HECHOS');
+$sheet->setCellValue('L' . $rowNum, 'ELEMENTO DE COMISIÓN');
+$sheet->setCellValue('M' . $rowNum, 'CONSUMACIÓN');
+$sheet->setCellValue('N' . $rowNum, 'DELITO CLASIFICACIÓN');
+$sheet->setCellValue('O' . $rowNum, 'MODALIDAD CLASIFICACIÓN');
+$sheet->setCellValue('P' . $rowNum, 'ELEMENTO CLASIFICACIÓN');
+$sheet->setCellValue('Q' . $rowNum, 'ENTIDAD FEDERATIVA');
+$sheet->setCellValue('R' . $rowNum, 'ID ENTIDAD FEDERATIVA');
+$sheet->setCellValue('S' . $rowNum, 'MUNICIPIO DEL HECHO');
+$sheet->setCellValue('T' . $rowNum, 'IDENTIFICADOR FISCALÍA');
+$sheet->setCellValue('U' . $rowNum, 'LOCALIDAD');
+$sheet->setCellValue('V' . $rowNum, 'ID LOCALIDAD');
+$sheet->setCellValue('W' . $rowNum, 'COLONIA');
+$sheet->setCellValue('X' . $rowNum, 'ID COLONIA');
+$sheet->setCellValue('Y' . $rowNum, 'CÓDIGO POSTAL');
+$sheet->setCellValue('Z' . $rowNum, 'LATITUD');
+$sheet->setCellValue('AA' . $rowNum, 'LONGITUD');
+$sheet->setCellValue('AB' . $rowNum, 'DOMICILIO DE LOS HECHOS');
+$sheet->setCellValue('AC' . $rowNum, 'ID');
+$sheet->setCellValue('AD' . $rowNum, 'ID DELITO');
+$sheet->setCellValue('AE' . $rowNum, 'ID PERSONA');
+$sheet->setCellValue('AF' . $rowNum, 'TIPO VICTIMA');
+$sheet->setCellValue('AG' . $rowNum, 'TIPO PERSONA MORAL');
+$sheet->setCellValue('AH' . $rowNum, 'SEXO DE LA VÍCTIMA');
+$sheet->setCellValue('AI' . $rowNum, 'POBLACIÓN LGBTTTI');
+$sheet->setCellValue('AJ' . $rowNum, 'POBLACIÓN INDÍGENA');
+$sheet->setCellValue('AK' . $rowNum, 'TIPO DE DISCAPACIDAD');
+$sheet->setCellValue('AL' . $rowNum, 'FECHA DE NACIMIENTO');
+$sheet->setCellValue('AM' . $rowNum, 'EDAD DE LA VÍCTIMA');
+$sheet->setCellValue('AN' . $rowNum, 'NACIONALIDAD');
+$sheet->setCellValue('AO' . $rowNum, 'RELACIÓN IMPUTADO');
 
 // Estilo de los encabezados de la tabla
-$sheet->getStyle("A$rowNum:AD$rowNum")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF'); // Texto blanco
-$sheet->getStyle("A$rowNum:AD$rowNum")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); // Fondo azul oscuro
-$sheet->getStyle("A$rowNum:AD$rowNum")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Centrar texto
-$sheet->getStyle("A$rowNum:AD$rowNum")->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+$sheet->getStyle("A$rowNum:AO$rowNum")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF'); // Texto blanco
+$sheet->getStyle("A$rowNum:AO$rowNum")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a'); // Fondo azul oscuro
+$sheet->getStyle("A$rowNum:AO$rowNum")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Centrar texto
+$sheet->getStyle("A$rowNum:AO$rowNum")->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
 // Ajuste de altura para encabezados
 $sheet->getRowDimension($rowNum)->setRowHeight(20);
@@ -231,43 +271,54 @@ foreach ($data as $row) {
     $sheet->setCellValue('D' . $rowNum, $hora_inicio);
     $sheet->setCellValue('E' . $rowNum, $row['hechos']);
     $sheet->getStyle('E' . $rowNum)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT); // Align "Hechos" to the left
-    $sheet->setCellValue('F' . $rowNum, $row['Fecha Hechos']);
-    $sheet->setCellValue('G' . $rowNum, $hora_hechos);
+    $sheet->setCellValue('F' . $rowNum, $row['Id']);
+    $sheet->setCellValue('G' . $rowNum, $row['id_delito']);
     $sheet->setCellValue('H' . $rowNum, $row['Delito']);
     $sheet->setCellValue('I' . $rowNum, $row['Modalidad (violencia)']);
-    $sheet->setCellValue('J' . $rowNum, $row['Elemento de comision']);
-    $sheet->setCellValue('K' . $rowNum, $row['Cosumacion']);
-    $sheet->setCellValue('L' . $rowNum, $row['delito_clasificacion']);
-    $sheet->setCellValue('M' . $rowNum, $row['modalidad_clasificacion']);
-    $sheet->setCellValue('N' . $rowNum, $row['elemento_clasificacion']);
-    $sheet->setCellValue('O' . $rowNum, $row['Entidad federativa']);
-    $sheet->setCellValue('P' . $rowNum, $row['ID_Entidad_federativa']);
-    $sheet->setCellValue('Q' . $rowNum, $row['Municipio del Hecho']);
-    $sheet->setCellValue('R' . $rowNum, $row['Identificador fiscalia']);
-    $sheet->setCellValue('S' . $rowNum, $row['Localidad']);
-    $sheet->setCellValue('T' . $rowNum, $row['ID_Localidad']);
-    $sheet->setCellValue('U' . $rowNum, $row['Colonia']);
-    $sheet->setCellValue('V' . $rowNum, $row['ID_Colonia']);
-    $sheet->setCellValue('W' . $rowNum, $row['Codigo_postal']);
-    $sheet->setCellValue('X' . $rowNum, $row['latitud']);
-    $sheet->setCellValue('Y' . $rowNum, $row['longitud']);
-    $sheet->setCellValue('Z' . $rowNum, $row['Domicilio de los hechos']);
-    $sheet->setCellValue('AA' . $rowNum, $row['ID_Persona']);
-    $sheet->setCellValue('AB' . $rowNum, $row['Sexo_de_la_Victima']);
-    $sheet->setCellValue('AC' . $rowNum, $row['Edad_de_la_Victima']);
-    $sheet->setCellValue('AD' . $rowNum, $row['Nacionalidad']);
+    $sheet->setCellValue('J' . $rowNum, $row['Fecha Hechos']);
+    $sheet->setCellValue('K' . $rowNum, $hora_hechos);
+    $sheet->setCellValue('L' . $rowNum, $row['Elemento de comision']);
+    $sheet->setCellValue('M' . $rowNum, $row['Cosumacion']);
+    $sheet->setCellValue('N' . $rowNum, $row['delito_clasificacion']);
+    $sheet->setCellValue('O' . $rowNum, $row['modalidad_clasificacion']);
+    $sheet->setCellValue('P' . $rowNum, $row['elemento_clasificacion']);
+    $sheet->setCellValue('Q' . $rowNum, $row['Entidad federativa']);
+    $sheet->setCellValue('R' . $rowNum, $row['ID_Entidad_federativa']);
+    $sheet->setCellValue('S' . $rowNum, $row['Municipio del Hecho']);
+    $sheet->setCellValue('T' . $rowNum, $row['Identificador fiscalia']);
+    $sheet->setCellValue('U' . $rowNum, $row['Localidad']);
+    $sheet->setCellValue('V' . $rowNum, $row['ID_Localidad']);
+    $sheet->setCellValue('W' . $rowNum, $row['Colonia']);
+    $sheet->setCellValue('X' . $rowNum, $row['ID_Colonia']);
+    $sheet->setCellValue('Y' . $rowNum, $row['Codigo_postal']);
+    $sheet->setCellValue('Z' . $rowNum, $row['latitud']);
+    $sheet->setCellValue('AA' . $rowNum, $row['longitud']);
+    $sheet->setCellValue('AB' . $rowNum, $row['Domicilio de los hechos']);
+    $sheet->setCellValue('AC' . $rowNum, $row['Id']);
+    $sheet->setCellValue('AD' . $rowNum, $row['id_delito']);
+    $sheet->setCellValue('AE' . $rowNum, $row['ID_Persona']);
+    $sheet->setCellValue('AF' . $rowNum, $row['Tipo_Victima']);
+    $sheet->setCellValue('AG' . $rowNum, $row['Tipo_Persona_Moral']);
+    $sheet->setCellValue('AH' . $rowNum, $row['Sexo_de_la_Victima']);
+    $sheet->setCellValue('AI' . $rowNum, $row['Poblacion_LGBTTTI']);
+    $sheet->setCellValue('AJ' . $rowNum, $row['Poblacion_Indigena']);
+    $sheet->setCellValue('AK' . $rowNum, $row['Tipo_de_Discapacidad']);
+    $sheet->setCellValue('AL' . $rowNum, $row['Fecha_de_Nacimiento']);
+    $sheet->setCellValue('AM' . $rowNum, $row['Edad_de_la_Victima']);
+    $sheet->setCellValue('AN' . $rowNum, $row['Nacionalidad']);
+    $sheet->setCellValue('AO' . $rowNum, $row['Relacion_imputado']);
 
     // Alternar colores de fondo
     if ($colorAlterno) {
         // Gris claro
-        $sheet->getStyle('A' . $rowNum . ':AD' . $rowNum)
+        $sheet->getStyle('A' . $rowNum . ':AO' . $rowNum)
             ->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()
             ->setRGB('C6C6C6');
     } else {
         // Blanco
-        $sheet->getStyle('A' . $rowNum . ':AD' . $rowNum)
+        $sheet->getStyle('A' . $rowNum . ':AO' . $rowNum)
             ->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()
@@ -283,7 +334,7 @@ foreach ($data as $row) {
 }
 
 // Aplicar bordes a todas las celdas de la tabla
-$sheet->getStyle('A1:AD' . ($rowNum - 1))->applyFromArray([
+$sheet->getStyle('A1:AO' . ($rowNum - 1))->applyFromArray([
     'borders' => [
         'allBorders' => [
             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
@@ -293,42 +344,49 @@ $sheet->getStyle('A1:AD' . ($rowNum - 1))->applyFromArray([
 ]);
 
 // Centrar texto horizontal y verticalmente
-$sheet->getStyle('A1:AD' . ($rowNum - 1))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle('A1:AD' . ($rowNum - 1))->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+$sheet->getStyle('A1:AO' . ($rowNum - 1))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('A1:AO' . ($rowNum - 1))->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
 // Encabezados en negritas
-$sheet->getStyle('A1:AD1')->getFont()->setBold(true);
+$sheet->getStyle('A1:AO1')->getFont()->setBold(true);
 
 // Ajustar anchos de columna
 $sheet->getColumnDimension('B')->setWidth(30); // Nomenclatura carpeta
 $sheet->getColumnDimension('C')->setWidth(15); // Fecha Inicio
 $sheet->getColumnDimension('D')->setWidth(15); // Hora Inicio
 $sheet->getColumnDimension('E')->setWidth(100); // Hechos
-$sheet->getColumnDimension('F')->setWidth(15); // Fecha Hechos
-$sheet->getColumnDimension('G')->setWidth(15); // Hora Hechos
 $sheet->getColumnDimension('H')->setWidth(110); // Delito
 $sheet->getColumnDimension('I')->setWidth(25); // Modalidad
-$sheet->getColumnDimension('J')->setWidth(40); // Elemento de comisión
-$sheet->getColumnDimension('K')->setWidth(17); // Consumación
-$sheet->getColumnDimension('L')->setWidth(63); // Delito clasificación
-$sheet->getColumnDimension('M')->setWidth(63); // Modalidad clasificación
-$sheet->getColumnDimension('N')->setWidth(63); // Elemento clasificación
-$sheet->getColumnDimension('O')->setWidth(22); // Entidad federativa
-$sheet->getColumnDimension('P')->setWidth(25); // ID Entidad federativa
-$sheet->getColumnDimension('Q')->setWidth(25); // Municipio del Hecho
-$sheet->getColumnDimension('R')->setWidth(30); // Identificador fiscalía
-$sheet->getColumnDimension('S')->setWidth(40); // Localidad
-$sheet->getColumnDimension('T')->setWidth(15); // ID Localidad
-$sheet->getColumnDimension('U')->setWidth(35); // Colonia
-$sheet->getColumnDimension('V')->setWidth(20); // ID Colonia
-$sheet->getColumnDimension('W')->setWidth(20); // Código postal
-$sheet->getColumnDimension('X')->setWidth(20); // Latitud
-$sheet->getColumnDimension('Y')->setWidth(20); // Longitud
-$sheet->getColumnDimension('Z')->setWidth(157); // Domilicio de los hechos
-$sheet->getColumnDimension('AA')->setWidth(15); // ID Persona
-$sheet->getColumnDimension('AB')->setWidth(20); // Sexo de la víctima
-$sheet->getColumnDimension('AC')->setWidth(20); // Edad de la víctima
-$sheet->getColumnDimension('AD')->setWidth(20); // Nacionalidad
+$sheet->getColumnDimension('J')->setWidth(15); // Fecha Hechos
+$sheet->getColumnDimension('K')->setWidth(15); // Hora Hechos
+$sheet->getColumnDimension('L')->setWidth(40); // Elemento de comisión
+$sheet->getColumnDimension('M')->setWidth(17); // Consumación
+$sheet->getColumnDimension('N')->setWidth(63); // Delito clasificación
+$sheet->getColumnDimension('O')->setWidth(63); // Modalidad clasificación
+$sheet->getColumnDimension('P')->setWidth(63); // Elemento clasificación
+$sheet->getColumnDimension('Q')->setWidth(22); // Entidad federativa
+$sheet->getColumnDimension('R')->setWidth(25); // ID Entidad federativa
+$sheet->getColumnDimension('S')->setWidth(25); // Municipio del Hecho
+$sheet->getColumnDimension('T')->setWidth(30); // Identificador fiscalía
+$sheet->getColumnDimension('U')->setWidth(50); // Localidad
+$sheet->getColumnDimension('V')->setWidth(15); // ID Localidad
+$sheet->getColumnDimension('W')->setWidth(35); // Colonia
+$sheet->getColumnDimension('X')->setWidth(20); // ID Colonia
+$sheet->getColumnDimension('Y')->setWidth(20); // Código postal
+$sheet->getColumnDimension('Z')->setWidth(20); // Latitud
+$sheet->getColumnDimension('AA')->setWidth(20); // Longitud
+$sheet->getColumnDimension('AB')->setWidth(157); // Domilicio de los hechos
+$sheet->getColumnDimension('AE')->setWidth(15); // ID Persona
+$sheet->getColumnDimension('AF')->setWidth(15); // Tipo Victima
+$sheet->getColumnDimension('AG')->setWidth(30); // Tipo Persona Moral
+$sheet->getColumnDimension('AH')->setWidth(20); // Sexo de la víctima
+$sheet->getColumnDimension('AI')->setWidth(20); // Población LGBTTTI
+$sheet->getColumnDimension('AJ')->setWidth(24); // Población indígena
+$sheet->getColumnDimension('AK')->setWidth(24); // Tipo de discapacidad
+$sheet->getColumnDimension('AL')->setWidth(24); // Fecha de nacimiento
+$sheet->getColumnDimension('AM')->setWidth(20); // Edad de la víctima
+$sheet->getColumnDimension('AN')->setWidth(20); // Nacionalidad
+$sheet->getColumnDimension('AO')->setWidth(20); // Relación imputado
 
 // Crear el writer de Excel y enviar al navegador
 $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
