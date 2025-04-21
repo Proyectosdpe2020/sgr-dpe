@@ -99,10 +99,10 @@ $sql = "
              ELSE 'N/A' 
         END
     ) AS 'Sexo_de_la_Victima',
-	CONVERT(VARCHAR(255), lgbtti.Nombre) AS 'Poblacion_LGBTTTI',
-	CONVERT(VARCHAR(255), indigena.Nombre) AS 'Poblacion_Indigena',
-	CONVERT(VARCHAR(255), discapacidad.Nombre) AS 'Tipo_de_Discapacidad',
-	CONVERT(VARCHAR(10), vsenap.FechaNacimiento, 23) AS 'Fecha_de_Nacimiento',
+	ISNULL(CONVERT(VARCHAR(255), lgbtti.Nombre), 'N/A') AS 'Poblacion_LGBTTTI',
+	ISNULL(CONVERT(VARCHAR(255), indigena.Nombre), 'N/A') AS 'Poblacion_Indigena',
+	ISNULL(CONVERT(VARCHAR(255),  discapacidad.Nombre), 'N/A') AS 'Tipo_de_Discapacidad',
+	ISNULL(CONVERT(VARCHAR(10),   vsenap.FechaNacimiento, 23), 'N/A') AS 'Fecha_de_Nacimiento',
     vic.Edad AS 'Edad_de_la_Victima',
     CONVERT(VARCHAR(255), nacion.Nombre) AS 'Nacionalidad',
     p.Nombre AS 'Relacion_imputado'  
