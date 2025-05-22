@@ -115,7 +115,7 @@ if ($_SESSION['user_data']['id'] == 5) {
                 <section>
                     <br>
                     <br>
-                    <form class="search-form" action="service/sesnsp/generate_excel_sesnsp.php" method="POST">
+                    <form class="search-form" id="excelForm" method="POST">
                         <div class="form-row">
                             <div class="col-md-6 form-group">
                                 <label style="font-weight:bold">Fecha inicial: *</label>
@@ -126,6 +126,14 @@ if ($_SESSION['user_data']['id'] == 5) {
                                 <label style="font-weight:bold">Fecha final: *</label>
                                 <input id="main-search-search-month" name="fecha_final" type="date" class="form-control" required="true">
                             </div>
+                            <br>
+                            <label style="font-weight:bold">Tipo de tabla: *</label>
+                            <select id="tipoTabla" name="tipoTabla" required>
+                                <option value="" selected disabled>-- Selecciona --</option>
+                                <option value="carpetas">Carpetas</option>
+                                <option value="delitos">Delitos</option>
+                                <option value="victimas">Víctimas</option>
+                            </select>
                         </div>
                         <br>
                         <div class="form-buttons">
@@ -141,6 +149,39 @@ if ($_SESSION['user_data']['id'] == 5) {
                         setTimeout(() => {
                             this.reset();
                         }, 500); // Se limpia después de medio segundo
+                    });
+                });
+
+                // Función para determinar que archivo es el que se va a generar
+                document.addEventListener("DOMContentLoaded", function() {
+                    const form = document.getElementById("excelForm");
+                    const tipoTabla = document.getElementById("tipoTabla");
+
+                    form.addEventListener("submit", function(e) {
+                        const tipo = tipoTabla.value;
+
+                        let actionUrl = "";
+                        switch (tipo) {
+                            case "carpetas":
+                                actionUrl = "service/sesnsp/generate_excel_carpetas.php";
+                                break;
+                            case "delitos":
+                                actionUrl = "service/sesnsp/generate_excel_delitos.php";
+                                break;
+                            case "victimas":
+                                actionUrl = "service/sesnsp/generate_excel_victimas.php";
+                                break;
+                            default:
+                                e.preventDefault();
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Opción no válida.'
+                                });
+                                return;
+                        }
+
+                        form.action = actionUrl;
                     });
                 });
             </script>
