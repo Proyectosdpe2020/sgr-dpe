@@ -122,7 +122,7 @@
 										<li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Validación de víctimas</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="producto_estadistico.php">Producto estadístico</a></li>
 										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sedena.php">Consulta SEDENA</a></li>
-										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sesnsp.php">Consulta CNI</a></li>
+										<li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sesnsp.php">Nueva norma técnica</a></li>
 <?php
 									}
 									else{

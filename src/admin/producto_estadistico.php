@@ -321,7 +321,10 @@ if ($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_
 
                     // Si todos los campos están completos, establece la acción y envía el formulario
                     formToSubmit.action = actionUrl;
-                    formToSubmit.submit();
+                    showLoader();
+                    setTimeout(() => {
+                        formToSubmit.submit();
+                    }, 2000);
                 }
 
                 function submitReport(reportType, type) {
@@ -370,6 +373,7 @@ if ($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_
                         // Restablecer formulario de Distrito
                         resetForm('pdfFormDistrito');
                     }
+                    localStorage.setItem('formularioActivo', formType);
                 }
 
                 // Función para restablecer un formulario
@@ -382,9 +386,9 @@ if ($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_
                     }
                 }
 
-                // Llamar a la función para que el formulario de "Municipio" se muestre por defecto
                 document.addEventListener('DOMContentLoaded', function() {
-                    changeForm('municipio');
+                    const lastForm = localStorage.getItem('formularioActivo') || 'municipio';
+                    changeForm(lastForm);
                 });
 
                 function refreshPage() {
@@ -409,6 +413,26 @@ if ($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_
                         return;
                     }
                 });
+
+                function showLoader() {
+                    const loader = document.getElementById('loader');
+                    loader.style.display = 'flex';
+
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+
+                        // Limpiar formulario
+                        if (document.getElementById('municipioForm').style.display !== 'none') {
+                            resetForm('pdfFormMunicipio');
+                        } else {
+                            resetForm('pdfFormDistrito');
+                        }
+
+                        // Recargar la página
+                        location.reload(); // Si prefieres solo ocultar o cambiar algo sin recargar, dime y lo ajustamos
+
+                    }, 5000); // Ajusta el tiempo si lo deseas
+                }
             </script>
         </div>
 
@@ -434,7 +458,7 @@ if ($_SESSION['user_data']['id'] == 4 || $_SESSION['user_data']['id'] == 5 || $_
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="validacion_victimas.php">Validación de víctimas</a></li>
                             <li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Producto estadístico</a></li>
                             <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sedena.php">Consulta SEDENA</a></li>
-                            <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sesnsp.php">Consulta CNI</a></li>
+                            <li><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="sesnsp.php">Nueva norma técnica</a></li>
                         <?php
                         } else {
                         ?>

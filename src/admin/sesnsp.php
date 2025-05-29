@@ -29,6 +29,8 @@ if ($_SESSION['user_data']['id'] == 5) {
 
     <script src="../../js/script.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/sesnsp.js"></script>
+
     <style>
         .loader-div {
             display: none;
@@ -108,7 +110,7 @@ if ($_SESSION['user_data']['id'] == 5) {
             </header>
 
             <div class="background-header">
-                <h1>CONSULTA CNI</h1>
+                <h1>NUEVA NORMA TÉCNICA</h1>
             </div>
 
             <div class="inner">
@@ -118,22 +120,24 @@ if ($_SESSION['user_data']['id'] == 5) {
                     <form class="search-form" id="excelForm" method="POST">
                         <div class="form-row">
                             <div class="col-md-6 form-group">
-                                <label style="font-weight:bold">Fecha inicial: *</label>
-                                <input id="main-search-search-month" name="fecha_inicial" type="date" class="form-control" required="true">
+                                <label for="fecha-inicial" style="font-weight:bold">Fecha inicial: *</label>
+                                <input id="fecha-inicial" name="fecha_inicial" type="date" class="form-control" required="true">
                             </div>
                             <br>
                             <div class="col-md-6 form-group">
-                                <label style="font-weight:bold">Fecha final: *</label>
-                                <input id="main-search-search-month" name="fecha_final" type="date" class="form-control" required="true">
+                                <label for="fecha-final" style="font-weight:bold">Fecha final: *</label>
+                                <input id="fecha-final" name="fecha_final" type="date" class="form-control" required="true">
                             </div>
                             <br>
-                            <label style="font-weight:bold">Tipo de tabla: *</label>
-                            <select id="tipoTabla" name="tipoTabla" required>
-                                <option value="" selected disabled>-- Selecciona --</option>
-                                <option value="carpetas">Carpetas</option>
-                                <option value="delitos">Delitos</option>
-                                <option value="victimas">Víctimas</option>
-                            </select>
+                            <div class="col-md-6 form-group">
+                                <label for="tipoTabla" style="font-weight:bold">Tipo de tabla: *</label>
+                                <select id="tipoTabla" name="tipoTabla" required>
+                                    <option value="" selected disabled>-- Selecciona --</option>
+                                    <option value="carpetas">Carpetas</option>
+                                    <option value="delitos">Delitos</option>
+                                    <option value="victimas">Víctimas</option>
+                                </select>
+                            </div>
                         </div>
                         <br>
                         <div class="form-buttons">
@@ -142,50 +146,6 @@ if ($_SESSION['user_data']['id'] == 5) {
                     </form>
                 </section>
             </div>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    document.querySelector(".search-form").addEventListener("submit", function() {
-                        setTimeout(() => {
-                            this.reset();
-                        }, 500); // Se limpia después de medio segundo
-                    });
-                });
-
-                // Función para determinar que archivo es el que se va a generar
-                document.addEventListener("DOMContentLoaded", function() {
-                    const form = document.getElementById("excelForm");
-                    const tipoTabla = document.getElementById("tipoTabla");
-
-                    form.addEventListener("submit", function(e) {
-                        const tipo = tipoTabla.value;
-
-                        let actionUrl = "";
-                        switch (tipo) {
-                            case "carpetas":
-                                actionUrl = "service/sesnsp/generate_excel_carpetas.php";
-                                break;
-                            case "delitos":
-                                actionUrl = "service/sesnsp/generate_excel_delitos.php";
-                                break;
-                            case "victimas":
-                                actionUrl = "service/sesnsp/generate_excel_victimas.php";
-                                break;
-                            default:
-                                e.preventDefault();
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'Opción no válida.'
-                                });
-                                return;
-                        }
-
-                        form.action = actionUrl;
-                    });
-                });
-            </script>
-
         </div>
 
         <div id="sidebar">
@@ -211,7 +171,7 @@ if ($_SESSION['user_data']['id'] == 5) {
                         <?php
                         }
                         ?>
-                        <li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Consulta CNI</a></li>
+                        <li class="selected"><i class="fa fa-circle" aria-hidden="true"></i>&nbsp;<a href="#">Nueva norma técnica</a></li>
                     </ul>
                 </nav>
 
