@@ -3,8 +3,7 @@ ini_set('memory_limit', '2048M');
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="Consulta_CNI_victimas.xlsx"');
 header('Cache-Control: max-age=0');
-session_start();
-include('D:/xampp/htdocs/sgr-dpe/service/connection.php');
+
 require('D:/xampp/htdocs/sgr-dpe/vendor/autoload.php');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -12,119 +11,16 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
-// Obtener la conexión para la base de datos PRUEBA
-$conn = $connections['sicap']['conn'];
-
-// Verificar si la conexión fue exitosa
-if (!$conn) {
-    die("Error de conexión a la base de datos.");
+// Validar que se recibió data por POST
+if (!isset($_POST['data'])) {
+    die("No se recibió información para generar el Excel.");
 }
 
-// Obtener los parámetros del formulario
-$fecha_inicial = isset($_POST['fecha_inicial']) ? $_POST['fecha_inicial'] : null;
-$fecha_final = isset($_POST['fecha_final']) ? $_POST['fecha_final'] : null;
+// Decodificar los datos recibidos desde nt.js
+$data3 = json_decode($_POST['data'], true);
 
-if ($fecha_inicial === null || $fecha_final === null) {
-    die("Las fechas inicial y final son campos obligatorios.");
-}
-
-// Consulta SQL
-$sql3 = "
-    SELECT DISTINCT
-    c.CarpetaID AS Id,
-    del.DelitoID AS id_delito,
-    vic.ID_Persona,
-    vic.Tipo_Victima,
-    vic.Tipo_Persona_Moral,
-	vic.Sexo,
-    vic.Genero,
-    vic.Poblacion_Indigena,
-    vic.Tipo_Discapacidad,
-    vic.Fecha_de_Nacimiento,
-    vic.Edad_de_la_Victima,
-    vic.Nacionalidad,
-	vic.Relacion_imputado,
-    c.FechaInicio,
-    CONVERT(VARCHAR(10), c.FechaInicio, 23) AS 'Fecha Inicio'
-FROM dbo.Carpeta c
-INNER JOIN dbo.Delito del ON c.CarpetaID = del.CarpetaID
-INNER JOIN dbo.CatModalidadesEstadisticas mo ON del.CatModalidadesID = mo.CatModalidadesEstadisticasID
-LEFT JOIN (
-    SELECT 
-        inv.CarpetaID,
-        dv.CatModalidadesID,
-        inv.InvolucradoID AS ID_Persona,
-		ctv.cni_id AS 'Tipo_Victima',
-        CONVERT(VARCHAR(20), 
-            CASE 
-               WHEN vo.Persona IN (0, 3, 4) THEN 5
-                ELSE 6
-            END
-        ) AS Tipo_Persona_Moral,
-			CASE 
-				WHEN inv.Sexo = 1 THEN 1 -- Hombre
-				WHEN inv.Sexo = 2 THEN 2 -- Mujer
-				WHEN inv.Sexo = 3 THEN 3 --No identificado
-				ELSE 3 --No identificado
-			END 
-			AS Sexo,
-            CASE 
-                WHEN inv.Sexo = 1 THEN 1 -- Masculino
-                WHEN inv.Sexo = 2 THEN 2 -- Femenino
-                WHEN inv.Sexo = 3 THEN 3 -- No identificado
-                ELSE 3 -- No identificado
-            END
-         AS Genero,
-        CASE 
-			WHEN indigena.Nombre IS NULL OR indigena.Nombre = 'No identificada' THEN 0 
-			ELSE 1 
-		END AS Poblacion_Indigena,
-		CASE 
-			WHEN discapacidad.Nombre IS NULL OR discapacidad.Nombre = 'No identificada' THEN 0 
-			ELSE 1 
-		END AS Tipo_Discapacidad,
-        CONVERT(VARCHAR(10), vsenap.FechaNacimiento, 23) AS Fecha_de_Nacimiento,
-        inv.Edad AS Edad_de_la_Victima,
-        nacion.cni_id AS 'Nacionalidad',
-		ISNULL(rel.Nombre, 'No identificada') AS Relacion_imputado,
-        vo.Victima,
-        CONCAT(inv.CarpetaID, '', dv.CatModalidadesID) AS carpeta_modalidad
-    FROM dbo.Involucrado inv
-    INNER JOIN dbo.Carpeta c ON inv.CarpetaID = c.CarpetaID
-    INNER JOIN dbo.VictimaOfendido vo ON vo.InvolucradoID = inv.InvolucradoID
-    LEFT JOIN PRUEBA.dbo.DelitosVictima dv ON dv.VictimaID = vo.VictimaOfendidoID
-    LEFT JOIN PRUEBA.dbo.VictimaSENAP vsenap ON vo.VictimaOfendidoID = vsenap.VictimaID
-    LEFT JOIN PRUEBA.dbo.CatPoblacionesLGBTTI lgbtti ON vsenap.PoblacionLGBTTI = lgbtti.PoblacionLGBTTIID
-    LEFT JOIN PRUEBA.dbo.CatPoblacionesIndigenas indigena ON vsenap.PoblacionIndigena = indigena.PoblacionIndigenaID
-    LEFT JOIN PRUEBA.dbo.CatDiscapacidades discapacidad ON vsenap.TipoDiscapacidad = discapacidad.DiscapacidadID
-    LEFT JOIN dbo.CatNacionalidades nacion ON vo.CatNacionalidadesID = nacion.CatNacionalidadesID
-    LEFT JOIN dbo.CatTipoVictima ctv ON ctv.CatTipoVictimaID = vo.Persona
-	LEFT JOIN dbo.CatRelacionVictimaImputado rel ON vsenap.RelacionImputado = rel.RelacionID
-    WHERE CAST(c.FechaInicio AS DATE) BETWEEN '$fecha_inicial' AND '$fecha_final'
-) vic ON vic.carpeta_modalidad = CONCAT(c.CarpetaID, '', del.CatModalidadesID)
-WHERE
-	contar = 1
-    AND CAST(c.FechaInicio AS DATE) BETWEEN '$fecha_inicial' AND '$fecha_final'
-	AND (
-		mo.Nombre NOT LIKE '%hechos posiblemente constitutivos de delito%' 
-		AND mo.Nombre NOT LIKE '%hechos (no localizados)%'
-		AND mo.Nombre NOT LIKE '%sospecha de suicidio%'
-		AND mo.Nombre NOT LIKE '%sospecha muerte natural%'
-		AND mo.Nombre NOT LIKE '%recuperación de vehículos%'
-		AND mo.Nombre NOT LIKE '%persona no localizada%'
-	)
-ORDER BY c.FechaInicio ASC, c.CarpetaID ASC;
-";
-
-$stmt3 = sqlsrv_query($conn, $sql3);
-
-if ($stmt3 === false) {
-    die(print_r(sqlsrv_errors(), true));
-}
-
-$data3 = [];
-while ($row3 = sqlsrv_fetch_array($stmt3, SQLSRV_FETCH_ASSOC)) {
-    $data3[] = $row3;
+if (!is_array($data3) || empty($data3)) {
+    die("Datos inválidos o vacíos.");
 }
 
 $spreadsheet = new Spreadsheet();
