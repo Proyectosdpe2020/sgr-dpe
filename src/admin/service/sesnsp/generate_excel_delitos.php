@@ -1,7 +1,20 @@
 <?php
+
+// Obtener fecha_final y construir nombre dinámico
+$nombreArchivo = "Consulta_CNI_delitos.xlsx"; // Valor por defecto
+
+if (isset($_POST['fecha_final'])) {
+    $fechaFinal = DateTime::createFromFormat('Y-m-d', $_POST['fecha_final']);
+    if ($fechaFinal) {
+        $anio = $fechaFinal->format('Y');
+        $mes = $fechaFinal->format('m');
+        $nombreArchivo = "16_{$anio}{$mes}_delitos.xlsx";
+    }
+}
+
 ini_set('memory_limit', '2048M');
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="Consulta_CNI_delitos.xlsx"');
+header("Content-Disposition: attachment;filename=\"$nombreArchivo\"");
 header('Cache-Control: max-age=0');
 
 require('D:/xampp/htdocs/sgr-dpe/vendor/autoload.php');
@@ -49,8 +62,8 @@ $sheet2->setCellValue('Q' . $rowNum2, 'ID_LOC_HCHOS');
 $sheet2->setCellValue('R' . $rowNum2, 'NOM_COL_HCHOS');
 $sheet2->setCellValue('S' . $rowNum2, 'ID_COL_HCHOS');
 $sheet2->setCellValue('T' . $rowNum2, 'CP');
-$sheet2->setCellValue('U' . $rowNum2, 'COORD_Y');
-$sheet2->setCellValue('V' . $rowNum2, 'COORD_X');
+$sheet2->setCellValue('U' . $rowNum2, 'COORD_X');
+$sheet2->setCellValue('V' . $rowNum2, 'COORD_Y');
 $sheet2->setCellValue('W' . $rowNum2, 'DOM_HCHOS');
 
 // Estilo para encabezados
@@ -88,8 +101,8 @@ foreach ($data2 as $row2) {
     $sheet2->setCellValue('R' . $rowNum2, $row2['Colonia']);
     $sheet2->setCellValue('S' . $rowNum2, $row2['ID_Colonia']);
     $sheet2->setCellValue('T' . $rowNum2, $row2['Codigo_postal']);
-    $sheet2->setCellValue('U' . $rowNum2, $row2['latitud']);
-    $sheet2->setCellValue('V' . $rowNum2, $row2['longitud']);
+    $sheet2->setCellValue('U' . $rowNum2, $row2['longitud']);
+    $sheet2->setCellValue('V' . $rowNum2, $row2['latitud']);
     $sheet2->setCellValue('W' . $rowNum2, $row2['Domicilio de los hechos']);
 
     // Alternar colores de fondo
@@ -154,8 +167,8 @@ $sheet2->getColumnDimension('Q')->setWidth(18); // ID Localidad
 $sheet2->getColumnDimension('R')->setWidth(35); // Colonia
 $sheet2->getColumnDimension('S')->setWidth(20); // ID Colonia
 $sheet2->getColumnDimension('T')->setWidth(15); // Código postal
-$sheet2->getColumnDimension('U')->setWidth(20); // Latitud
-$sheet2->getColumnDimension('V')->setWidth(20); // Longitud
+$sheet2->getColumnDimension('U')->setWidth(20); // Longitud
+$sheet2->getColumnDimension('V')->setWidth(20); // Latitud
 $sheet2->getColumnDimension('W')->setWidth(157); // Domilicio de los hechos
 
 // Crear el writer de Excel y enviar al navegador

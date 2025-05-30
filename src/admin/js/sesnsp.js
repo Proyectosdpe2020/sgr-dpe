@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Reset del formulario tras submit
     const searchForm = document.querySelector(".search-form");
-    if (searchForm) {
-        searchForm.addEventListener("submit", function () {
-            setTimeout(() => {
-                this.reset();
-            }, 500);
-        });
-    }
+if (searchForm && searchForm.id !== "excelForm") {
+    searchForm.addEventListener("submit", function () {
+        setTimeout(() => {
+            this.reset();
+        }, 500);
+    });
+}
 
     const form = document.getElementById("excelForm");
     const tipoTabla = document.getElementById("tipoTabla");
@@ -92,12 +92,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     inputData.name = "data";
                     inputData.value = JSON.stringify(data);
 
+                    const inputFechaFinal = document.createElement("input");
+                    inputFechaFinal.type = "hidden";
+                    inputFechaFinal.name = "fecha_final";
+                    inputFechaFinal.value = fecha_final;
+
                     formExcel.appendChild(inputData);
+                    formExcel.appendChild(inputFechaFinal);
                     document.body.appendChild(formExcel);
 
                     formExcel.submit();
                     document.body.removeChild(formExcel);
-                    form.reset();
+                    // form.reset();
                 },
                 error: function () {
                     document.getElementById("loader").style.display = "none";
