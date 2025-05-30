@@ -1,7 +1,20 @@
 <?php
+
+// Obtener fecha_final y construir nombre dinámico
+$nombreArchivo = "Consulta_CNI_carpetas.xlsx"; // Valor por defecto
+
+if (isset($_POST['fecha_final'])) {
+    $fechaFinal = DateTime::createFromFormat('Y-m-d', $_POST['fecha_final']);
+    if ($fechaFinal) {
+        $anio = $fechaFinal->format('Y');
+        $mes = $fechaFinal->format('m');
+        $nombreArchivo = "16_{$anio}{$mes}_carpetas.xlsx";
+    }
+}
+
 ini_set('memory_limit', '2048M');
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="Consulta_CNI_carpetas.xlsx"');
+header("Content-Disposition: attachment;filename=\"$nombreArchivo\"");
 header('Cache-Control: max-age=0');
 
 require('D:/xampp/htdocs/sgr-dpe/vendor/autoload.php');

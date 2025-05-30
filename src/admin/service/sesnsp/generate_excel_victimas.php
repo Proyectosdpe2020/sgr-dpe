@@ -1,7 +1,20 @@
 <?php
+
+// Obtener fecha_final y construir nombre dinámico
+$nombreArchivo = "Consulta_CNI_victimas.xlsx"; // Valor por defecto
+
+if (isset($_POST['fecha_final'])) {
+    $fechaFinal = DateTime::createFromFormat('Y-m-d', $_POST['fecha_final']);
+    if ($fechaFinal) {
+        $anio = $fechaFinal->format('Y');
+        $mes = $fechaFinal->format('m');
+        $nombreArchivo = "16_{$anio}{$mes}_victimas.xlsx";
+    }
+}
+
 ini_set('memory_limit', '2048M');
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="Consulta_CNI_victimas.xlsx"');
+header("Content-Disposition: attachment;filename=\"$nombreArchivo\"");
 header('Cache-Control: max-age=0');
 
 require('D:/xampp/htdocs/sgr-dpe/vendor/autoload.php');
@@ -124,7 +137,7 @@ $sheet3->getColumnDimension('G')->setWidth(15); // Genero
 $sheet3->getColumnDimension('H')->setWidth(15); // Población indígena
 $sheet3->getColumnDimension('I')->setWidth(15); // Tipo de discapacidad
 $sheet3->getColumnDimension('J')->setWidth(21); // Fecha de nacimiento
-$sheet3->getColumnDimension('K')->setWidth(15); // Edad de la víctima
+$sheet3->getColumnDimension('K')->setWidth(17); // Edad de la víctima
 $sheet3->getColumnDimension('L')->setWidth(15); // Nacionalidad
 $sheet3->getColumnDimension('M')->setWidth(32); // Relación imputado
 
