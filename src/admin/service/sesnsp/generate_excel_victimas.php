@@ -43,7 +43,7 @@ $sheet3->setTitle('Víctimas');
 // Encabezados de la tabla (a partir de la fila 1)
 $rowNum3 = 1; // Comenzar en la fila 1
 $sheet3->setCellValue('A' . $rowNum3, 'ID_CI');
-$sheet3->setCellValue('B' . $rowNum3, 'ID_CI_DELITO');
+$sheet3->setCellValue('B' . $rowNum3, 'ID_DELITO');
 $sheet3->setCellValue('C' . $rowNum3, 'ID_VICF');
 $sheet3->setCellValue('D' . $rowNum3, 'ID_TV');
 $sheet3->setCellValue('E' . $rowNum3, 'ID_TPM');
