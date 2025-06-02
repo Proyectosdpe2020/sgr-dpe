@@ -43,7 +43,7 @@ $sheet2->setTitle('Delitos');
 // Encabezados de la tabla (a partir de la fila 1)
 $rowNum2 = 1; // Comenzar en la fila 1
 $sheet2->setCellValue('A' . $rowNum2, 'ID_CI');
-$sheet2->setCellValue('B' . $rowNum2, 'ID_CI_DELITO');
+$sheet2->setCellValue('B' . $rowNum2, 'ID_DELITO');
 $sheet2->setCellValue('C' . $rowNum2, 'DTO');
 $sheet2->setCellValue('D' . $rowNum2, 'DTO_PRIN');
 $sheet2->setCellValue('E' . $rowNum2, 'MODA_DTO');
