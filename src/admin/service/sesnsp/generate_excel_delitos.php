@@ -91,7 +91,8 @@ foreach ($data2 as $row2) {
     $sheet2->setCellValue('H' . $rowNum2, $row2['Hora Hechos']);
     $sheet2->setCellValue('I' . $rowNum2, $row2['Elemento de comision']);
     $sheet2->setCellValue('J' . $rowNum2, $row2['Cosumacion']);
-    $sheet2->setCellValue('K' . $rowNum2, $row2['elemento_clasificacion']);
+    //$sheet2->setCellValue('K' . $rowNum2, $row2['elemento_clasificacion']);
+    $sheet2->setCellValueExplicit('K' . $rowNum2, $row2['elemento_clasificacion'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
     $sheet2->setCellValue('L' . $rowNum2, $row2['Entidad federativa']);
     $sheet2->setCellValue('M' . $rowNum2, $row2['ID_Entidad_federativa']);
     $sheet2->setCellValue('N' . $rowNum2, $row2['Municipio del Hecho']);
