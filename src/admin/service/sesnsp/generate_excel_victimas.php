@@ -54,12 +54,12 @@ $sheet3->setCellValue('I' . $rowNum3, 'DISC');
 $sheet3->setCellValue('J' . $rowNum3, 'FHA_NAC');
 $sheet3->setCellValue('K' . $rowNum3, 'EDAD');
 $sheet3->setCellValue('L' . $rowNum3, 'NACIONAL');
-$sheet3->setCellValue('M' . $rowNum3, 'REL_VIC_VMARIO');
+// $sheet3->setCellValue('M' . $rowNum3, 'REL_VIC_VMARIO');
 
 // Estilo para encabezados
-$sheet3->getStyle("A$rowNum3:M$rowNum3")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF');
-$sheet3->getStyle("A$rowNum3:M$rowNum3")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a');
-$sheet3->getStyle("A$rowNum3:M$rowNum3")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+$sheet3->getStyle("A$rowNum3:L$rowNum3")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF');
+$sheet3->getStyle("A$rowNum3:L$rowNum3")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a');
+$sheet3->getStyle("A$rowNum3:L$rowNum3")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
 // Ajuste de altura para encabezados
 $sheet3->getRowDimension($rowNum3)->setRowHeight(20);
@@ -83,19 +83,19 @@ foreach ($data3 as $row3) {
     $sheet3->setCellValue('J' . $rowNum3, $row3['Fecha_de_Nacimiento']);
     $sheet3->setCellValue('K' . $rowNum3, $row3['Edad_de_la_Victima']);
     $sheet3->setCellValue('L' . $rowNum3, $row3['Nacionalidad']);
-    $sheet3->setCellValue('M' . $rowNum3, $row3['Relacion_imputado']);
+    // $sheet3->setCellValue('M' . $rowNum3, $row3['Relacion_imputado']);
 
     // Alternar colores de fondo
     if ($colorAlterno) {
         // Gris claro
-        $sheet3->getStyle('A' . $rowNum3 . ':M' . $rowNum3)
+        $sheet3->getStyle('A' . $rowNum3 . ':L' . $rowNum3)
             ->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()
             ->setRGB('C6C6C6');
     } else {
         // Blanco
-        $sheet3->getStyle('A' . $rowNum3 . ':M' . $rowNum3)
+        $sheet3->getStyle('A' . $rowNum3 . ':L' . $rowNum3)
             ->getFill()
             ->setFillType(Fill::FILL_SOLID)
             ->getStartColor()
@@ -111,7 +111,7 @@ foreach ($data3 as $row3) {
 }
 
 // Aplicar bordes a todas las celdas de la tabla
-$sheet3->getStyle('A1:M' . ($rowNum3 - 1))->applyFromArray([
+$sheet3->getStyle('A1:L' . ($rowNum3 - 1))->applyFromArray([
     'borders' => [
         'allBorders' => [
             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
@@ -121,11 +121,11 @@ $sheet3->getStyle('A1:M' . ($rowNum3 - 1))->applyFromArray([
 ]);
 
 // Centrar texto horizontal y verticalmente
-$sheet3->getStyle('A1:M' . ($rowNum3 - 1))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet3->getStyle('A1:M' . ($rowNum3 - 1))->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+$sheet3->getStyle('A1:L' . ($rowNum3 - 1))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet3->getStyle('A1:L' . ($rowNum3 - 1))->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
 // Encabezados en negritas
-$sheet3->getStyle('A1:M1')->getFont()->setBold(true);
+$sheet3->getStyle('A1:L1')->getFont()->setBold(true);
 
 // Ajustar anchos de columna
 $sheet3->getColumnDimension('B')->setWidth(22); // Id_delito
@@ -139,7 +139,7 @@ $sheet3->getColumnDimension('I')->setWidth(15); // Tipo de discapacidad
 $sheet3->getColumnDimension('J')->setWidth(21); // Fecha de nacimiento
 $sheet3->getColumnDimension('K')->setWidth(17); // Edad de la víctima
 $sheet3->getColumnDimension('L')->setWidth(15); // Nacionalidad
-$sheet3->getColumnDimension('M')->setWidth(32); // Relación imputado
+// $sheet3->getColumnDimension('M')->setWidth(32); // Relación imputado
 
 // Crear el writer de Excel y enviar al navegador
 $spreadsheet->setActiveSheetIndexByName('Víctimas');

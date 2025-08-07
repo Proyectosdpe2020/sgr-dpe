@@ -46,14 +46,14 @@ $sheet->setCellValue('A1', 'ID_CI');
 $sheet->setCellValue('B1', 'NTRA_CI');
 $sheet->setCellValue('C1', 'FHA_DE_INI');
 $sheet->setCellValue('D1', 'HRA_DE_INI');
-$sheet->setCellValue('E1', 'ID_TEXP');
-$sheet->setCellValue('F1', 'RMEN_DE_HCHOS');
+// $sheet->setCellValue('E1', 'ID_TEXP');
+$sheet->setCellValue('E1', 'RMEN_DE_HCHOS');
 
 // Estilo encabezados
-$sheet->getStyle("A1:F1")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF');
-$sheet->getStyle("A1:F1")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a');
-$sheet->getStyle("A1:F1")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A1:F1")->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+$sheet->getStyle("A1:E1")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF');
+$sheet->getStyle("A1:E1")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('152f4a');
+$sheet->getStyle("A1:E1")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A1:E1")->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 $sheet->getRowDimension(1)->setRowHeight(20);
 
 // Cuerpo
@@ -65,18 +65,18 @@ foreach ($data as $row) {
     $sheet->setCellValueExplicit('B' . $rowNum, $row['Nomenglatura_carpeta'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
     $sheet->setCellValue('C' . $rowNum, $row['Fecha Inicio']);
     $sheet->setCellValue('D' . $rowNum, $row['Hora Inicio']);
-    $sheet->setCellValue('E' . $rowNum, $row['Tipo de expediente']);
-    $sheet->setCellValue('F' . $rowNum, $row['hechos']);
-    $sheet->getStyle('F' . $rowNum)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
+    // $sheet->setCellValue('E' . $rowNum, $row['Tipo de expediente']);
+    $sheet->setCellValue('E' . $rowNum, $row['hechos']);
+    $sheet->getStyle('E' . $rowNum)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
 
-    $sheet->getStyle("A$rowNum:F$rowNum")->getFill()->setFillType(Fill::FILL_SOLID)
+    $sheet->getStyle("A$rowNum:E$rowNum")->getFill()->setFillType(Fill::FILL_SOLID)
         ->getStartColor()->setRGB($colorAlterno ? 'C6C6C6' : 'FFFFFF');
     $colorAlterno = !$colorAlterno;
     $rowNum++;
 }
 
 // Bordes
-$sheet->getStyle("A1:F" . ($rowNum - 1))->applyFromArray([
+$sheet->getStyle("A1:E" . ($rowNum - 1))->applyFromArray([
     'borders' => [
         'allBorders' => [
             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
@@ -86,13 +86,13 @@ $sheet->getStyle("A1:F" . ($rowNum - 1))->applyFromArray([
 ]);
 
 // Ajustes finales
-$sheet->getStyle("A1:F" . ($rowNum - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A1:F" . ($rowNum - 1))->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+$sheet->getStyle("A1:E" . ($rowNum - 1))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A1:E" . ($rowNum - 1))->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 $sheet->getColumnDimension('B')->setWidth(22);
 $sheet->getColumnDimension('C')->setWidth(15);
 $sheet->getColumnDimension('D')->setWidth(15);
-$sheet->getColumnDimension('E')->setWidth(10);
-$sheet->getColumnDimension('F')->setWidth(600);
+// $sheet->getColumnDimension('E')->setWidth(10);
+$sheet->getColumnDimension('E')->setWidth(600);
 
 // Exportar
 $spreadsheet->setActiveSheetIndexByName('Carpetas');
