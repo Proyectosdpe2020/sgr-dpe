@@ -80,7 +80,12 @@ foreach ($data3 as $row3) {
     $sheet3->setCellValue('G' . $rowNum3, $row3['Genero']);
     $sheet3->setCellValue('H' . $rowNum3, $row3['Poblacion_Indigena']);
     $sheet3->setCellValue('I' . $rowNum3, $row3['Tipo_Discapacidad']);
-    $sheet3->setCellValue('J' . $rowNum3, $row3['Fecha_de_Nacimiento']);
+    $sheet3->getStyle('J')->getNumberFormat()->setFormatCode('@');
+    $sheet3->setCellValueExplicit(
+        'J' . $rowNum3,
+        $row3['Fecha_de_Nacimiento'],
+        \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
+    );
     $sheet3->setCellValue('K' . $rowNum3, $row3['Edad_de_la_Victima']);
     $sheet3->setCellValue('L' . $rowNum3, $row3['Nacionalidad']);
     // $sheet3->setCellValue('M' . $rowNum3, $row3['Relacion_imputado']);

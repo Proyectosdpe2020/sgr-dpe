@@ -63,7 +63,12 @@ $colorAlterno = true;
 foreach ($data as $row) {
     $sheet->setCellValue('A' . $rowNum, $row['Id']);
     $sheet->setCellValueExplicit('B' . $rowNum, $row['Nomenglatura_carpeta'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-    $sheet->setCellValue('C' . $rowNum, $row['Fecha Inicio']);
+    $sheet->getStyle('C')->getNumberFormat()->setFormatCode('@');
+    $sheet->setCellValueExplicit(
+    'C' . $rowNum,
+    $row['Fecha Inicio'],
+    \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
+);
     $sheet->setCellValue('D' . $rowNum, $row['Hora Inicio']);
     // $sheet->setCellValue('E' . $rowNum, $row['Tipo de expediente']);
     $sheet->setCellValue('E' . $rowNum, $row['hechos']);
