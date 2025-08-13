@@ -87,7 +87,12 @@ foreach ($data2 as $row2) {
     // $sheet2->setCellValue('D' . $rowNum2, $row2['Delito principal']);
     $sheet2->setCellValue('D' . $rowNum2, $row2['Modalidad']);
     $sheet2->setCellValue('E' . $rowNum2, $row2['Forma (violencia)']);
-    $sheet2->setCellValue('F' . $rowNum2, $row2['Fecha Hechos']);
+    $sheet2->getStyle('F')->getNumberFormat()->setFormatCode('@');
+    $sheet2->setCellValueExplicit(
+        'F' . $rowNum2,
+        $row2['Fecha Hechos'],
+        \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING
+    );
     $sheet2->setCellValue('G' . $rowNum2, $row2['Hora Hechos']);
     $sheet2->setCellValue('H' . $rowNum2, $row2['Elemento de comision']);
     $sheet2->setCellValue('I' . $rowNum2, $row2['Cosumacion']);
